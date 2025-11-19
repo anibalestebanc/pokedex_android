@@ -1,15 +1,170 @@
+# Gradle
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/**/build/ # allow src build directories if any custom config (usually unnecessary)
+
+# Local Gradle settings
+gradle-app.setting
+gradle-app.properties
+gradle.properties.local
+local.properties
+
+# IDEs
+### Android Studio / IntelliJ
+.idea/
 *.iml
-.gradle
-/local.properties
-/.idea
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+*.ipr
+*.iws
+# Mantener code style opcionalmente:
+# !.idea/codeStyles/
+# !.idea/inspectionProfiles/
+
+### VSCode
+.vscode/
+
+# Kotlin/Java
+*.class
+*.log
+hs_err_pid*
+replay_pid*
+
+# Keystore y credenciales (NUNCA subir claves reales)
+*.jks
+*.keystore
+*.keystore.*
+*.pem
+*.p12
+*.key
+keystore.properties
+signing.properties
+
+# Artifacts
+*.apk
+*.aab
+*.ap_
+*.aar
+*.so
+*.jar
+*.war
+*.ear
+outputs/
+captures/
+
+# NDK / CMake
+.obj/
+*.o
+*.obj
+*.ndk
+.externalNativeBuild/
+.cxx/
+
+# Compose
+# (No suele generar cachés fuera de build/, pero por si acaso)
+compose-compiler/
+
+# Android
+local.settings
+*.hprof
+
+# Logs y reportes
+*.log
+logs/
+lint-results.xml
+lint-results.html
+lint-results.sarif
+lint/
+reports/
+test-results/
+
+# Coverage
+*.ec
+*.exec
+jacoco.exec
+coverage/
+.jacoco/
+
+# Kotlin/Gradle caches
+.kotlinc/
+kotlin-js-store/
+
+# IntelliJ cache
+out/
+
+# Mac / Windows / Linux
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+Thumbs.db
+desktop.ini
+
+# Firebase / Google Services (mantén el JSON si lo necesitas)
+# Descomenta para ignorar por completo, o gestiona con secretos
+# google-services.json
+# GoogleService-Info.plist
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Crashlytics
+crashlytics-build.properties
+fabric.properties
+
+# Proguard / R8
+# (generalmente dentro de source control, no ignorar a menos que generes dinámicamente)
+# proguard-rules.pro
+
+# Detekt / Spotless / Lint caches
+.detekt/
+.spotless/
+.android/
+.idea/caches/
+.idea/shelf/
+
+# Temporary / OS files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Docker (si aplica)
+docker-data/
+*.env
+.env.local
+.env.*.local
+
+# GitHub Actions/CI artifacts
+*.sarif
+
+# Secrets comunes
+secrets.properties
+.env
+.envrc
+
+# Room / Databases (solo si generas locales que no quieres versionar)
+*.db
+*.db-shm
+*.db-wal
+
+# Benchmarking
+benchmarkData/
+
+# Jetpack Compose Preview cache (Android Studio)
+.idea/render.experimental.xml
+.idea/assetWizardSettings.xml
+
+# Kotlin Symbol Processing (KSP)
+ksp/
+
+# Gradle Build Scans
+.scans/
+
+# LLM/AI assistants project files (si tu IDE los genera)
+.codellm.rules.json
+.cursor/
+.docs/
+.aider*
+.codeium/
+.github/copilot*
