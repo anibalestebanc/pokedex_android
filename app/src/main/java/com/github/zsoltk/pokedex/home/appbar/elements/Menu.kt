@@ -53,11 +53,7 @@ fun MenuItemButton(text: String, color: Color, onClick: () -> Unit = {}) {
     Surface(
         color = color,
         shape = RoundedCornerShape(16.dp),
-        modifier = Modifier.clickable(
-            onClick = onClick,
-            indication = rememberRipple(),
-            interactionSource = remember { MutableInteractionSource() }
-        )
+        modifier = Modifier.clickable { onClick() },
     ) {
         Box(
             modifier = Modifier

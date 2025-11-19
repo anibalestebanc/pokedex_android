@@ -21,7 +21,7 @@ data class Pokemon(
 fun Pokemon.color(): Int {
     val type = typeOfPokemon?.elementAtOrNull(0)
 
-    return when (type?.toLowerCase()) {
+    return when (type?.lowercase()) {
         "grass", "bug" -> R.color.poke_light_teal
         "fire" -> R.color.poke_light_red
         "water", "fighting", "normal" -> R.color.poke_light_blue

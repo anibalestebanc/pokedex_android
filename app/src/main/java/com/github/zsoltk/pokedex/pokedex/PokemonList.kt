@@ -144,11 +144,7 @@ fun PokeDexCard(
     Surface(
         color = colorResource(id = pokemon.color()),
         shape = RoundedCornerShape(16.dp),
-        modifier = Modifier.clickable(
-            onClick = { onPokemonSelected(pokemon) },
-            indication = rememberRipple(),
-            interactionSource = remember { MutableInteractionSource() }
-        )
+        modifier = Modifier.clickable{onPokemonSelected(pokemon) }
     ) {
         PokeDexCardContent(pokemon)
     }
