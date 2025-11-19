@@ -1,17 +1,15 @@
 package com.github.zsoltk.pokedex
 
-import androidx.ui.material.Typography
-import androidx.ui.text.font.FontWeight
-import androidx.ui.text.font.ResourceFont
-import androidx.ui.text.font.fontFamily
+import androidx.compose.material.Typography
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 
-val appFontFamily = fontFamily(
-    fonts = listOf(
-        ResourceFont(R.font.circularstd_book),
-        ResourceFont(R.font.circularstd_medium, FontWeight.W600),
-        ResourceFont(R.font.circularstd_black, FontWeight.Bold),
-        ResourceFont(R.font.circularstd_bold, FontWeight.W900)
-    )
+val appFontFamily = FontFamily(
+    Font(R.font.circularstd_book),
+    Font(R.font.circularstd_medium, FontWeight.W600),
+    Font(R.font.circularstd_black, FontWeight.Bold),
+    Font(R.font.circularstd_bold, FontWeight.W900)
 )
 
 private val defaultTypography = Typography()

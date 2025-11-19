@@ -1,45 +1,46 @@
 package com.github.zsoltk.pokedex.pokedex
 
-import androidx.compose.Composable
-import androidx.compose.remember
-import androidx.ui.animation.Crossfade
-import androidx.ui.core.Alignment
-import androidx.ui.core.Text
-import androidx.ui.core.drawOpacity
-import androidx.ui.foundation.Clickable
-import androidx.ui.foundation.Image
-import androidx.ui.foundation.VerticalScroller
-import androidx.ui.foundation.shape.corner.RoundedCornerShape
-import androidx.ui.graphics.Color
-import androidx.ui.layout.Column
-import androidx.ui.layout.Container
-import androidx.ui.layout.LayoutGravity
-import androidx.ui.layout.LayoutHeight
-import androidx.ui.layout.LayoutOffset
-import androidx.ui.layout.LayoutPadding
-import androidx.ui.layout.LayoutSize
-import androidx.ui.layout.LayoutWidth
-import androidx.ui.layout.Stack
-import androidx.ui.material.Button
-import androidx.ui.material.MaterialTheme
-import androidx.ui.material.ripple.Ripple
-import androidx.ui.material.Surface
-import androidx.ui.res.colorResource
-import androidx.ui.res.imageResource
-import androidx.ui.text.AnnotatedString
-import androidx.ui.text.ParagraphStyle
-import androidx.ui.text.TextStyle
-import androidx.ui.text.font.FontWeight
-import androidx.ui.text.style.TextAlign
-import androidx.ui.tooling.preview.Preview
-import androidx.ui.unit.dp
-import androidx.ui.unit.sp
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.ParagraphStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.github.zsoltk.pokedex.R
 import com.github.zsoltk.pokedex.appFontFamily
-import com.github.zsoltk.pokedex.common.AsyncState.Error
-import com.github.zsoltk.pokedex.common.AsyncState.Initialised
-import com.github.zsoltk.pokedex.common.AsyncState.Loading
-import com.github.zsoltk.pokedex.common.AsyncState.Result
+import com.github.zsoltk.pokedex.common.AsyncState
 import com.github.zsoltk.pokedex.common.PokeBallBackground
 import com.github.zsoltk.pokedex.common.PokeBallSmall
 import com.github.zsoltk.pokedex.common.PokemonTypeLabels
@@ -47,7 +48,6 @@ import com.github.zsoltk.pokedex.common.RotateIndefinitely
 import com.github.zsoltk.pokedex.common.TableRenderer
 import com.github.zsoltk.pokedex.common.Title
 import com.github.zsoltk.pokedex.common.TypeLabelMetrics.Companion.SMALL
-import com.github.zsoltk.pokedex.common.observe
 import com.github.zsoltk.pokedex.entity.Pokemon
 import com.github.zsoltk.pokedex.entity.PokemonApi
 import com.github.zsoltk.pokedex.entity.PokemonLiveData
@@ -60,24 +60,20 @@ interface PokemonList {
     companion object {
         @Composable
         fun Content(onPokemonSelected: (Pokemon) -> Unit) {
-            // You could lift this out to higher scope to survive this screen and avoid
-            // loading every time. Kept here for demonstration purposes only.
             val liveData = remember { PokemonLiveData() }
-            val asyncState = observe(liveData)
+            val asyncState by liveData.observeAsState(AsyncState.Initialised())
 
-            Stack(modifier = LayoutHeight.Fill + LayoutWidth.Fill) {
-                Surface(color = MaterialTheme.colors().surface) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Surface(color = MaterialTheme.colors.surface) {
                     PokeBallBackground()
                 }
 
-                Container(modifier = LayoutGravity.Stretch) {
-                    Crossfade(current = asyncState) {
-                        when (it) {
-                            is Initialised,
-                            is Loading -> LoadingView()
-                            is Error -> ErrorView(onRetryClicked = { liveData.reload() })
-                            is Result -> ContentView(onPokemonSelected)
-                        }
+                Crossfade(targetState = asyncState) { state ->
+                    when (state) {
+                        is AsyncState.Initialised,
+                        is AsyncState.Loading -> LoadingView()
+                        is AsyncState.Error -> ErrorView(onRetryClicked = { liveData.reload() })
+                        is AsyncState.Result -> ContentView(state.result, onPokemonSelected)
                     }
                 }
             }
@@ -87,10 +83,10 @@ interface PokemonList {
 
 @Composable
 private fun LoadingView() {
-    Container(expanded = true) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         RotateIndefinitely(durationPerRotation = 400) {
-            Container(width = 50.dp, height = 50.dp) {
-                PokeBallSmall(tint = colorResource(R.color.poke_light_red))
+            Box(modifier = Modifier.size(50.dp)) {
+                PokeBallSmall(tint = colorResource(id = R.color.poke_light_red))
             }
         }
     }
@@ -100,22 +96,19 @@ private fun LoadingView() {
 private fun ErrorView(onRetryClicked: () -> Unit) {
     val errorRatio = "%.0f".format(PokemonApi.randomFailureChance * 100)
 
-    Container(expanded = true) {
-        Column {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = AnnotatedString(
-                    text = "There's a $errorRatio% chance of a simulated error.\nNow it happened.",
-                    paragraphStyle = ParagraphStyle(textAlign = TextAlign.Center)
+                text = buildAnnotatedString {
+                    append("There's a $errorRatio% chance of a simulated error.\nNow it happened.")
+                    addStyle(ParagraphStyle(textAlign = TextAlign.Center), 0, length)
+                },
+                style = MaterialTheme.typography.body1.copy(
+                    color = colorResource(id = R.color.poke_red)
                 ),
-                style = MaterialTheme.typography().body1.copy(
-                    color = colorResource(R.color.poke_red)
-                ),
-                modifier = LayoutPadding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp)
             )
-            Button(
-                modifier = LayoutGravity.Center,
-                onClick = onRetryClicked
-            ) {
+            Button(onClick = onRetryClicked) {
                 Text("Retry")
             }
         }
@@ -123,22 +116,22 @@ private fun ErrorView(onRetryClicked: () -> Unit) {
 }
 
 @Composable
-private fun ContentView(onPokemonSelected: (Pokemon) -> Unit) {
-    Container(alignment = Alignment.TopStart) {
-        VerticalScroller {
-            Column(LayoutPadding(32.dp)) {
-                Title(
-                    text = "Pokedex",
-                    color = MaterialTheme.colors().onSurface,
-                    modifier = LayoutPadding(
-                        top = 64.dp,
-                        bottom = 24.dp
-                    )
-                )
-                TableRenderer(cols = 2, cellSpacing = 4.dp, items = pokemons) { cell ->
-                    PokeDexCard(cell.item, onPokemonSelected)
-                }
-            }
+private fun ContentView(pokemons: List<Pokemon>, onPokemonSelected: (Pokemon) -> Unit) {
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .padding(32.dp)
+    ) {
+        Title(
+            text = "Pokedex",
+            color = MaterialTheme.colors.onSurface,
+            modifier = Modifier.padding(
+                top = 64.dp,
+                bottom = 24.dp
+            )
+        )
+        TableRenderer(cols = 2, cellSpacing = 4.dp, items = pokemons) { cell ->
+            PokeDexCard(cell.item, onPokemonSelected)
         }
     }
 }
@@ -149,33 +142,35 @@ fun PokeDexCard(
     onPokemonSelected: (Pokemon) -> Unit
 ) {
     Surface(
-        color = colorResource(pokemon.color()),
-        shape = RoundedCornerShape(16.dp)
+        color = colorResource(id = pokemon.color()),
+        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier.clickable(
+            onClick = { onPokemonSelected(pokemon) },
+            indication = rememberRipple(),
+            interactionSource = remember { MutableInteractionSource() }
+        )
     ) {
-        Ripple(bounded = true) {
-            Clickable(onClick = { onPokemonSelected(pokemon) }) {
-                PokeDexCardContent(pokemon)
-            }
-        }
+        PokeDexCardContent(pokemon)
     }
 }
 
 @Composable
 private fun PokeDexCardContent(pokemon: Pokemon) {
-    Stack(modifier = LayoutHeight(120.dp) + LayoutWidth.Fill) {
-        Column(modifier = LayoutGravity.TopStart + LayoutPadding(top = 8.dp, start = 12.dp)) {
+    Box(modifier = Modifier.height(120.dp).fillMaxWidth()) {
+        Column(modifier = Modifier.align(Alignment.TopStart).padding(top = 8.dp, start = 12.dp)) {
             PokemonName(pokemon.name)
             PokemonTypeLabels(pokemon.typeOfPokemon, SMALL)
         }
 
-        Container(LayoutGravity.TopEnd + LayoutPadding(top = 8.dp, end = 12.dp)) {
+        Box(modifier = Modifier.align(Alignment.TopEnd).padding(top = 8.dp, end = 12.dp)) {
             PokemonId(pokemon.id)
         }
 
-        Container(
-            modifier = LayoutGravity.BottomEnd +
-                LayoutOffset(x = 5.dp, y = 10.dp) +
-                LayoutSize(96.dp)
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .offset(x = 5.dp, y = 10.dp)
+                .size(96.dp)
         ) {
             PokeBallSmall(
                 Color.White,
@@ -184,12 +179,13 @@ private fun PokeDexCardContent(pokemon: Pokemon) {
         }
 
         pokemon.image?.let { image ->
-            Container(
-                modifier = LayoutGravity.BottomEnd +
-                    LayoutPadding(bottom = 8.dp, end = 8.dp) +
-                    LayoutSize(72.dp)
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(bottom = 8.dp, end = 8.dp)
+                    .size(72.dp)
             ) {
-                Image(image = imageResource(image))
+                Image(painter = painterResource(id = image), contentDescription = pokemon.name)
             }
         }
     }
@@ -203,9 +199,9 @@ private fun PokemonName(text: String?) {
             fontFamily = appFontFamily,
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
-            color = colorResource(R.color.white_1000)
+            color = colorResource(id = R.color.white_1000)
         ),
-        modifier = LayoutPadding(bottom = 8.dp)
+        modifier = Modifier.padding(bottom = 8.dp)
     )
 }
 
@@ -213,7 +209,7 @@ private fun PokemonName(text: String?) {
 private fun PokemonId(text: String?) {
     Text(
         text = text ?: "",
-        modifier = drawOpacity(0.1f),
+        modifier = Modifier.alpha(0.1f),
         style = TextStyle(
             fontFamily = appFontFamily,
             fontWeight = FontWeight.Bold,
@@ -226,8 +222,6 @@ private fun PokemonId(text: String?) {
 @Composable
 private fun PreviewPokemonCard() {
     MaterialTheme(lightThemeColors) {
-        Container(width = 640.dp) {
-            Pokedex.Content()
-        }
+        PokeDexCard(pokemon = pokemons.first(), onPokemonSelected = {})
     }
 }

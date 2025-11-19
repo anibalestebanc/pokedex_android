@@ -1,16 +1,16 @@
 package com.github.zsoltk.pokedex.common
 
-import androidx.compose.Composable
-import androidx.ui.core.Modifier
-import androidx.ui.core.Text
-import androidx.ui.graphics.Color
-import androidx.ui.text.TextStyle
-import androidx.ui.text.font.FontWeight
-import androidx.ui.unit.sp
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.github.zsoltk.pokedex.appFontFamily
 
 @Composable
-fun Title(text: String, color: Color, modifier: Modifier = Modifier.None) {
+fun Title(text: String, color: Color, modifier: Modifier = Modifier) {
     Text(
         text = text,
         style = TextStyle(

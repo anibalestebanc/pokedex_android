@@ -1,62 +1,44 @@
 package com.github.zsoltk.pokedex.common
 
-import androidx.compose.Composable
-import androidx.ui.layout.Container
-import androidx.ui.layout.LayoutPadding
-import androidx.ui.layout.Table
-import androidx.ui.layout.TableColumnWidth
-import androidx.ui.unit.Dp
-import androidx.ui.unit.dp
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 
-/**
- * Renders a list of items into a table.
- *
- * @param cols How many columns to render
- * @param items The list of items you want to render as a table
- * @param cellSpacing The amount of padding you want to have between cells. This padding will only
- * be applied between cells, i.e. no padding will be added at the outer edges of the table. You
- * can add that separately by wrapping the whole [TableRenderer] with [Padding].
- */
 @Composable
 fun <T> TableRenderer(
     cols: Int,
     items: List<T>,
     cellSpacing: Dp,
-    cellRenderer: @Composable() (Cell<T>) -> Unit
+    cellRenderer: @Composable (Cell<T>) -> Unit
 ) {
-    val rows = items.size / cols
-    val lastIndex = items.lastIndex
+    val chunkedItems = items.withIndex().chunked(cols)
 
-    Table(
-        columns = cols,
-        columnWidth = { TableColumnWidth.Fraction(1.0f / cols) }) {
-        for (i in 0..rows) {
-            tableRow {
-                val startIndex = i * cols
-                val maxIndex = (i + 1) * cols - 1
-                val endIndex = if (maxIndex > lastIndex) lastIndex else maxIndex
-
-                for (j in startIndex..endIndex) {
+    Column(verticalArrangement = Arrangement.spacedBy(cellSpacing)) {
+        chunkedItems.forEachIndexed { rowIndex, rowItems ->
+            Row(horizontalArrangement = Arrangement.spacedBy(cellSpacing)) {
+                rowItems.forEach { (itemIndex, item) ->
+                    val colIndex = itemIndex % cols
                     val cell = Cell(
-                        item = items[j],
-                        index = j,
-                        rowIndex = i,
-                        colIndex = j - startIndex
+                        item = item,
+                        index = itemIndex,
+                        rowIndex = rowIndex,
+                        colIndex = colIndex
                     )
-
-                    Container(
-                        modifier = LayoutPadding(
-                            start = if (cell.colIndex > 0) cellSpacing else 0.dp,
-                            top = if (cell.rowIndex > 0) cellSpacing else 0.dp,
-                            end = if (cell.colIndex < cols - 1) cellSpacing else 0.dp,
-                            bottom = if (cell.rowIndex < rows - 1) cellSpacing else 0.dp
-                        )
-                    ) {
-                        cellRenderer(
-                            cell
-                        )
+                    Box(modifier = Modifier.weight(1f)) {
+                        cellRenderer(cell)
                     }
-
+                }
+                // Add spacers for the last row if it's not full
+                val emptyCells = cols - rowItems.size
+                if (emptyCells > 0) {
+                    for (i in 0 until emptyCells) {
+                        Spacer(Modifier.weight(1f))
+                    }
                 }
             }
         }
@@ -83,4 +65,3 @@ data class Cell<T>(
      */
     val colIndex: Int
 )
-

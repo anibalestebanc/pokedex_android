@@ -1,7 +1,7 @@
 package com.github.zsoltk.pokedex.pokedex.section
 
-import androidx.compose.Composable
-import androidx.ui.core.Text
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 import com.github.zsoltk.pokedex.entity.Pokemon
 
 @Composable

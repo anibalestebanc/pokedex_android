@@ -1,30 +1,30 @@
 package com.github.zsoltk.pokedex.home.appbar.elements
 
-import androidx.compose.Composable
-import androidx.ui.core.Alignment
-import androidx.ui.foundation.shape.corner.RoundedCornerShape
-import androidx.ui.layout.Container
-import androidx.ui.layout.Stack
-import androidx.ui.material.MaterialTheme
-import androidx.ui.material.Surface
-import androidx.ui.unit.dp
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun LargeAppBar(
-    background: @Composable() () -> Unit,
-    content: @Composable() () -> Unit
+    background: @Composable () -> Unit,
+    content: @Composable () -> Unit
 ) {
     Surface(
-        color = MaterialTheme.colors().surface,
+        color = MaterialTheme.colors.surface,
         shape = RoundedCornerShape(
-            bottomLeft = 32.dp,
-            bottomRight = 32.dp
+            bottomStart = 32.dp,
+            bottomEnd = 32.dp
         )
     ) {
-        Stack {
+        Box {
             background()
 
-            Container(alignment = Alignment.TopCenter) {
+            Box(contentAlignment = Alignment.TopCenter) {
                 content()
             }
         }

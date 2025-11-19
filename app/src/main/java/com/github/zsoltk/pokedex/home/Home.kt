@@ -1,12 +1,13 @@
 package com.github.zsoltk.pokedex.home
 
-import androidx.compose.Composable
-import androidx.ui.foundation.VerticalScroller
-import androidx.ui.layout.Column
-import androidx.ui.layout.Container
-import androidx.ui.layout.LayoutPadding
-import androidx.ui.tooling.preview.Preview
-import androidx.ui.unit.dp
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.github.zsoltk.pokedex.R
 import com.github.zsoltk.pokedex.home.appbar.MainAppBar
 import com.github.zsoltk.pokedex.home.news.NewsSection
@@ -28,12 +29,10 @@ interface Home {
     companion object {
         @Composable
         fun Content(onMenuItemSelected: (MenuItem) -> Unit) {
-            VerticalScroller {
-                Column {
-                    MainAppBar(onMenuItemSelected)
-                    Container(modifier = LayoutPadding(32.dp)) {
-                        NewsSection()
-                    }
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                MainAppBar(onMenuItemSelected)
+                Column(modifier = Modifier.padding(32.dp)) {
+                    NewsSection()
                 }
             }
         }

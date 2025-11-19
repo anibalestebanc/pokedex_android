@@ -1,12 +1,12 @@
 package com.github.zsoltk.pokedex.common
 
-import androidx.compose.Composable
-import androidx.ui.core.drawOpacity
-import androidx.ui.foundation.Image
-import androidx.ui.graphics.BlendMode
-import androidx.ui.graphics.Color
-import androidx.ui.graphics.ColorFilter
-import androidx.ui.res.loadImageResource
+import androidx.compose.foundation.Image
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 
 @Composable
 fun LoadImage(
@@ -14,16 +14,12 @@ fun LoadImage(
     tint: Color? = null,
     opacity: Float = 1.0f
 ) {
-    loadImageResource(imageResId).resource.resource?.let {
-        Image(
-            modifier = drawOpacity(opacity),
-            image = it,
-            colorFilter = tint?.let { color ->
-                ColorFilter(
-                    color = color,
-                    blendMode = BlendMode.srcIn
-                )
-            }
-        )
-    }
+    Image(
+        painter = painterResource(id = imageResId),
+        contentDescription = null,
+        modifier = Modifier.alpha(opacity),
+        colorFilter = tint?.let { color ->
+            ColorFilter.tint(color)
+        }
+    )
 }

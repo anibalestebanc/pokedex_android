@@ -1,31 +1,35 @@
 package com.github.zsoltk.pokedex.pokedex
 
-import androidx.compose.Composable
-import androidx.compose.state
-import androidx.ui.core.Text
-import androidx.ui.foundation.shape.corner.RoundedCornerShape
-import androidx.ui.graphics.Color
-import androidx.ui.layout.Column
-import androidx.ui.layout.Container
-import androidx.ui.layout.LayoutGravity
-import androidx.ui.layout.LayoutHeight
-import androidx.ui.layout.LayoutOffset
-import androidx.ui.layout.LayoutPadding
-import androidx.ui.layout.LayoutSize
-import androidx.ui.layout.LayoutWidth
-import androidx.ui.layout.Row
-import androidx.ui.layout.Spacer
-import androidx.ui.layout.Stack
-import androidx.ui.layout.StackScope
-import androidx.ui.material.Tab
-import androidx.ui.material.TabRow
-import androidx.ui.material.Surface
-import androidx.ui.res.colorResource
-import androidx.ui.text.TextStyle
-import androidx.ui.text.font.FontWeight
-import androidx.ui.tooling.preview.Preview
-import androidx.ui.unit.dp
-import androidx.ui.unit.sp
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Surface
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.github.zsoltk.pokedex.R
 import com.github.zsoltk.pokedex.appFontFamily
 import com.github.zsoltk.pokedex.common.LoadImage
@@ -48,8 +52,8 @@ interface PokemonDetails {
     companion object {
         @Composable
         fun Content(pokemon: Pokemon) {
-            Surface(color = colorResource(pokemon.color())) {
-                Stack {
+            Surface(color = colorResource(id = pokemon.color())) {
+                Box {
                     RoundedRectangleDecoration()
                     DottedDecoration()
                     RotatingPokeBall()
@@ -64,42 +68,43 @@ interface PokemonDetails {
 }
 
 @Composable
-private fun StackScope.RoundedRectangleDecoration() {
-    Container(
-        modifier = LayoutGravity.TopStart + LayoutOffset(x = (-60).dp, y = (-50).dp)
+private fun BoxScope.RoundedRectangleDecoration() {
+    Box(
+        modifier = Modifier
+            .align(Alignment.TopStart)
+            .offset(x = (-60).dp, y = (-50).dp)
     ) {
         Rotate(-20f) {
             Surface(color = Color(0x22FFFFFF), shape = RoundedCornerShape(32.dp)) {
-                Spacer(modifier = LayoutWidth(150.dp) + LayoutHeight(150.dp))
+                Spacer(modifier = Modifier.size(150.dp))
             }
         }
     }
 }
 
 @Composable
-private fun StackScope.DottedDecoration() {
-    Container(
-        modifier = LayoutGravity.TopEnd + LayoutPadding(
-            top = 4.dp,
-            end = 100.dp
-        ),
-        width = 63.dp,
-        height = 34.dp
+private fun BoxScope.DottedDecoration() {
+    Box(
+        modifier = Modifier
+            .align(Alignment.TopEnd)
+            .padding(top = 4.dp, end = 100.dp)
+            .size(width = 63.dp, height = 34.dp)
     ) {
         LoadImage(imageResId = R.drawable.dotted, opacity = 0.3f)
     }
 }
 
 @Composable
-private fun StackScope.RotatingPokeBall() {
-    Container(
-        modifier = LayoutGravity.TopCenter +
-            LayoutPadding(top = 140.dp) +
-            LayoutSize(200.dp)
+private fun BoxScope.RotatingPokeBall() {
+    Box(
+        modifier = Modifier
+            .align(Alignment.TopCenter)
+            .padding(top = 140.dp)
+            .size(200.dp)
     ) {
         RotateIndefinitely(durationPerRotation = 4000) {
             PokeBallLarge(
-                tint = colorResource(R.color.grey_100),
+                tint = colorResource(id = R.color.grey_100),
                 opacity = 0.25f
             )
         }
@@ -107,15 +112,14 @@ private fun StackScope.RotatingPokeBall() {
 }
 
 @Composable
-private fun StackScope.HeaderRight(pokemon: Pokemon) {
-    Container(
-        modifier = LayoutGravity.TopEnd +
-            LayoutPadding(top = 52.dp) +
-            LayoutPadding(32.dp)
+private fun BoxScope.HeaderRight(pokemon: Pokemon) {
+    Box(
+        modifier = Modifier
+            .align(Alignment.TopEnd)
+            .padding(top = 52.dp, end = 32.dp)
     ) {
-        Column {
+        Column(horizontalAlignment = Alignment.End) {
             Text(
-                modifier = LayoutGravity.End,
                 text = pokemon.id ?: "",
                 style = TextStyle(
                     fontFamily = appFontFamily,
@@ -124,9 +128,8 @@ private fun StackScope.HeaderRight(pokemon: Pokemon) {
                     color = Color.White
                 )
             )
-            Spacer(modifier = LayoutHeight(6.dp))
+            Spacer(modifier = Modifier.height(6.dp))
             Text(
-                modifier = LayoutGravity.End,
                 text = pokemon.category ?: "",
                 style = TextStyle(
                     fontFamily = appFontFamily,
@@ -139,11 +142,11 @@ private fun StackScope.HeaderRight(pokemon: Pokemon) {
 }
 
 @Composable
-private fun StackScope.HeaderLeft(pokemon: Pokemon) {
-    Container(
-        modifier = LayoutGravity.TopStart +
-            LayoutPadding(top = 40.dp) +
-            LayoutPadding(32.dp)
+private fun BoxScope.HeaderLeft(pokemon: Pokemon) {
+    Box(
+        modifier = Modifier
+            .align(Alignment.TopStart)
+            .padding(top = 40.dp, start = 32.dp)
     ) {
         Column {
             Title(
@@ -168,27 +171,30 @@ private enum class Sections(val title: String) {
 }
 
 @Composable
-private fun StackScope.CardContent(pokemon: Pokemon) {
-    Container(
-        modifier = LayoutGravity.TopCenter +
-            LayoutPadding(top = 300.dp)
+private fun BoxScope.CardContent(pokemon: Pokemon) {
+    Box(
+        modifier = Modifier
+            .align(Alignment.TopCenter)
+            .padding(top = 300.dp)
     ) {
-        Surface(shape = RoundedCornerShape(topLeft = 32.dp, topRight = 32.dp)) {
-            Column(modifier = LayoutWidth.Fill + LayoutHeight.Fill) {
+        Surface(shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)) {
+            Column(modifier = Modifier.fillMaxSize()) {
 
-                Spacer(modifier = LayoutHeight(32.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
                 val sectionTitles = Sections.values().map { it.title }
-                var section by state { Sections.BaseStats }
-                TabRow(items = sectionTitles, selectedIndex = section.ordinal) { index, text ->
-                    Tab(
-                        text = { Text(text) },
-                        selected = section.ordinal == index,
-                        onSelected = { section = Sections.values()[index] }
-                    )
+                var section by remember { mutableStateOf(Sections.BaseStats) }
+                TabRow(selectedTabIndex = section.ordinal) { 
+                    sectionTitles.forEachIndexed { index, text ->
+                        Tab(
+                            text = { Text(text) },
+                            selected = section.ordinal == index,
+                            onClick = { section = Sections.values()[index] }
+                        )
+                    }
                 }
 
-                Container(modifier = LayoutPadding(24.dp)) {
+                Box(modifier = Modifier.padding(24.dp)) {
                     when (section) {
                         Sections.About -> AboutSection(pokemon)
                         Sections.BaseStats -> BaseStatsSection(pokemon)
@@ -202,12 +208,13 @@ private fun StackScope.CardContent(pokemon: Pokemon) {
 }
 
 @Composable
-private fun StackScope.PokemonImage(pokemon: Pokemon) {
+private fun BoxScope.PokemonImage(pokemon: Pokemon) {
     pokemon.image?.let { image ->
-        Container(
-            modifier = LayoutGravity.TopCenter +
-                LayoutPadding(top = 140.dp) +
-                LayoutSize(200.dp)
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 140.dp)
+                .size(200.dp)
         ) {
             LoadImage(image)
         }
@@ -218,7 +225,7 @@ private fun StackScope.PokemonImage(pokemon: Pokemon) {
 @Preview
 @Composable
 private fun PreviewPokemonDetails() {
-    Container(expanded = true) {
+    Box {
         PokemonDetails.Content(pokemons.first())
     }
 }

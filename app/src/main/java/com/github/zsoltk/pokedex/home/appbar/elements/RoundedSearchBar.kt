@@ -1,53 +1,46 @@
 package com.github.zsoltk.pokedex.home.appbar.elements
 
-import androidx.compose.Composable
-import androidx.ui.core.Alignment
-import androidx.ui.core.Text
-import androidx.ui.foundation.Image
-import androidx.ui.foundation.shape.corner.RoundedCornerShape
-import androidx.ui.layout.Container
-import androidx.ui.layout.LayoutGravity
-import androidx.ui.layout.LayoutPadding
-import androidx.ui.layout.LayoutWidth
-import androidx.ui.layout.Row
-import androidx.ui.material.MaterialTheme
-import androidx.ui.material.Surface
-import androidx.ui.res.imageResource
-import androidx.ui.tooling.preview.Preview
-import androidx.ui.unit.dp
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.github.zsoltk.pokedex.R
 
 @Preview
 @Composable
 fun RoundedSearchBar() {
     Surface(
-        color = MaterialTheme.colors().background,
-        shape = RoundedCornerShape(24.dp)
+        color = MaterialTheme.colors.background,
+        shape = RoundedCornerShape(24.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp)
     ) {
-        Container(
-            height = 48.dp,
-            modifier = LayoutPadding(start = 16.dp, end = 16.dp)
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(modifier = LayoutWidth.Fill) {
-                Container(
-                    modifier = LayoutGravity.Center,
-                    alignment = Alignment.CenterStart,
-                    width = 24.dp, height = 24.dp
-                ) {
-                    Image(
-                        image = imageResource(
-                            R.drawable.search
-                        )
-                    )
-                }
-                Container(
-                    modifier = LayoutWeight(1f) + LayoutGravity.Center +
-                        LayoutPadding(start = 16.dp, end = 16.dp),
-                    alignment = Alignment.CenterStart
-                ) {
-                    Text("Search Pokemon, Move, Ability, etc")
-                }
-            }
+            Image(
+                painter = painterResource(id = R.drawable.search),
+                contentDescription = "Search icon"
+            )
+            Text(
+                text = "Search Pokemon, Move, Ability, etc",
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .weight(1f)
+            )
         }
     }
 }

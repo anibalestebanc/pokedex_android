@@ -1,24 +1,26 @@
 package com.github.zsoltk.pokedex.home.appbar.elements
 
-import androidx.compose.Composable
-import androidx.ui.core.Alignment
-import androidx.ui.core.Text
-import androidx.ui.foundation.Clickable
-import androidx.ui.foundation.shape.corner.RoundedCornerShape
-import androidx.ui.graphics.Color
-import androidx.ui.layout.Container
-import androidx.ui.layout.LayoutGravity
-import androidx.ui.layout.LayoutHeight
-import androidx.ui.layout.LayoutOffset
-import androidx.ui.layout.LayoutPadding
-import androidx.ui.layout.LayoutWidth
-import androidx.ui.layout.Stack
-import androidx.ui.material.MaterialTheme
-import androidx.ui.material.ripple.Ripple
-import androidx.ui.material.Surface
-import androidx.ui.res.colorResource
-import androidx.ui.tooling.preview.Preview
-import androidx.ui.unit.dp
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.github.zsoltk.pokedex.common.PokeBallSmall
 import com.github.zsoltk.pokedex.common.TableRenderer
 import com.github.zsoltk.pokedex.home.Home.MenuItem
@@ -50,47 +52,50 @@ fun Menu(onMenuItemSelected: (MenuItem) -> Unit) {
 fun MenuItemButton(text: String, color: Color, onClick: () -> Unit = {}) {
     Surface(
         color = color,
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier.clickable(
+            onClick = onClick,
+            indication = rememberRipple(),
+            interactionSource = remember { MutableInteractionSource() }
+        )
     ) {
-        Ripple(bounded = true) {
-            Clickable(onClick) {
-                Stack(
-                    modifier = LayoutHeight(64.dp) + LayoutWidth.Fill
-                ) {
-                    Text(
-                        modifier = LayoutGravity.CenterStart + LayoutPadding(start = 16.dp),
-                        text = text,
-                        style = MaterialTheme.typography().body1.copy(
-                            color = Color.White
-                        )
-                    )
+        Box(
+            modifier = Modifier
+                .height(64.dp)
+                .fillMaxWidth()
+        ) {
+            Text(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(start = 16.dp),
+                text = text,
+                style = MaterialTheme.typography.body1.copy(
+                    color = Color.White
+                )
+            )
 
-                    Container(
-                        alignment = Alignment.TopStart,
-                        modifier = LayoutOffset(x = (-30).dp, y = (-40).dp),
-                        expanded = true
-                    ) {
-                        Container(width = 60.dp, height = 60.dp) {
-                            PokeBallSmall(
-                                Color.White,
-                                0.15f
-                            )
-                        }
-                    }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .offset(x = (-30).dp, y = (-40).dp)
+                    .size(60.dp),
+            ) {
+                PokeBallSmall(
+                    Color.White,
+                    0.15f
+                )
+            }
 
-                    Container(
-                        alignment = Alignment.TopEnd,
-                        modifier = LayoutOffset(x = 20.dp, y = 0.dp),
-                        expanded = true
-                    ) {
-                        Container(width = 96.dp, height = 96.dp) {
-                            PokeBallSmall(
-                                Color.White,
-                                0.15f
-                            )
-                        }
-                    }
-                }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = 20.dp, y = 0.dp)
+                    .size(96.dp)
+            ) {
+                PokeBallSmall(
+                    Color.White,
+                    0.15f
+                )
             }
         }
     }

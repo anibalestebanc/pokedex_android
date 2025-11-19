@@ -1,17 +1,17 @@
 package com.github.zsoltk.pokedex.pokedex.section
 
-import androidx.compose.Composable
-import androidx.ui.core.Text
-import androidx.ui.graphics.Color
-import androidx.ui.layout.Container
-import androidx.ui.layout.LayoutPadding
-import androidx.ui.layout.Table
-import androidx.ui.layout.TableColumnWidth
-import androidx.ui.material.LinearProgressIndicator
-import androidx.ui.material.MaterialTheme
-import androidx.ui.res.colorResource
-import androidx.ui.text.font.FontWeight
-import androidx.ui.unit.dp
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.github.zsoltk.pokedex.R
 import com.github.zsoltk.pokedex.entity.Pokemon
 
@@ -42,40 +42,30 @@ fun BaseStatsSection(pokemon: Pokemon) {
 
 @Composable
 private fun StatsTable(stats: List<Stat>) {
-    Table(
-        columns = 3,
-        columnWidth = { columnIndex ->
-            when (columnIndex) {
-                0 -> TableColumnWidth.Wrap
-                1 -> TableColumnWidth.Wrap
-                else -> TableColumnWidth.Fraction(fraction = 0.6f)
-            }
-        }
-    ) {
-        stats.forEach {
-            tableRow {
+    Column {
+        stats.forEach { stat ->
+            Row(modifier = Modifier.padding(bottom = 8.dp)) {
                 Text(
-                    text = it.label,
-                    modifier = LayoutPadding(end = 16.dp, bottom = 8.dp),
-                    style = MaterialTheme.typography().body2.copy(
-                        color = colorResource(R.color.grey_900)
+                    text = stat.label,
+                    modifier = Modifier.weight(0.3f),
+                    style = MaterialTheme.typography.body2.copy(
+                        color = colorResource(id = R.color.grey_900)
                     )
                 )
 
                 Text(
-                    text = it.value.toString(),
-                    modifier = LayoutPadding(end = 16.dp, bottom = 8.dp),
-                    style = MaterialTheme.typography().body2.copy(
+                    text = stat.value.toString(),
+                    modifier = Modifier.weight(0.2f),
+                    style = MaterialTheme.typography.body2.copy(
                         fontWeight = FontWeight.Bold
                     )
                 )
 
-                Container(modifier = LayoutPadding(top = 8.dp)) {
-                    LinearProgressIndicator(
-                        progress = it.progress,
-                        color = Color.Red
-                    )
-                }
+                LinearProgressIndicator(
+                    progress = stat.progress,
+                    modifier = Modifier.weight(0.5f).padding(top = 8.dp),
+                    color = Color.Red
+                )
             }
         }
     }

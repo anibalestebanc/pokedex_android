@@ -1,20 +1,20 @@
 package com.github.zsoltk.pokedex.common
 
-import androidx.compose.Composable
-import androidx.ui.core.Text
-import androidx.ui.foundation.shape.corner.RoundedCornerShape
-import androidx.ui.graphics.Color
-import androidx.ui.layout.LayoutHeight
-import androidx.ui.layout.LayoutPadding
-import androidx.ui.layout.LayoutWidth
-import androidx.ui.layout.Spacer
-import androidx.ui.material.Surface
-import androidx.ui.res.colorResource
-import androidx.ui.text.TextStyle
-import androidx.ui.unit.Dp
-import androidx.ui.unit.TextUnit
-import androidx.ui.unit.dp
-import androidx.ui.unit.sp
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.github.zsoltk.pokedex.R
 import com.github.zsoltk.pokedex.appFontFamily
 
@@ -40,7 +40,7 @@ fun PokemonTypeLabels(types: List<String>?, metrics: TypeLabelMetrics) {
         ) {
             PokemonTypeLabel(it, metrics)
         }
-        Spacer(modifier = LayoutWidth(metrics.elementSpacing) + LayoutHeight(metrics.elementSpacing))
+        Spacer(modifier = Modifier.size(metrics.elementSpacing))
     }
 }
 
@@ -48,7 +48,7 @@ fun PokemonTypeLabels(types: List<String>?, metrics: TypeLabelMetrics) {
 fun PokemonTypeLabel(text: String, metrics: TypeLabelMetrics) {
     Text(
         text = text,
-        modifier = LayoutPadding(
+        modifier = Modifier.padding(
             start = metrics.horizontalPadding,
             end = metrics.horizontalPadding,
             top = metrics.verticalPadding,
@@ -57,7 +57,7 @@ fun PokemonTypeLabel(text: String, metrics: TypeLabelMetrics) {
         style = TextStyle(
             fontFamily = appFontFamily,
             fontSize = metrics.fontSize,
-            color = colorResource(R.color.white_1000)
+            color = colorResource(id = R.color.white_1000)
         )
     )
 }

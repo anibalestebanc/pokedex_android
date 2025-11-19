@@ -1,48 +1,35 @@
 package com.github.zsoltk.pokedex.common
 
-import androidx.animation.FloatPropKey
-import androidx.animation.Infinite
-import androidx.animation.LinearEasing
-import androidx.animation.transitionDefinition
-import androidx.compose.Composable
-import androidx.ui.animation.Transition
-import androidx.ui.core.Draw
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Box
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 
-private val rotation = FloatPropKey()
+@Composable
+fun RotateIndefinitely(durationPerRotation: Int, content: @Composable () -> Unit) {
+    val infiniteTransition = rememberInfiniteTransition()
+    val angle by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = durationPerRotation, easing = LinearEasing)
+        )
+    )
 
-private fun createDefinition(duration: Int) = transitionDefinition {
-    state(0) { this[rotation] = 0f }
-    state(1) { this[rotation] = 360f }
-
-    transition {
-        rotation using repeatable {
-            animation = tween {
-                easing = LinearEasing
-                this.duration = duration
-            }
-            iterations = Infinite
-        }
+    Rotate(degree = angle) {
+        content()
     }
 }
 
 @Composable
-fun RotateIndefinitely(durationPerRotation: Int, children: @Composable() () -> Unit) {
-    Transition(definition = createDefinition(durationPerRotation), initState = 0, toState = 1) {
-        Rotate(it[rotation], children)
-    }
-}
-
-@Composable
-fun Rotate(degree: Float, children: @Composable() () -> Unit) {
-    Draw(children = children) { canvas, parent ->
-        val halfWidth = parent.width.value / 2
-        val halfHeight = parent.height.value / 2
-
-        canvas.save()
-        canvas.translate(halfWidth, halfHeight)
-        canvas.rotate(degree)
-        canvas.translate(-halfWidth, -halfHeight)
-        drawChildren()
-        canvas.restore()
+fun Rotate(degree: Float, content: @Composable () -> Unit) {
+    Box(modifier = Modifier.graphicsLayer(rotationZ = degree)) {
+        content()
     }
 }
