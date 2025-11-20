@@ -1,11 +1,11 @@
 package com.github.zsoltk.pokedex
 
-import androidx.compose.material.lightColors
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
-val lightThemeColors = lightColors(
+val lightThemeColors = lightColorScheme(
     primary = Color.White,
-    primaryVariant = Color(0xFFC20029),
+    primaryContainer = Color(0xFFC20029),
     onPrimary = Color.Black,
     secondary = Color.White,
     onSecondary = Color.Black,

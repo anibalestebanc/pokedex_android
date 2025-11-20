@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -56,7 +56,7 @@ private fun NewsImage() {
 private fun NewsTitle(text: String) {
     Text(
         text = text,
-        style = MaterialTheme.typography.body2.copy(
+        style = MaterialTheme.typography.bodyMedium.copy(
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.grey_900)
         ),
@@ -69,7 +69,7 @@ private fun NewsTitle(text: String) {
 private fun NewsPublishedDate(text: String) {
     Text(
         text = text,
-        style = MaterialTheme.typography.overline.copy(
+        style = MaterialTheme.typography.labelSmall.copy(
             color = colorResource(id = R.color.grey_500)
         )
     )

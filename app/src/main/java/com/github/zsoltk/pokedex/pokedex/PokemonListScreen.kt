@@ -14,10 +14,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -59,16 +59,16 @@ fun PokemonListScreen(onPokemonSelected: (Pokemon) -> Unit) {
     val asyncState by liveData.observeAsState(AsyncState.Initialised())
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Surface(color = MaterialTheme.colors.surface) {
+        Surface(color = MaterialTheme.colorScheme.surface) {
             PokeBallBackground()
         }
 
-        Crossfade(targetState = asyncState) { state ->
-            when (state) {
+        Crossfade(targetState = asyncState, label = "") {
+            when (it) {
                 is AsyncState.Initialised,
                 is AsyncState.Loading -> LoadingView()
                 is AsyncState.Error -> ErrorView(onRetryClicked = { liveData.reload() })
-                is AsyncState.Result -> ContentView(state.result, onPokemonSelected)
+                is AsyncState.Result -> ContentView(it.result, onPokemonSelected)
             }
         }
     }
@@ -96,7 +96,7 @@ private fun ErrorView(onRetryClicked: () -> Unit) {
                     append("There's a $errorRatio% chance of a simulated error.\nNow it happened.")
                     addStyle(ParagraphStyle(textAlign = TextAlign.Center), 0, length)
                 },
-                style = MaterialTheme.typography.body1.copy(
+                style = MaterialTheme.typography.bodyLarge.copy(
                     color = colorResource(id = R.color.poke_red)
                 ),
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -117,7 +117,7 @@ private fun ContentView(pokemons: List<Pokemon>, onPokemonSelected: (Pokemon) ->
     ) {
         Title(
             text = "Pokedex",
-            color = MaterialTheme.colors.onSurface,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(
                 top = 64.dp,
                 bottom = 24.dp
@@ -210,7 +210,7 @@ private fun PokemonId(text: String?) {
 @Preview
 @Composable
 private fun PreviewPokemonCard() {
-    MaterialTheme(lightThemeColors) {
+    MaterialTheme(colorScheme = lightThemeColors) {
         PokeDexCard(pokemon = pokemons.first(), onPokemonSelected = {})
     }
 }

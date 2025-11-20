@@ -11,10 +11,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Surface
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.Text
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -177,19 +177,19 @@ private fun BoxScope.CardContent(pokemon: Pokemon) {
                 Spacer(modifier = Modifier.height(32.dp))
 
                 val sectionTitles = Sections.values().map { it.title }
-                var section by remember { mutableStateOf(Sections.BaseStats) }
-                TabRow(selectedTabIndex = section.ordinal) {
+                var selectedTabIndex by remember { mutableStateOf(Sections.BaseStats.ordinal) }
+                TabRow(selectedTabIndex = selectedTabIndex) {
                     sectionTitles.forEachIndexed { index, text ->
                         Tab(
                             text = { Text(text) },
-                            selected = section.ordinal == index,
-                            onClick = { section = Sections.values()[index] }
+                            selected = selectedTabIndex == index,
+                            onClick = { selectedTabIndex = index }
                         )
                     }
                 }
 
                 Box(modifier = Modifier.padding(24.dp)) {
-                    when (section) {
+                    when (Sections.values()[selectedTabIndex]) {
                         Sections.About -> AboutSection(pokemon)
                         Sections.BaseStats -> BaseStatsSection(pokemon)
                         Sections.Evolution -> EvolutionSection(pokemon)

@@ -1,6 +1,6 @@
 package com.github.zsoltk.pokedex
 
-import androidx.compose.material.Typography
+import androidx.compose.material3.Typography
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -14,17 +14,17 @@ val appFontFamily = FontFamily(
 
 private val defaultTypography = Typography()
 val themeTypography = Typography(
-    h1 = defaultTypography.h1.copy(fontFamily = appFontFamily),
-    h2 = defaultTypography.h2.copy(fontFamily = appFontFamily),
-    h3 = defaultTypography.h3.copy(fontFamily = appFontFamily),
-    h4 = defaultTypography.h4.copy(fontFamily = appFontFamily),
-    h5 = defaultTypography.h5.copy(fontFamily = appFontFamily),
-    h6 = defaultTypography.h6.copy(fontFamily = appFontFamily),
-    subtitle1 = defaultTypography.subtitle1.copy(fontFamily = appFontFamily),
-    subtitle2 = defaultTypography.subtitle2.copy(fontFamily = appFontFamily),
-    body1 = defaultTypography.body1.copy(fontFamily = appFontFamily),
-    body2 = defaultTypography.body2.copy(fontFamily = appFontFamily),
-    button = defaultTypography.button.copy(fontFamily = appFontFamily),
-    caption = defaultTypography.caption.copy(fontFamily = appFontFamily),
-    overline = defaultTypography.overline.copy(fontFamily = appFontFamily)
+    displayLarge = defaultTypography.displayLarge.copy(fontFamily = appFontFamily),
+    displayMedium = defaultTypography.displayMedium.copy(fontFamily = appFontFamily),
+    displaySmall = defaultTypography.displaySmall.copy(fontFamily = appFontFamily),
+    headlineLarge = defaultTypography.headlineLarge.copy(fontFamily = appFontFamily),
+    headlineMedium = defaultTypography.headlineMedium.copy(fontFamily = appFontFamily),
+    headlineSmall = defaultTypography.headlineSmall.copy(fontFamily = appFontFamily),
+    titleLarge = defaultTypography.titleLarge.copy(fontFamily = appFontFamily),
+    titleMedium = defaultTypography.titleMedium.copy(fontFamily = appFontFamily),
+    bodyLarge = defaultTypography.bodyLarge.copy(fontFamily = appFontFamily),
+    bodyMedium = defaultTypography.bodyMedium.copy(fontFamily = appFontFamily),
+    labelLarge = defaultTypography.labelLarge.copy(fontFamily = appFontFamily),
+    bodySmall = defaultTypography.bodySmall.copy(fontFamily = appFontFamily),
+    labelSmall = defaultTypography.labelSmall.copy(fontFamily = appFontFamily)
 )

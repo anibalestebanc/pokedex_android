@@ -3,9 +3,9 @@ package com.github.zsoltk.pokedex.pokedex.section
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.LinearProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,7 +48,7 @@ private fun StatsTable(stats: List<Stat>) {
                 Text(
                     text = stat.label,
                     modifier = Modifier.weight(0.3f),
-                    style = MaterialTheme.typography.body2.copy(
+                    style = MaterialTheme.typography.bodyMedium.copy(
                         color = colorResource(id = R.color.grey_900)
                     )
                 )
@@ -56,7 +56,7 @@ private fun StatsTable(stats: List<Stat>) {
                 Text(
                     text = stat.value.toString(),
                     modifier = Modifier.weight(0.2f),
-                    style = MaterialTheme.typography.body2.copy(
+                    style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.Bold
                     )
                 )
@@ -64,7 +64,7 @@ private fun StatsTable(stats: List<Stat>) {
                 LinearProgressIndicator(
                     progress = stat.progress,
                     modifier = Modifier.weight(0.5f).padding(top = 8.dp),
-                    color = Color.Red
+                    trackColor = Color.Red
                 )
             }
         }
