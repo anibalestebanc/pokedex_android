@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import com.github.zsoltk.pokedex.navigation.AppNavHost
+import com.github.zsoltk.pokedex.navigation.rememberAppState
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,21 +14,11 @@ class MainActivity : AppCompatActivity() {
         setContent {
             MaterialTheme(
                 colors = lightThemeColors,
-                typography = themeTypography
+                typography = themeTypography,
             ) {
-                Root.Content()
+                val appState = rememberAppState()
+                AppNavHost(appState)
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun DefaultPreview() {
-    MaterialTheme(
-        colors = lightThemeColors,
-        typography = themeTypography
-    ) {
-        Root.Content()
     }
 }

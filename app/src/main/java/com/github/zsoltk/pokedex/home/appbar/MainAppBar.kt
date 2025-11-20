@@ -11,13 +11,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.zsoltk.pokedex.common.PokeBallBackground
 import com.github.zsoltk.pokedex.common.Title
-import com.github.zsoltk.pokedex.home.Home
+import com.github.zsoltk.pokedex.home.MenuItem
 import com.github.zsoltk.pokedex.home.appbar.elements.LargeAppBar
 import com.github.zsoltk.pokedex.home.appbar.elements.Menu
 import com.github.zsoltk.pokedex.home.appbar.elements.RoundedSearchBar
 
 @Composable
-fun MainAppBar(onMenuItemSelected: (Home.MenuItem) -> Unit) {
+fun MainAppBar(onMenuItemSelected: (MenuItem) -> Unit) {
     LargeAppBar(background = { PokeBallBackground() }) {
         Column(
             modifier = Modifier.padding(

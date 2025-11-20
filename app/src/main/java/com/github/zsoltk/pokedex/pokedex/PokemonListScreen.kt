@@ -3,7 +3,6 @@ package com.github.zsoltk.pokedex.pokedex
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +18,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -55,27 +53,22 @@ import com.github.zsoltk.pokedex.entity.color
 import com.github.zsoltk.pokedex.entity.pokemons
 import com.github.zsoltk.pokedex.lightThemeColors
 
-interface PokemonList {
+@Composable
+fun PokemonListScreen(onPokemonSelected: (Pokemon) -> Unit) {
+    val liveData = remember { PokemonLiveData() }
+    val asyncState by liveData.observeAsState(AsyncState.Initialised())
 
-    companion object {
-        @Composable
-        fun Content(onPokemonSelected: (Pokemon) -> Unit) {
-            val liveData = remember { PokemonLiveData() }
-            val asyncState by liveData.observeAsState(AsyncState.Initialised())
+    Box(modifier = Modifier.fillMaxSize()) {
+        Surface(color = MaterialTheme.colors.surface) {
+            PokeBallBackground()
+        }
 
-            Box(modifier = Modifier.fillMaxSize()) {
-                Surface(color = MaterialTheme.colors.surface) {
-                    PokeBallBackground()
-                }
-
-                Crossfade(targetState = asyncState) { state ->
-                    when (state) {
-                        is AsyncState.Initialised,
-                        is AsyncState.Loading -> LoadingView()
-                        is AsyncState.Error -> ErrorView(onRetryClicked = { liveData.reload() })
-                        is AsyncState.Result -> ContentView(state.result, onPokemonSelected)
-                    }
-                }
+        Crossfade(targetState = asyncState) { state ->
+            when (state) {
+                is AsyncState.Initialised,
+                is AsyncState.Loading -> LoadingView()
+                is AsyncState.Error -> ErrorView(onRetryClicked = { liveData.reload() })
+                is AsyncState.Result -> ContentView(state.result, onPokemonSelected)
             }
         }
     }

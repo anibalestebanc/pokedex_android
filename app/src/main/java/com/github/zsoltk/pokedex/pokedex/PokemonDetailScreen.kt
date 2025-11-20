@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -47,22 +46,17 @@ import com.github.zsoltk.pokedex.pokedex.section.BaseStatsSection
 import com.github.zsoltk.pokedex.pokedex.section.EvolutionSection
 import com.github.zsoltk.pokedex.pokedex.section.MovesSection
 
-interface PokemonDetails {
-
-    companion object {
-        @Composable
-        fun Content(pokemon: Pokemon) {
-            Surface(color = colorResource(id = pokemon.color())) {
-                Box {
-                    RoundedRectangleDecoration()
-                    DottedDecoration()
-                    RotatingPokeBall()
-                    HeaderLeft(pokemon)
-                    HeaderRight(pokemon)
-                    CardContent(pokemon)
-                    PokemonImage(pokemon)
-                }
-            }
+@Composable
+fun PokemonDetails(pokemon: Pokemon) {
+    Surface(color = colorResource(id = pokemon.color())) {
+        Box {
+            RoundedRectangleDecoration()
+            DottedDecoration()
+            RotatingPokeBall()
+            HeaderLeft(pokemon)
+            HeaderRight(pokemon)
+            CardContent(pokemon)
+            PokemonImage(pokemon)
         }
     }
 }
@@ -184,7 +178,7 @@ private fun BoxScope.CardContent(pokemon: Pokemon) {
 
                 val sectionTitles = Sections.values().map { it.title }
                 var section by remember { mutableStateOf(Sections.BaseStats) }
-                TabRow(selectedTabIndex = section.ordinal) { 
+                TabRow(selectedTabIndex = section.ordinal) {
                     sectionTitles.forEachIndexed { index, text ->
                         Tab(
                             text = { Text(text) },
@@ -226,6 +220,6 @@ private fun BoxScope.PokemonImage(pokemon: Pokemon) {
 @Composable
 private fun PreviewPokemonDetails() {
     Box {
-        PokemonDetails.Content(pokemons.first())
+        PokemonDetails(pokemons.first())
     }
 }
