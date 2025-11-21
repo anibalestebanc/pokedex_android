@@ -12,9 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -164,7 +164,7 @@ private fun BoxScope.CardContent(pokemon: Pokemon) {
             Column(modifier = Modifier.fillMaxSize()) {
 
                 Spacer(modifier = Modifier.height(32.dp))
-                TabRow(selectedTabIndex = selectedTab.ordinal) {
+                SecondaryTabRow (selectedTabIndex = selectedTab.ordinal) {
                     sectionTitles.forEachIndexed { index, text ->
                         Tab(
                             selected = selectedTab.ordinal == index,

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -62,9 +63,11 @@ private fun StatsTable(stats: List<Stat>) {
                 )
 
                 LinearProgressIndicator(
-                    progress = stat.progress,
+                    progress = { stat.progress },
                     modifier = Modifier.weight(0.5f).padding(top = 8.dp),
-                    trackColor = Color.Red
+                    color = ProgressIndicatorDefaults.linearColor,
+                    trackColor = Color.Red,
+                    strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
                 )
             }
         }
