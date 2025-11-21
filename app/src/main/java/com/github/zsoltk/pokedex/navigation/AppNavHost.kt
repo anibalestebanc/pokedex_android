@@ -5,11 +5,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.github.zsoltk.pokedex.entity.pokemons
-import com.github.zsoltk.pokedex.home.HomeScreen
-import com.github.zsoltk.pokedex.home.MenuItem
-import com.github.zsoltk.pokedex.pokedex.PokemonDetails
-import com.github.zsoltk.pokedex.pokedex.PokemonListScreen
+import com.github.zsoltk.pokedex.domain.model.pokemons
+import com.github.zsoltk.pokedex.ui.home.HomeScreen
+import com.github.zsoltk.pokedex.ui.home.MenuItem
+import com.github.zsoltk.pokedex.ui.pokemondetail.PokemonDetails
+import com.github.zsoltk.pokedex.ui.pokemonlist.PokemonListScreen
 
 @Composable
 fun AppNavHost(appState: AppState) {
