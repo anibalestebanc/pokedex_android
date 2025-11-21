@@ -29,15 +29,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.ParagraphStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.github.zsoltk.pokedex.R
-import com.github.zsoltk.pokedex.appFontFamily
 import com.github.zsoltk.pokedex.common.AsyncState
 import com.github.zsoltk.pokedex.common.PokeBallBackground
 import com.github.zsoltk.pokedex.common.PokeBallSmall
@@ -51,7 +48,7 @@ import com.github.zsoltk.pokedex.entity.PokemonApi
 import com.github.zsoltk.pokedex.entity.PokemonLiveData
 import com.github.zsoltk.pokedex.entity.color
 import com.github.zsoltk.pokedex.entity.pokemons
-import com.github.zsoltk.pokedex.lightThemeColors
+import com.github.zsoltk.pokedex.theme.PokeAppTheme
 
 @Composable
 fun PokemonListScreen(onPokemonSelected: (Pokemon) -> Unit) {
@@ -184,11 +181,8 @@ private fun PokeDexCardContent(pokemon: Pokemon) {
 private fun PokemonName(text: String?) {
     Text(
         text = text ?: "",
-        style = TextStyle(
-            fontFamily = appFontFamily,
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp,
-            color = colorResource(id = R.color.white_1000)
+        style =   MaterialTheme.typography.bodyLarge.copy(
+            fontWeight =  FontWeight.Bold
         ),
         modifier = Modifier.padding(bottom = 8.dp)
     )
@@ -199,10 +193,8 @@ private fun PokemonId(text: String?) {
     Text(
         text = text ?: "",
         modifier = Modifier.alpha(0.1f),
-        style = TextStyle(
-            fontFamily = appFontFamily,
+        style =  MaterialTheme.typography.bodyMedium.copy(
             fontWeight = FontWeight.Bold,
-            fontSize = 14.sp
         )
     )
 }
@@ -210,7 +202,7 @@ private fun PokemonId(text: String?) {
 @Preview
 @Composable
 private fun PreviewPokemonCard() {
-    MaterialTheme(colorScheme = lightThemeColors) {
+    PokeAppTheme {
         PokeDexCard(pokemon = pokemons.first(), onPokemonSelected = {})
     }
 }
