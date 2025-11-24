@@ -49,11 +49,32 @@ import com.github.zsoltk.pokedex.ui.PokemonLiveData
 import com.github.zsoltk.pokedex.domain.model.color
 import com.github.zsoltk.pokedex.domain.model.pokemons
 import com.github.zsoltk.pokedex.theme.PokeAppTheme
+import org.koin.androidx.compose.koinViewModel
+
 
 @Composable
-fun PokemonListScreen(onPokemonSelected: (Pokemon) -> Unit) {
+fun PokemonListRoute(
+    onBackClick: () -> Unit,
+    onPokemonDetailClick: (String) -> Unit,
+    viewModel: PokemonListViewModel = koinViewModel(),
+) {
     val liveData = remember { PokemonLiveData() }
     val asyncState by liveData.observeAsState(AsyncState.Initialised())
+    PokemonListScreen(
+        onPokemonSelected = { pokemon ->
+            onPokemonDetailClick(pokemon.name ?: "")
+        },
+        asyncState = asyncState,
+        reloaded = { liveData.reload() },
+    )
+}
+
+@Composable
+fun PokemonListScreen(
+    onPokemonSelected: (Pokemon) -> Unit,
+    asyncState: AsyncState<List<Pokemon>>,
+    reloaded: () -> Unit,
+) {
 
     Box(modifier = Modifier.fillMaxSize()) {
         Surface(color = MaterialTheme.colorScheme.surface) {
@@ -63,8 +84,10 @@ fun PokemonListScreen(onPokemonSelected: (Pokemon) -> Unit) {
         Crossfade(targetState = asyncState, label = "") {
             when (it) {
                 is AsyncState.Initialised,
-                is AsyncState.Loading -> LoadingView()
-                is AsyncState.Error -> ErrorView(onRetryClicked = { liveData.reload() })
+                is AsyncState.Loading,
+                    -> LoadingView()
+
+                is AsyncState.Error -> ErrorView(onRetryClicked = { reloaded() })
                 is AsyncState.Result -> ContentView(it.result, onPokemonSelected)
             }
         }
@@ -94,9 +117,9 @@ private fun ErrorView(onRetryClicked: () -> Unit) {
                     addStyle(ParagraphStyle(textAlign = TextAlign.Center), 0, length)
                 },
                 style = MaterialTheme.typography.bodyLarge.copy(
-                    color = colorResource(id = R.color.poke_red)
+                    color = colorResource(id = R.color.poke_red),
                 ),
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             Button(onClick = onRetryClicked) {
                 Text("Retry")
@@ -110,15 +133,15 @@ private fun ContentView(pokemons: List<Pokemon>, onPokemonSelected: (Pokemon) ->
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
-            .padding(32.dp)
+            .padding(32.dp),
     ) {
         Title(
             text = "Pokedex",
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(
                 top = 64.dp,
-                bottom = 24.dp
-            )
+                bottom = 24.dp,
+            ),
         )
         TableRenderer(cols = 2, cellSpacing = 4.dp, items = pokemons) { cell ->
             PokeDexCard(cell.item, onPokemonSelected)
@@ -129,12 +152,12 @@ private fun ContentView(pokemons: List<Pokemon>, onPokemonSelected: (Pokemon) ->
 @Composable
 fun PokeDexCard(
     pokemon: Pokemon,
-    onPokemonSelected: (Pokemon) -> Unit
+    onPokemonSelected: (Pokemon) -> Unit,
 ) {
     Surface(
         color = colorResource(id = pokemon.color()),
         shape = RoundedCornerShape(16.dp),
-        modifier = Modifier.clickable{onPokemonSelected(pokemon) }
+        modifier = Modifier.clickable { onPokemonSelected(pokemon) },
     ) {
         PokeDexCardContent(pokemon)
     }
@@ -142,13 +165,25 @@ fun PokeDexCard(
 
 @Composable
 private fun PokeDexCardContent(pokemon: Pokemon) {
-    Box(modifier = Modifier.height(120.dp).fillMaxWidth()) {
-        Column(modifier = Modifier.align(Alignment.TopStart).padding(top = 8.dp, start = 12.dp)) {
+    Box(
+        modifier = Modifier
+            .height(120.dp)
+            .fillMaxWidth(),
+    ) {
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(top = 8.dp, start = 12.dp),
+        ) {
             PokemonName(pokemon.name)
             PokemonTypeLabels(pokemon.typeOfPokemon, SMALL)
         }
 
-        Box(modifier = Modifier.align(Alignment.TopEnd).padding(top = 8.dp, end = 12.dp)) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 8.dp, end = 12.dp),
+        ) {
             PokemonId(pokemon.id)
         }
 
@@ -156,11 +191,11 @@ private fun PokeDexCardContent(pokemon: Pokemon) {
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .offset(x = 5.dp, y = 10.dp)
-                .size(96.dp)
+                .size(96.dp),
         ) {
             PokeBallSmall(
                 Color.White,
-                0.25f
+                0.25f,
             )
         }
 
@@ -169,7 +204,7 @@ private fun PokeDexCardContent(pokemon: Pokemon) {
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(bottom = 8.dp, end = 8.dp)
-                    .size(72.dp)
+                    .size(72.dp),
             ) {
                 Image(painter = painterResource(id = image), contentDescription = pokemon.name)
             }
@@ -181,10 +216,10 @@ private fun PokeDexCardContent(pokemon: Pokemon) {
 private fun PokemonName(text: String?) {
     Text(
         text = text ?: "",
-        style =   MaterialTheme.typography.bodyLarge.copy(
-            fontWeight =  FontWeight.Bold
+        style = MaterialTheme.typography.bodyLarge.copy(
+            fontWeight = FontWeight.Bold,
         ),
-        modifier = Modifier.padding(bottom = 8.dp)
+        modifier = Modifier.padding(bottom = 8.dp),
     )
 }
 
@@ -193,9 +228,9 @@ private fun PokemonId(text: String?) {
     Text(
         text = text ?: "",
         modifier = Modifier.alpha(0.1f),
-        style =  MaterialTheme.typography.bodyMedium.copy(
+        style = MaterialTheme.typography.bodyMedium.copy(
             fontWeight = FontWeight.Bold,
-        )
+        ),
     )
 }
 

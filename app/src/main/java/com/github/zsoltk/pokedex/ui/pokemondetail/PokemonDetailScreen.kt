@@ -39,9 +39,19 @@ import com.github.zsoltk.pokedex.ui.components.TypeLabelMetrics.Companion.MEDIUM
 import com.github.zsoltk.pokedex.domain.model.Pokemon
 import com.github.zsoltk.pokedex.domain.model.color
 import com.github.zsoltk.pokedex.domain.model.pokemons
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun PokemonDetails(pokemon: Pokemon) {
+fun PokemonDetailRoute(
+    onBackClick: () -> Unit,
+    pokemon: Pokemon,
+    viewModel: PokemonDetailViewModel = koinViewModel(),
+) {
+    PokemonDetail(pokemon)
+}
+
+@Composable
+fun PokemonDetail(pokemon: Pokemon) {
     Surface(color = colorResource(id = pokemon.color())) {
         Box {
             RoundedRectangleDecoration()
@@ -111,12 +121,12 @@ private fun BoxScope.HeaderRight(pokemon: Pokemon) {
                 text = pokemon.id ?: "",
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
-                )
+                ),
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = pokemon.category ?: "",
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
             )
         }
     }
@@ -164,7 +174,7 @@ private fun BoxScope.CardContent(pokemon: Pokemon) {
             Column(modifier = Modifier.fillMaxSize()) {
 
                 Spacer(modifier = Modifier.height(32.dp))
-                SecondaryTabRow (selectedTabIndex = selectedTab.ordinal) {
+                SecondaryTabRow(selectedTabIndex = selectedTab.ordinal) {
                     sectionTitles.forEachIndexed { index, text ->
                         Tab(
                             selected = selectedTab.ordinal == index,
@@ -205,6 +215,6 @@ private fun BoxScope.PokemonImage(pokemon: Pokemon) {
 @Composable
 private fun PreviewPokemonDetails() {
     Box {
-        PokemonDetails(pokemons.first())
+        PokemonDetail(pokemons.first())
     }
 }

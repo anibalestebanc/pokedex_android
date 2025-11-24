@@ -20,6 +20,4 @@ fun rememberAppState(
 class AppState(
     val coroutineScope: CoroutineScope,
     val navController: NavHostController,
-) {
-
-}
+)

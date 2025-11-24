@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.zsoltk.pokedex.ui.components.PokeBallSmall
 import com.github.zsoltk.pokedex.ui.components.TableRenderer
-import com.github.zsoltk.pokedex.ui.home.MenuItem
+import com.github.zsoltk.pokedex.ui.home.model.MenuItem
 
 @Composable
 fun Menu(onMenuItemSelected: (MenuItem) -> Unit) {

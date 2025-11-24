@@ -1,4 +1,4 @@
-package com.github.zsoltk.pokedex.ui.home
+package com.github.zsoltk.pokedex.ui.home.model
 
 import com.github.zsoltk.pokedex.R
 
