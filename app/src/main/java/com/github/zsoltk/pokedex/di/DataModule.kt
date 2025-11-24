@@ -3,6 +3,8 @@ package com.github.zsoltk.pokedex.di
 import androidx.room.Room
 import com.github.zsoltk.pokedex.core.database.PokemonDatabase
 import com.github.zsoltk.pokedex.core.network.RetrofitFactory
+import com.github.zsoltk.pokedex.data.datasource.local.PokemonCatalogLocalDataSource
+import com.github.zsoltk.pokedex.data.datasource.local.PrefsPokemonCatalogLocalDataSource
 import com.github.zsoltk.pokedex.data.datasource.remote.PokemonCatalogRemoteDatasource
 import com.github.zsoltk.pokedex.data.datasource.remote.RetrofitCatalogRemoteDataSource
 import com.github.zsoltk.pokedex.data.datasource.remote.api.PokemonApiV2
@@ -24,14 +26,16 @@ val dataModule = module {
     }
 
     //Api
-    factory <PokemonApiV2> {
+    factory<PokemonApiV2> {
         RetrofitFactory.createService(
             baseUrl = get(qualifier = named("default_base_url")),
             klass = PokemonApiV2::class.java,
         )
     }
+    //LocalDataSource
+    singleOf(::PrefsPokemonCatalogLocalDataSource) { bind<PokemonCatalogLocalDataSource>() }
 
-    //DataSource
+    //RemoteDataSource
     singleOf(::RetrofitCatalogRemoteDataSource) { bind<PokemonCatalogRemoteDatasource>() }
 
     //Repository

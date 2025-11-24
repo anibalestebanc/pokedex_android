@@ -79,6 +79,7 @@ dependencies {
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.android)
     implementation(libs.androidx.ui.text.google.fonts)
+    implementation(libs.androidx.work.runtime.ktx)
     testImplementation(libs.coroutines.test)
 
     // Koin
