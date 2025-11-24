@@ -109,8 +109,12 @@ dependencies {
     // Persistence (for future use)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
+    implementation(libs.room.paging)
     ksp(libs.room.compiler)
     implementation(libs.datastore.preferences)
+
+    // Paging
+    implementation(libs.androidx.paging.runtime)
 
     // Image Loading
     implementation(libs.coil)

@@ -22,6 +22,7 @@ fun HomeRoute(
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     LaunchedEffect(Unit) {
+        viewModel.onEvent(HomeEvent.OnStart)
         viewModel.effect.collect { effect ->
             when (effect) {
                 is HomeEffect.NavigateTo -> onPokemonListClick()

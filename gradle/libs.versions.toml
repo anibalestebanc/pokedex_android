@@ -29,6 +29,7 @@ rxandroid = "2.1.1"
 ktlint = "12.1.2"
 detekt = "1.23.7"
 ui-text-google-fonts = "1.9.5"
+paging-runtime = "3.3.6"
 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
@@ -75,7 +76,11 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-paging = { module = "androidx.room:room-paging", version.ref = "room" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+
+# Paging
+androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging-runtime" }
 
 # Image Loading
 coil = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
