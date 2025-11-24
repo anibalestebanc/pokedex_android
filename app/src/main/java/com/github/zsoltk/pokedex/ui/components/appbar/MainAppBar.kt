@@ -11,10 +11,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.zsoltk.pokedex.ui.components.PokeBallBackground
 import com.github.zsoltk.pokedex.ui.components.Title
+import com.github.zsoltk.pokedex.ui.home.HomeEvent
+import com.github.zsoltk.pokedex.ui.home.HomeUiState
 import com.github.zsoltk.pokedex.ui.home.model.MenuItem
 
 @Composable
-fun MainAppBar(onMenuItemSelected: (MenuItem) -> Unit) {
+fun MainAppBar(
+    state: HomeUiState,
+    onEvent: (HomeEvent) -> Unit,
+) {
     LargeAppBar(background = { PokeBallBackground() }) {
         Column(
             modifier = Modifier.padding(
@@ -30,11 +35,20 @@ fun MainAppBar(onMenuItemSelected: (MenuItem) -> Unit) {
                 modifier = Modifier.padding(
                     top = 64.dp,
                     bottom = 24.dp
-                )
+                ),
             )
-            RoundedSearchBar()
+            RoundedSearchFieldV2(
+                value = state.query,
+                onValueChange = { onEvent(HomeEvent.SearchQueryChanged(it)) },
+                onSearch = { onEvent(HomeEvent.SearchSubmitted) },
+            )
             Spacer(modifier = Modifier.height(32.dp))
-            Menu(onMenuItemSelected)
+            Menu(onMenuItemSelected = { menuItem ->
+                when (menuItem) {
+                    is MenuItem.Pokedex -> onEvent(HomeEvent.OpenPokedex)
+                    else -> Unit
+                }
+            })
         }
     }
 }
@@ -42,5 +56,5 @@ fun MainAppBar(onMenuItemSelected: (MenuItem) -> Unit) {
 @Preview
 @Composable
 fun PreviewMainAppBar() {
-    MainAppBar(onMenuItemSelected = {})
+    MainAppBar(onEvent = { }, state = HomeUiState())
 }

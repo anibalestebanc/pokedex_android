@@ -3,7 +3,7 @@ package com.github.zsoltk.pokedex.data.repository
 import androidx.room.withTransaction
 import com.github.zsoltk.pokedex.core.database.PokemonDatabase
 import com.github.zsoltk.pokedex.data.datasource.local.PokemonCatalogLocalDataSource
-import com.github.zsoltk.pokedex.data.datasource.mapper.toEntity
+import com.github.zsoltk.pokedex.data.mapper.toEntity
 import com.github.zsoltk.pokedex.data.datasource.remote.PokemonCatalogRemoteDatasource
 import com.github.zsoltk.pokedex.domain.repository.PokemonCatalogRepository
 import kotlinx.coroutines.Dispatchers

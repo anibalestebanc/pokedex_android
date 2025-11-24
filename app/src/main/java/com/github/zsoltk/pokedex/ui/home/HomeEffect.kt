@@ -1,7 +1,6 @@
 package com.github.zsoltk.pokedex.ui.home
 
-import com.github.zsoltk.pokedex.navigation.Route
-
 sealed class HomeEffect {
-    data class NavigateTo(val route: Route) : HomeEffect()
+    object NavigateToPokemonList : HomeEffect()
+    data class NavigateToSearch(val query: String) : HomeEffect()
 }

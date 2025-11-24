@@ -13,6 +13,9 @@ import com.github.zsoltk.pokedex.ui.pokemondetail.navigation.POKEMON_NAME_ARG
 import com.github.zsoltk.pokedex.ui.pokemondetail.navigation.navigateToPokemonDetail
 import com.github.zsoltk.pokedex.ui.pokemonlist.PokemonListRoute
 import com.github.zsoltk.pokedex.ui.pokemonlist.navigation.navigateToPokemonList
+import com.github.zsoltk.pokedex.ui.search.SearchRoute
+import com.github.zsoltk.pokedex.ui.search.navigation.SEARCH_QUERY_ARG
+import com.github.zsoltk.pokedex.ui.search.navigation.navigateToSearch
 
 @Composable
 fun AppNavHost(
@@ -32,6 +35,7 @@ fun AppNavHost(
             HomeRoute(
                 onBackClick = navController::popBackStack,
                 onPokemonListClick = navController::navigateToPokemonList,
+                onPokemonSearchClick = { navController.navigateToSearch(it) }
             )
         }
 
@@ -46,7 +50,7 @@ fun AppNavHost(
 
         composable(
             route = Route.PokemonDetail.route,
-            arguments = listOf(navArgument(POKEMON_NAME_ARG) { type = NavType.StringType })
+            arguments = listOf(navArgument(POKEMON_NAME_ARG) { type = NavType.StringType }),
         ) { backStackEntry ->
             val pokemonName: String = backStackEntry.arguments?.getString(POKEMON_NAME_ARG) ?: ""
             //TODO Get pokemon by Local
@@ -56,6 +60,20 @@ fun AppNavHost(
             PokemonDetailRoute(
                 onBackClick = navController::popBackStack,
                 pokemon = pokemon,
+            )
+        }
+
+        composable(
+            route = Route.Search.route,
+            arguments = listOf(navArgument(SEARCH_QUERY_ARG) { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val initialQuery = backStackEntry.arguments?.getString(SEARCH_QUERY_ARG).orEmpty()
+            SearchRoute(
+                initialQuery = initialQuery,
+                onBackClick = navController::popBackStack,
+                onDetailClick = { pokemonName ->
+                    navController.navigateToPokemonDetail(pokemonName)
+                }
             )
         }
     }
