@@ -7,7 +7,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.github.zsoltk.pokedex.domain.model.pokemons
 import com.github.zsoltk.pokedex.ui.home.HomeScreen
-import com.github.zsoltk.pokedex.ui.home.MenuItem
 import com.github.zsoltk.pokedex.ui.pokemondetail.PokemonDetails
 import com.github.zsoltk.pokedex.ui.pokemonlist.PokemonListScreen
 
@@ -20,10 +19,9 @@ fun AppNavHost(appState: AppState) {
 
         composable(Route.Home.route) {
             HomeScreen(
-                onMenuItemSelected = { menuItem ->
-                    when (menuItem) {
-                        MenuItem.Pokedex -> navController.navigate(Route.PokemonList.route)
-                        else -> {}
+                onNavigate = { route ->
+                    navController.navigate(route.route) {
+                        launchSingleTop = true
                     }
                 },
             )
