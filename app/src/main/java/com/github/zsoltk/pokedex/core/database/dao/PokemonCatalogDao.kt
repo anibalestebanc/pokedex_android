@@ -24,7 +24,7 @@ interface PokemonCatalogDao {
 
     @Query("""
         SELECT * FROM pokemon_catalog
-        WHERE name LIKE '%' || :query || '%'
+        WHERE LOWER(name) LIKE '%' || :query || '%'
         ORDER BY id ASC
     """)
     fun pagingSourceByQuery(query: String): PagingSource<Int, PokemonCatalogEntity>

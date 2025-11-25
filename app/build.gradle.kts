@@ -117,6 +117,7 @@ dependencies {
 
     // Paging
     implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
 
     // Image Loading
     implementation(libs.coil)

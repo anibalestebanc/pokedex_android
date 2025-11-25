@@ -9,7 +9,9 @@ import com.github.zsoltk.pokedex.data.datasource.remote.PokemonCatalogRemoteData
 import com.github.zsoltk.pokedex.data.datasource.remote.RetrofitCatalogRemoteDataSource
 import com.github.zsoltk.pokedex.data.datasource.remote.api.PokemonApiV2
 import com.github.zsoltk.pokedex.data.repository.DefaultPokemonCatalogRepository
+import com.github.zsoltk.pokedex.data.repository.OfflinePokemonSearchRepository
 import com.github.zsoltk.pokedex.domain.repository.PokemonCatalogRepository
+import com.github.zsoltk.pokedex.domain.repository.SearchPokemonRepository
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
@@ -40,4 +42,6 @@ val dataModule = module {
 
     //Repository
     singleOf(::DefaultPokemonCatalogRepository) { bind<PokemonCatalogRepository>() }
+    singleOf(::OfflinePokemonSearchRepository) { bind<SearchPokemonRepository>() }
+
 }
