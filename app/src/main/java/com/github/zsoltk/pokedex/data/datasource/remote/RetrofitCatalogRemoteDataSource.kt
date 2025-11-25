@@ -15,7 +15,7 @@ class RetrofitCatalogRemoteDataSource(
             var offset = 0
             var total = Int.MAX_VALUE
             while (offset < total) {
-                val page = pokemonApiV2.getPokemonPage(limit = pageSize, offset = offset)
+                val page = pokemonApiV2.getPokemonCatalog(limit = pageSize, offset = offset)
                 total = page.count
                 val mapped = page.results
                 all += mapped

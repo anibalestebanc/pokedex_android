@@ -1,4 +1,4 @@
-package com.github.zsoltk.pokedex.ui.pokemondetail
+package com.github.zsoltk.pokedex.ui.pokemondetail.components
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

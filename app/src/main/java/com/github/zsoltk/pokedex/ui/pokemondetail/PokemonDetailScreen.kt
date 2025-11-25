@@ -39,6 +39,10 @@ import com.github.zsoltk.pokedex.ui.components.TypeLabelMetrics.Companion.MEDIUM
 import com.github.zsoltk.pokedex.domain.model.Pokemon
 import com.github.zsoltk.pokedex.domain.model.color
 import com.github.zsoltk.pokedex.domain.model.pokemons
+import com.github.zsoltk.pokedex.ui.pokemondetail.components.AboutSection
+import com.github.zsoltk.pokedex.ui.pokemondetail.components.BaseStatsSection
+import com.github.zsoltk.pokedex.ui.pokemondetail.components.EvolutionSection
+import com.github.zsoltk.pokedex.ui.pokemondetail.components.MovesSection
 
 @Composable
 fun PokemonDetailScreen(pokemon: Pokemon) {

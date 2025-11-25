@@ -3,6 +3,8 @@ package com.github.zsoltk.pokedex.data.mapper
 import com.github.zsoltk.pokedex.core.database.entity.PokemonDetailEntity
 import com.github.zsoltk.pokedex.data.datasource.remote.dto.PokemonDetailDto
 import com.github.zsoltk.pokedex.domain.model.PokemonDetail
+import com.github.zsoltk.pokedex.domain.model.PokemonFullDetail
+import com.github.zsoltk.pokedex.domain.model.PokemonSpecies
 import com.github.zsoltk.pokedex.domain.model.Stat
 import com.github.zsoltk.pokedex.utils.PokeTimeUtils
 
@@ -55,6 +57,34 @@ fun PokemonDetailEntity.toDomain(): PokemonDetail = PokemonDetail(
     stats = stats,
     lastUpdated = lastUpdated,
 )
+
+fun PokemonDetail.combineWith(species: PokemonSpecies): PokemonFullDetail {
+    val number = "#${id.toString().padStart(3, '0')}"
+    val heightM = height / 10.0
+    val weightKg = weight / 10.0
+
+    return PokemonFullDetail(
+        id = id,
+        name = name,
+        numberLabel = number,
+        imageUrl = imageUrl,
+        types = types,
+        heightMeters = heightM,
+        weightKg = weightKg,
+        abilities = abilities,
+        stats = stats,
+        genera = species.genera,
+        flavorText = species.flavorText,
+        color = species.color,
+        habitat = species.habitat,
+        eggGroups = species.eggGroups,
+        captureRate = species.captureRate,
+        baseHappiness = species.baseHappiness,
+        growthRate = species.growthRate,
+        isLegendary = species.isLegendary,
+        isMythical = species.isMythical,
+    )
+}
 
 
 
