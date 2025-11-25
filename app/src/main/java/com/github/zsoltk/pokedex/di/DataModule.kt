@@ -10,6 +10,8 @@ import com.github.zsoltk.pokedex.data.datasource.remote.RetrofitCatalogRemoteDat
 import com.github.zsoltk.pokedex.data.datasource.remote.api.PokemonApiV2
 import com.github.zsoltk.pokedex.data.repository.DefaultPokemonCatalogRepository
 import com.github.zsoltk.pokedex.data.repository.OfflinePokemonSearchRepository
+import com.github.zsoltk.pokedex.data.repository.RoomHistorySearchRepository
+import com.github.zsoltk.pokedex.domain.repository.HistorySearchRepository
 import com.github.zsoltk.pokedex.domain.repository.PokemonCatalogRepository
 import com.github.zsoltk.pokedex.domain.repository.SearchPokemonRepository
 import org.koin.core.module.dsl.bind
@@ -27,6 +29,11 @@ val dataModule = module {
         ).build()
     }
 
+    //Dao
+    single { get<PokemonDatabase>().pokemonCatalogDao() }
+    single { get<PokemonDatabase>().historySearchDao() }
+
+
     //Api
     factory<PokemonApiV2> {
         RetrofitFactory.createService(
@@ -43,5 +50,6 @@ val dataModule = module {
     //Repository
     singleOf(::DefaultPokemonCatalogRepository) { bind<PokemonCatalogRepository>() }
     singleOf(::OfflinePokemonSearchRepository) { bind<SearchPokemonRepository>() }
+    singleOf(::RoomHistorySearchRepository) { bind<HistorySearchRepository>() }
 
 }

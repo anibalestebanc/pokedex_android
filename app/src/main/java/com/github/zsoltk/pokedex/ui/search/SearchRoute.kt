@@ -39,7 +39,9 @@ fun SearchRoute(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val items = viewModel.pagingFlow.collectAsLazyPagingItems()
-
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(SearchEvent.OnStart)
+    }
     LaunchedEffect(initialQuery) {
         viewModel.onEvent(SearchEvent.SetInitialQuery(initialQuery))
     }
@@ -63,6 +65,8 @@ fun SearchScreen(
             onSearch = {
                 onEvent(SearchEvent.SearchSubmit)
             },
+            searchState = searchState,
+            onEvent = onEvent,
         )
 
         val loadState = items.loadState
