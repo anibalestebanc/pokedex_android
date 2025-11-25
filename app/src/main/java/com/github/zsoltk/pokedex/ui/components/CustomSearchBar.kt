@@ -61,7 +61,10 @@ fun CustomSearchBar(
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                     trailingIcon = {
                         if (query.isNotEmpty()) {
-                            IconButton(onClick = { onQueryChange("") }) {
+                            IconButton(onClick = {
+                                onQueryChange("")
+                                expanded = false
+                            }) {
                                 Icon(Icons.Default.Close, contentDescription = "Clear")
                             }
                         }

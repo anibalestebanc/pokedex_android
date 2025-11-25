@@ -43,6 +43,7 @@ fun SearchRoute(
     }
 
     SearchScreen(
+        onDetailClick= onDetailClick,
         searchState = state,
         onEvent = viewModel::onEvent,
         items = items,
@@ -52,6 +53,7 @@ fun SearchRoute(
 
 @Composable
 fun SearchScreen(
+    onDetailClick: (String) -> Unit,
     searchState: SearchUiState,
     onEvent: (SearchEvent) -> Unit,
     items: LazyPagingItems<PokemonCatalog>,
@@ -102,7 +104,7 @@ fun SearchScreen(
                         fallbackThumbUrl = p.url,
                         isLoadingDetail = detailUiState.isLoading,
                         errorDetail = detailUiState.error,
-                        onClick = { },
+                        onClick = { onDetailClick(p.name) },
                     )
                 }
             }

@@ -39,19 +39,9 @@ import com.github.zsoltk.pokedex.ui.components.TypeLabelMetrics.Companion.MEDIUM
 import com.github.zsoltk.pokedex.domain.model.Pokemon
 import com.github.zsoltk.pokedex.domain.model.color
 import com.github.zsoltk.pokedex.domain.model.pokemons
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun PokemonDetailRoute(
-    onBackClick: () -> Unit,
-    pokemon: Pokemon,
-    viewModel: PokemonDetailViewModel = koinViewModel(),
-) {
-    PokemonDetail(pokemon)
-}
-
-@Composable
-fun PokemonDetail(pokemon: Pokemon) {
+fun PokemonDetailScreen(pokemon: Pokemon) {
     Surface(color = colorResource(id = pokemon.color())) {
         Box {
             RoundedRectangleDecoration()
@@ -215,6 +205,6 @@ private fun BoxScope.PokemonImage(pokemon: Pokemon) {
 @Composable
 private fun PreviewPokemonDetails() {
     Box {
-        PokemonDetail(pokemons.first())
+        PokemonDetailScreen(pokemons.first())
     }
 }

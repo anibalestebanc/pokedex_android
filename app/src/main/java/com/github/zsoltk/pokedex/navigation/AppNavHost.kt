@@ -9,7 +9,9 @@ import androidx.navigation.navArgument
 import com.github.zsoltk.pokedex.domain.model.pokemons
 import com.github.zsoltk.pokedex.ui.home.HomeRoute
 import com.github.zsoltk.pokedex.ui.pokemondetail.PokemonDetailRoute
+import com.github.zsoltk.pokedex.ui.pokemondetail.PokemonDetailScreen
 import com.github.zsoltk.pokedex.ui.pokemondetail.navigation.POKEMON_NAME_ARG
+import com.github.zsoltk.pokedex.ui.pokemondetail.navigation.navigateToOldPokemonDetail
 import com.github.zsoltk.pokedex.ui.pokemondetail.navigation.navigateToPokemonDetail
 import com.github.zsoltk.pokedex.ui.pokemonlist.PokemonListRoute
 import com.github.zsoltk.pokedex.ui.pokemonlist.navigation.navigateToPokemonList
@@ -43,9 +45,20 @@ fun AppNavHost(
             PokemonListRoute(
                 onBackClick = navController::popBackStack,
                 onPokemonDetailClick = { pokemonName ->
-                    navController.navigateToPokemonDetail(pokemonName)
+                    navController.navigateToOldPokemonDetail(pokemonName)
                 }
             )
+        }
+
+        composable(
+            route = Route.OldPokemonDetail.route,
+            arguments = listOf(navArgument(POKEMON_NAME_ARG) { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val pokemonName: String = backStackEntry.arguments?.getString(POKEMON_NAME_ARG) ?: ""
+            val pokemon = pokemons.find { it.name == pokemonName }
+                ?: throw IllegalArgumentException("Pokemon Name $pokemonName not found")
+
+            PokemonDetailScreen(pokemon = pokemon)
         }
 
         composable(
@@ -53,13 +66,9 @@ fun AppNavHost(
             arguments = listOf(navArgument(POKEMON_NAME_ARG) { type = NavType.StringType }),
         ) { backStackEntry ->
             val pokemonName: String = backStackEntry.arguments?.getString(POKEMON_NAME_ARG) ?: ""
-            //TODO Get pokemon by Local
-            val pokemon = pokemons.find { it.name == pokemonName }
-                ?: throw IllegalArgumentException("Pokemon Name $pokemonName not found")
-
             PokemonDetailRoute(
                 onBackClick = navController::popBackStack,
-                pokemon = pokemon,
+                pokemonName = pokemonName,
             )
         }
 
