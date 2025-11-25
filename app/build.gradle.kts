@@ -15,7 +15,7 @@ android {
     namespace = "com.github.zsoltk.pokedex"
     defaultConfig {
         applicationId = "com.github.zsoltk.pokedex"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"

@@ -1,6 +1,7 @@
 [versions]
 agp = "8.13.1"
 kotlin = "2.2.21"
+ksp = "2.3.1"
 appcompat = "1.7.1"
 core-ktx = "1.17.0"
 lifecycle = "2.10.0"
@@ -120,4 +121,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-ksp = { id = "com.google.devtools.ksp", version = "2.3.1" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

@@ -1,7 +1,9 @@
 package com.github.zsoltk.pokedex.data.datasource.remote.api
 
 import com.github.zsoltk.pokedex.data.datasource.remote.dto.PokemonCatalogResponseDto
+import com.github.zsoltk.pokedex.data.datasource.remote.dto.PokemonDetailDto
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface PokemonApiV2 {
@@ -10,4 +12,9 @@ interface PokemonApiV2 {
         @Query("limit") limit: Int,
         @Query("offset") offset: Int
     ): PokemonCatalogResponseDto
+
+    @GET("pokemon/{idOrName}")
+    suspend fun getPokemon(
+        @Path("idOrName") idOrName: String,
+    ): PokemonDetailDto
 }

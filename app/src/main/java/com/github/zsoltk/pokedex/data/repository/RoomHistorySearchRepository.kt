@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 class RoomHistorySearchRepository(
     private val searchHistoryDao: HistorySearchDao,
 ) : HistorySearchRepository {
+
     override fun getHistorySearch(limit: Int): Flow<List<String>> =
         searchHistoryDao.getLastSearch(limit).map { list -> list.map { it.query } }
 
@@ -40,5 +41,4 @@ class RoomHistorySearchRepository(
     override suspend fun clear() = searchHistoryDao.clearAll()
 
     private fun normalizer(queryRaw: String): String = queryRaw.trim().lowercase()
-
 }

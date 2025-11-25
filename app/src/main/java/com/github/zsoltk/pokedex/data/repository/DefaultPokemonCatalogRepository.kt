@@ -10,9 +10,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class DefaultPokemonCatalogRepository(
-    private val database: PokemonDatabase,
     private val remoteDataSource: PokemonCatalogRemoteDatasource,
     private val localDataSource: PokemonCatalogLocalDataSource,
+    private val database: PokemonDatabase,
 ) : PokemonCatalogRepository {
 
     override suspend fun syncPokemonCatalog(): Result<Int> = withContext(Dispatchers.IO) {

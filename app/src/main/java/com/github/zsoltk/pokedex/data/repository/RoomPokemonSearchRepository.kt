@@ -11,7 +11,7 @@ import com.github.zsoltk.pokedex.domain.repository.SearchPokemonRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class OfflinePokemonSearchRepository(
+class RoomPokemonSearchRepository(
     private val database: PokemonDatabase,
 ) : SearchPokemonRepository {
 

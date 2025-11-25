@@ -1,26 +1,21 @@
 package com.github.zsoltk.pokedex.ui.search
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
@@ -28,6 +23,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.github.zsoltk.pokedex.domain.model.PokemonCatalog
 import com.github.zsoltk.pokedex.ui.components.CustomSearchBar
+import com.github.zsoltk.pokedex.ui.components.PokemonSearchCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -46,7 +42,12 @@ fun SearchRoute(
         viewModel.onEvent(SearchEvent.SetInitialQuery(initialQuery))
     }
 
-    SearchScreen(state, viewModel::onEvent, items)
+    SearchScreen(
+        searchState = state,
+        onEvent = viewModel::onEvent,
+        items = items,
+        viewModel = viewModel,
+    )
 }
 
 @Composable
@@ -54,6 +55,7 @@ fun SearchScreen(
     searchState: SearchUiState,
     onEvent: (SearchEvent) -> Unit,
     items: LazyPagingItems<PokemonCatalog>,
+    viewModel: SearchViewModel,
     modifier: Modifier = Modifier,
 ) {
     Column(Modifier.fillMaxSize()) {
@@ -87,10 +89,19 @@ fun SearchScreen(
                 },
             ) { index ->
                 items[index]?.let { p ->
-                    PokemonRow(
-                        index = index,
-                        name = p.name,
-                        artworkUrl = p.url,
+
+                    val detailFlow = remember(p.id) { viewModel.observeDetail(p.id) }
+                    val detailUiState by detailFlow.collectAsStateWithLifecycle()
+
+                    PokemonSearchCard(
+                        index = index + 1,
+                        number = detailUiState.detail?.id,
+                        name = p.displayName,
+                        types = detailUiState.detail?.types ?: emptyList(),
+                        imageUrl = detailUiState.detail?.imageUrl,
+                        fallbackThumbUrl = p.url,
+                        isLoadingDetail = detailUiState.isLoading,
+                        errorDetail = detailUiState.error,
                         onClick = { },
                     )
                 }
@@ -126,37 +137,6 @@ fun SearchScreen(
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun PokemonRow(
-    index: Int,
-    name: String,
-    artworkUrl: String,
-    onClick: () -> Unit,
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-    ) {
-        OutlinedCard(
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-            ),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(height = 100.dp),
-        ) {
-            Text(
-                text = "$index - $name",
-                modifier = Modifier
-                    .padding(start = 8.dp, top = 8.dp),
-                textAlign = TextAlign.Center,
-            )
         }
     }
 }

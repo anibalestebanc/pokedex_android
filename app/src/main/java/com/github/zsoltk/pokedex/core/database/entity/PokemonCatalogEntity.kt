@@ -8,6 +8,7 @@ data class PokemonCatalogEntity (
     @PrimaryKey
     val id: Int,
     val name: String,
+    val displayName : String,
     val url: String
 )
 

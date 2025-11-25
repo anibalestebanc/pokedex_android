@@ -6,15 +6,21 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.github.zsoltk.pokedex.domain.model.PokemonCatalog
 import com.github.zsoltk.pokedex.domain.repository.HistorySearchRepository
+import com.github.zsoltk.pokedex.domain.repository.PokemonDetailRepository
 import com.github.zsoltk.pokedex.domain.usecase.SearchPokemonUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -22,12 +28,15 @@ import kotlinx.coroutines.launch
 class SearchViewModel(
     private val searchPokemon: SearchPokemonUseCase,
     private val repository: HistorySearchRepository,
+    private val pokemonDetailRepository: PokemonDetailRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState: StateFlow<SearchUiState> = _uiState
 
     private val queryFlow = MutableStateFlow("")
+
+    private val detailFlows = mutableMapOf<Int, StateFlow<PokemonDetailUiState>>()
 
     val pagingFlow: Flow<PagingData<PokemonCatalog>> =
         queryFlow
@@ -36,6 +45,22 @@ class SearchViewModel(
             .flatMapLatest { q ->
                 searchPokemon(q.ifBlank { null })
             }.cachedIn(viewModelScope)
+
+    fun observeDetail(id: Int): StateFlow<PokemonDetailUiState> = detailFlows.getOrPut(id) {
+        pokemonDetailRepository.observePokemonDetail(id)
+            .map { detail ->
+                PokemonDetailUiState(detail = detail, isLoading = false, error = null)
+            }.onStart {
+                emit(PokemonDetailUiState(isLoading = true))
+            }.catch { e ->
+                emit(PokemonDetailUiState(isLoading = false, error = e.message))
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                initialValue = PokemonDetailUiState(isLoading = true),
+            )
+    }
 
     fun onEvent(event: SearchEvent) = when (event) {
         SearchEvent.OnStart -> getSearchHistory()

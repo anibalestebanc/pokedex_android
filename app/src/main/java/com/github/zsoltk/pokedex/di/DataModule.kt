@@ -6,13 +6,17 @@ import com.github.zsoltk.pokedex.core.network.RetrofitFactory
 import com.github.zsoltk.pokedex.data.datasource.local.PokemonCatalogLocalDataSource
 import com.github.zsoltk.pokedex.data.datasource.local.PrefsPokemonCatalogLocalDataSource
 import com.github.zsoltk.pokedex.data.datasource.remote.PokemonCatalogRemoteDatasource
+import com.github.zsoltk.pokedex.data.datasource.remote.PokemonDetailRemoteDataSource
 import com.github.zsoltk.pokedex.data.datasource.remote.RetrofitCatalogRemoteDataSource
+import com.github.zsoltk.pokedex.data.datasource.remote.RetrofitPokemonDetailRemoteDataSource
 import com.github.zsoltk.pokedex.data.datasource.remote.api.PokemonApiV2
 import com.github.zsoltk.pokedex.data.repository.DefaultPokemonCatalogRepository
-import com.github.zsoltk.pokedex.data.repository.OfflinePokemonSearchRepository
+import com.github.zsoltk.pokedex.data.repository.OfflineFirstPokemonDetailRepository
+import com.github.zsoltk.pokedex.data.repository.RoomPokemonSearchRepository
 import com.github.zsoltk.pokedex.data.repository.RoomHistorySearchRepository
 import com.github.zsoltk.pokedex.domain.repository.HistorySearchRepository
 import com.github.zsoltk.pokedex.domain.repository.PokemonCatalogRepository
+import com.github.zsoltk.pokedex.domain.repository.PokemonDetailRepository
 import com.github.zsoltk.pokedex.domain.repository.SearchPokemonRepository
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
@@ -32,6 +36,7 @@ val dataModule = module {
     //Dao
     single { get<PokemonDatabase>().pokemonCatalogDao() }
     single { get<PokemonDatabase>().historySearchDao() }
+    single { get<PokemonDatabase>().pokemonDetailDao() }
 
 
     //Api
@@ -46,10 +51,12 @@ val dataModule = module {
 
     //RemoteDataSource
     singleOf(::RetrofitCatalogRemoteDataSource) { bind<PokemonCatalogRemoteDatasource>() }
+    singleOf(::RetrofitPokemonDetailRemoteDataSource) { bind<PokemonDetailRemoteDataSource>() }
 
     //Repository
     singleOf(::DefaultPokemonCatalogRepository) { bind<PokemonCatalogRepository>() }
-    singleOf(::OfflinePokemonSearchRepository) { bind<SearchPokemonRepository>() }
+    singleOf(::RoomPokemonSearchRepository) { bind<SearchPokemonRepository>() }
     singleOf(::RoomHistorySearchRepository) { bind<HistorySearchRepository>() }
+    singleOf(::OfflineFirstPokemonDetailRepository) { bind<PokemonDetailRepository>() }
 
 }
