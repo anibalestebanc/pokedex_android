@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.github.zsoltk.pokedex.core.database.converts.PokemonDetailTypeConverters
+import com.github.zsoltk.pokedex.domain.model.PokemonSprites
 import com.github.zsoltk.pokedex.domain.model.Stat
 
 @Entity(tableName = "pokemon_detail")
@@ -12,6 +13,7 @@ data class PokemonDetailEntity(
     @PrimaryKey val id: Int,
     val name: String,
     val imageUrl: String?,
+    val sprites: PokemonSprites,
     val types: List<String>,
     val height: Int,
     val weight: Int,

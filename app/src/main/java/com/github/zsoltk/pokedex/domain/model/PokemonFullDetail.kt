@@ -1,7 +1,7 @@
 package com.github.zsoltk.pokedex.domain.model
 
 data class PokemonFullDetail(
-    //detail
+    // detail values
     val id: Int,
     val name: String,
     val numberLabel: String,
@@ -11,7 +11,8 @@ data class PokemonFullDetail(
     val weightKg: Double,
     val abilities: List<String>,
     val stats: List<Stat>,
-    // species
+    val sprites: PokemonSprites?,
+    // species values
     val genera: String?,
     val flavorText: String?,
     val color: String?,

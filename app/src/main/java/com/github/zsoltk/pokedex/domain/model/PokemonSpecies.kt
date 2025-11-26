@@ -5,6 +5,7 @@ data class PokemonSpecies(
     val name: String,
     val genera: String?,
     val flavorText: String?,
+    val description: String?,
     val color: String?,
     val habitat: String?,
     val eggGroups: List<String>,

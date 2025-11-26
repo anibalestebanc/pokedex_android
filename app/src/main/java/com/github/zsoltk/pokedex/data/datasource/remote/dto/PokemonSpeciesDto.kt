@@ -11,6 +11,8 @@ data class PokemonSpeciesDto(
     val egg_groups: List<NamedApiResourceDto> = emptyList(),
     val genera: List<GenusDto> = emptyList(),
     val flavor_text_entries: List<FlavorTextEntryDto> = emptyList(),
+    val form_descriptions: List<FormDescriptionDto> = emptyList(),
+    val varieties: List<PokemonSpeciesVarietyDto> = emptyList(),
     val capture_rate: Int? = null,
     val base_happiness: Int? = null,
     val growth_rate: NamedApiResourceDto? = null,
@@ -18,6 +20,17 @@ data class PokemonSpeciesDto(
     val is_mythical: Boolean = false
 )
 
+@Serializable
+data class FormDescriptionDto(
+    val description: String? = null,
+    val language: NamedApiResourceDto? = null
+)
+
+@Serializable
+data class PokemonSpeciesVarietyDto(
+    val is_default: Boolean = false,
+    val pokemon: NamedApiResourceDto? = null
+)
 @Serializable
 data class GenusDto(
     val genus: String? = null,

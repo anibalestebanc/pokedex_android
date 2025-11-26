@@ -26,13 +26,3 @@ data class TypeSlotDto(
 data class StatDto(
     val base_stat: Int? = null, val stat: NamedApiResourceDto? = null
 )
-
-@Serializable
-data class SpritesDto(
-    val front_default: String? = null,
-    val other: Map<String, OtherSpriteDto>? = null
-)
-@Serializable
-data class OtherSpriteDto(
-    val front_default: String? = null
-)

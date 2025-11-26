@@ -5,6 +5,7 @@ import com.github.zsoltk.pokedex.data.datasource.remote.dto.PokemonDetailDto
 import com.github.zsoltk.pokedex.domain.model.PokemonDetail
 import com.github.zsoltk.pokedex.domain.model.PokemonFullDetail
 import com.github.zsoltk.pokedex.domain.model.PokemonSpecies
+import com.github.zsoltk.pokedex.domain.model.PokemonSprites
 import com.github.zsoltk.pokedex.domain.model.Stat
 import com.github.zsoltk.pokedex.utils.PokeTimeUtils
 
@@ -15,15 +16,19 @@ fun PokemonDetailDto.toDomain(): PokemonDetail {
         val n = s.stat?.name ?: return@mapNotNull null
         Stat(name = n, value = s.base_stat ?: 0)
     }
-    val official = sprites?.other?.get("official-artwork")?.front_default
-    val dream = sprites?.other?.get("dream_world")?.front_default
-    val front = sprites?.front_default
-    val img = official ?: dream ?: front
+
+    val spritesDomain = PokemonSprites(
+        dreamWorld = sprites?.other?.dream_world?.front_default,
+        home = sprites?.other?.home?.front_default,
+        officialArtwork = sprites?.other?.official_artwork?.front_default,
+        fallbackFront = sprites?.front_default
+    )
 
     return PokemonDetail(
         id = id,
         name = name,
-        imageUrl = img,
+        imageUrl = spritesDomain.defaultImageUrl,
+        sprites = spritesDomain,
         types = typesList,
         height = height ?: 0,
         weight = weight ?: 0,
@@ -38,6 +43,7 @@ fun PokemonDetail.toEntity(): PokemonDetailEntity =
         id = id,
         name = name,
         imageUrl = imageUrl,
+        sprites = sprites,
         types = types,
         height = height,
         weight = weight,
@@ -50,6 +56,7 @@ fun PokemonDetailEntity.toDomain(): PokemonDetail = PokemonDetail(
     id = id,
     name = name,
     imageUrl = imageUrl,
+    sprites = sprites,
     types = types,
     height = height,
     weight = weight,
@@ -67,12 +74,13 @@ fun PokemonDetail.combineWith(species: PokemonSpecies): PokemonFullDetail {
         id = id,
         name = name,
         numberLabel = number,
-        imageUrl = imageUrl,
+        imageUrl = sprites.defaultImageUrl,
         types = types,
         heightMeters = heightM,
         weightKg = weightKg,
         abilities = abilities,
         stats = stats,
+        sprites = sprites,
         genera = species.genera,
         flavorText = species.flavorText,
         color = species.color,

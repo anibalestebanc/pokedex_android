@@ -2,12 +2,21 @@ package com.github.zsoltk.pokedex.core.database.converts
 
 import androidx.room.TypeConverter
 import com.github.zsoltk.pokedex.core.database.DatabaseJson.dbJson
+import com.github.zsoltk.pokedex.domain.model.PokemonSprites
 import com.github.zsoltk.pokedex.domain.model.Stat
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 
 @Serializable
 private data class StatDb(val name: String, val value: Int)
+
+@Serializable
+private data class PokemonSpritesDb(
+    val dreamWorld: String? = null,
+    val home: String? = null,
+    val officialArtwork: String? = null,
+    val fallbackFront: String? = null
+)
 
 class PokemonDetailTypeConverters {
 
@@ -31,5 +40,28 @@ class PokemonDetailTypeConverters {
         if (value.isBlank()) return emptyList()
         val payload = dbJson.decodeFromString(ListSerializer(StatDb.serializer()), value)
         return payload.map { Stat(name = it.name, value = it.value) }
+    }
+
+    @TypeConverter
+    fun spritesToText(value: PokemonSprites?): String {
+        val db = PokemonSpritesDb(
+            dreamWorld = value?.dreamWorld,
+            home = value?.home,
+            officialArtwork = value?.officialArtwork,
+            fallbackFront = value?.fallbackFront
+        )
+        return dbJson.encodeToString(PokemonSpritesDb.serializer(), db)
+    }
+
+    @TypeConverter
+    fun textToSprites(value: String): PokemonSprites {
+        if (value.isBlank()) return PokemonSprites(null, null, null, null)
+        val db = dbJson.decodeFromString(PokemonSpritesDb.serializer(), value)
+        return PokemonSprites(
+            dreamWorld = db.dreamWorld,
+            home = db.home,
+            officialArtwork = db.officialArtwork,
+            fallbackFront = db.fallbackFront
+        )
     }
 }
