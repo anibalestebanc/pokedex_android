@@ -20,7 +20,7 @@ import org.koin.androidx.compose.koinViewModel
 fun HomeRoute(
     onBackClick: () -> Unit,
     onPokemonListClick: () -> Unit,
-    onPokemonSearchClick: (String) -> Unit,
+    onPokemonSearchClick: () -> Unit,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -30,19 +30,19 @@ fun HomeRoute(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is HomeEffect.NavigateToPokemonList -> onPokemonListClick()
-                is HomeEffect.NavigateToSearch -> onPokemonSearchClick(effect.query)
+                is HomeEffect.NavigateToSearch -> onPokemonSearchClick()
             }
         }
     }
-    HomeScreen(state, viewModel::onEvent)
+    HomeScreen(viewModel::onEvent, onPokemonSearchClick)
 }
 
 @Composable
-fun HomeScreen(state: HomeUiState, onEvent: (HomeEvent) -> Unit) {
+fun HomeScreen(onEvent: (HomeEvent) -> Unit, onSearchClick: () -> Unit) {
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         MainAppBar(
-            state = state,
             onEvent = onEvent,
+            onSearchBarClicked = onSearchClick
         )
         Column(modifier = Modifier.padding(32.dp)) {
             NewsSection()
@@ -51,10 +51,9 @@ fun HomeScreen(state: HomeUiState, onEvent: (HomeEvent) -> Unit) {
 }
 
 
-
 @Preview
 @Composable
 fun PreviewMainScreen() {
-    HomeScreen(HomeUiState(), {})
+    HomeScreen({ }, {})
 }
 

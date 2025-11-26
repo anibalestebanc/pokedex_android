@@ -1,5 +1,6 @@
 package com.github.zsoltk.pokedex.di
 
+import com.github.zsoltk.pokedex.ui.fullsearch.SearchFullViewModel
 import com.github.zsoltk.pokedex.ui.home.HomeViewModel
 import com.github.zsoltk.pokedex.ui.pokemondetail.PokemonDetailViewModel
 import com.github.zsoltk.pokedex.ui.pokemonlist.PokemonListViewModel
@@ -13,4 +14,5 @@ val presentationModule = module {
     viewModelOf(::PokemonListViewModel)
     viewModelOf(::PokemonDetailViewModel)
     viewModelOf(::SearchViewModel)
+    viewModelOf(::SearchFullViewModel)
 }

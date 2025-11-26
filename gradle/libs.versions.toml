@@ -33,6 +33,7 @@ ui-text-google-fonts = "1.9.5"
 paging-runtime = "3.3.6"
 paging-compose = "3.3.6"
 work-runtime-ktx = "2.11.0"
+accompanist = "0.34.0"
 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
@@ -68,6 +69,7 @@ compose-material-icons-extended = { group = "androidx.compose.material", name = 
 compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
 compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata" }
+accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 
 # Networking
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }

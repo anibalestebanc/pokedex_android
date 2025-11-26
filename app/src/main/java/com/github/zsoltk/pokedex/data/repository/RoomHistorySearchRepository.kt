@@ -38,7 +38,7 @@ class RoomHistorySearchRepository(
         searchHistoryDao.deleteByQuery(q)
     }
 
-    override suspend fun clear() = searchHistoryDao.clearAll()
+    override suspend fun clearAll() = searchHistoryDao.clearAll()
 
     private fun normalizer(queryRaw: String): String = queryRaw.trim().lowercase()
 }

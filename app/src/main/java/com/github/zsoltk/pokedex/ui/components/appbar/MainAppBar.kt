@@ -12,12 +12,11 @@ import androidx.compose.ui.unit.dp
 import com.github.zsoltk.pokedex.ui.components.PokeBallBackground
 import com.github.zsoltk.pokedex.ui.components.Title
 import com.github.zsoltk.pokedex.ui.home.HomeEvent
-import com.github.zsoltk.pokedex.ui.home.HomeUiState
 import com.github.zsoltk.pokedex.ui.home.model.MenuItem
 
 @Composable
 fun MainAppBar(
-    state: HomeUiState,
+    onSearchBarClicked: () -> Unit,
     onEvent: (HomeEvent) -> Unit,
 ) {
     LargeAppBar(background = { PokeBallBackground() }) {
@@ -33,15 +32,11 @@ fun MainAppBar(
                 text = "What Pokémon\nare you looking for?",
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(
-                    top = 64.dp,
+                    top = 48.dp,
                     bottom = 24.dp
                 ),
             )
-            RoundedSearchFieldV2(
-                value = state.query,
-                onValueChange = { onEvent(HomeEvent.SearchQueryChanged(it)) },
-                onSearch = { onEvent(HomeEvent.SearchSubmitted) },
-            )
+            RoundedSearchBar(onSearchBarClicked)
             Spacer(modifier = Modifier.height(32.dp))
             Menu(onMenuItemSelected = { menuItem ->
                 when (menuItem) {
@@ -56,5 +51,5 @@ fun MainAppBar(
 @Preview
 @Composable
 fun PreviewMainAppBar() {
-    MainAppBar(onEvent = { }, state = HomeUiState())
+    MainAppBar(onEvent = { }, onSearchBarClicked = { })
 }

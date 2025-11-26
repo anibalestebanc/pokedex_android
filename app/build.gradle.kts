@@ -100,6 +100,7 @@ dependencies {
     implementation(libs.compose.foundation)
     implementation(libs.navigation.compose)
     implementation(libs.compose.runtime.livedata)
+    implementation(libs.accompanist.systemuicontroller)
 
     // Networking (for future use)
     implementation(libs.retrofit)

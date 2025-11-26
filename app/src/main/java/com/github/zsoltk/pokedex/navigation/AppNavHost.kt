@@ -2,11 +2,17 @@ package com.github.zsoltk.pokedex.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
 import com.github.zsoltk.pokedex.domain.model.pokemons
+import com.github.zsoltk.pokedex.ui.fullsearch.SearchDialogRoute
+import com.github.zsoltk.pokedex.ui.fullsearch.navigation.SEARCH_DIALOG_NAVIGATION_ARG
+import com.github.zsoltk.pokedex.ui.fullsearch.navigation.SEARCH_DIALOG_QUERY_ARG
+import com.github.zsoltk.pokedex.ui.fullsearch.navigation.navigateToSearchDialog
 import com.github.zsoltk.pokedex.ui.home.HomeRoute
 import com.github.zsoltk.pokedex.ui.pokemondetail.PokemonDetailRoute
 import com.github.zsoltk.pokedex.ui.pokemondetail.PokemonDetailScreen
@@ -38,7 +44,9 @@ fun AppNavHost(
             HomeRoute(
                 onBackClick = navController::popBackStack,
                 onPokemonListClick = navController::navigateToPokemonList,
-                onPokemonSearchClick = { navController.navigateToSearch(it) }
+                onPokemonSearchClick = {
+                    navController.navigateToSearchDialog(navigateToResult = true)
+                }
             )
         }
 
@@ -58,7 +66,6 @@ fun AppNavHost(
             val pokemonName: String = backStackEntry.arguments?.getString(POKEMON_NAME_ARG) ?: ""
             val pokemon = pokemons.find { it.name == pokemonName }
                 ?: throw IllegalArgumentException("Pokemon Name $pokemonName not found")
-
             PokemonDetailScreen(pokemon = pokemon)
         }
 
@@ -84,6 +91,33 @@ fun AppNavHost(
                 onDetailClick = { pokemonId ->
                     navController.navigateToPokemonDetail(pokemonId)
                 }
+            )
+        }
+
+        dialog(
+            route = Route.SearchDialog.route,
+            arguments = listOf(
+                navArgument(SEARCH_DIALOG_QUERY_ARG) { type = NavType.StringType },
+                navArgument(SEARCH_DIALOG_NAVIGATION_ARG) { type = NavType.BoolType },
+            ),
+            dialogProperties = DialogProperties(
+                usePlatformDefaultWidth = false,
+                dismissOnBackPress = true,
+                dismissOnClickOutside = false,
+            ),
+        ) { backStackEntry ->
+            val initialQuery = backStackEntry.arguments?.getString(SEARCH_DIALOG_QUERY_ARG).orEmpty()
+            val navigateToResult = backStackEntry.arguments?.getBoolean(SEARCH_DIALOG_NAVIGATION_ARG) ?: false
+            SearchDialogRoute(
+                navigateToResult = navigateToResult,
+                initialQuery = initialQuery,
+                onBackClick = navController::popBackStack,
+                saveOnStateHandle = { query ->
+                    navController.previousBackStackEntry?.savedStateHandle?.set("search_query_result", query)
+                },
+                onSearchResult = { query ->
+                    navController.navigateToSearch(query)
+                },
             )
         }
     }
