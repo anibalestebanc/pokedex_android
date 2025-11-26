@@ -12,13 +12,16 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -46,11 +49,14 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.github.zsoltk.pokedex.theme.PokeAppTheme
 import com.github.zsoltk.pokedex.ui.components.utils.PokeBackgroundUtil.primaryTypeColorRes
 
 @Composable
@@ -66,7 +72,6 @@ fun PokemonSearchCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     val bgColor = colorResource(id = primaryTypeColorRes(types))
     val bgGradient = remember(bgColor) {
         Brush.linearGradient(
@@ -78,7 +83,7 @@ fun PokemonSearchCard(
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth()
-            .height(120.dp)
+            .aspectRatio(1.9f)
             .padding(horizontal = 16.dp)
             .clip(RoundedCornerShape(16.dp))
             .clickable(onClick = onClick),
@@ -88,91 +93,121 @@ fun PokemonSearchCard(
     ) {
 
         Box(modifier = Modifier.background(bgGradient)) {
+
+            Box(
+                modifier = Modifier
+                    .size(180.dp)
+                    .align(Alignment.CenterEnd)
+                    .offset(x = 28.dp)
+                    .background(Color.White.copy(alpha = 0.18f), shape = CircleShape),
+            )
+
+            if (number != null) {
+                Text(
+                    text = "#${number.toString().padStart(3, '0')}",
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        color = Color.White.copy(alpha = 0.85f),
+                        fontWeight = FontWeight.SemiBold,
+                    ),
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(top = 24.dp, end = 24.dp),
+                )
+            }
+
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                    .padding(horizontal = 24.dp, vertical = 24.dp),
             ) {
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp),
+                    verticalArrangement = Arrangement.Top,
+                ) {
                     Text(
                         text = name.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() },
-                        style = MaterialTheme.typography.titleMedium.copy(color = Color.White),
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                        ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
-                    Spacer(Modifier.width(8.dp))
-                    number?.let {
-                        Text(
-                            text = "#${it.toString().padStart(3, '0')}",
-                            style = MaterialTheme.typography.labelLarge.copy(color = Color.White.copy(alpha = 0.9f)),
-                        )
+
+                    Spacer(Modifier.height(6.dp))
+
+                    when {
+                        isLoadingDetail && types.isEmpty() -> {
+                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                ChipPlaceholder(width = 56.dp)
+                                ChipPlaceholder(width = 44.dp)
+                            }
+                        }
+
+                        errorDetail != null && types.isEmpty() -> {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                modifier = Modifier
+                                    .padding(top = 4.dp),
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Warning,
+                                    contentDescription = "error",
+                                    tint = Color.White.copy(alpha = 0.9f),
+                                    modifier = Modifier.size(16.dp),
+                                )
+                                Spacer(Modifier.width(4.dp))
+                                Text(
+                                    errorDetail,
+                                    style = MaterialTheme.typography.labelMedium.copy(color = Color.White),
+                                )
+                            }
+                        }
+
+                        else -> {
+                            FlowRow(
+                                modifier = Modifier
+                                    .padding(top = 4.dp),
+                                horizontalArrangement = Arrangement.Start,
+                                verticalArrangement = Arrangement.Top,
+                            ) {
+                                types.take(3).forEach { t -> TypeChip(t) }
+                            }
+                        }
                     }
                 }
-
-                Spacer(Modifier.height(6.dp))
-
-                if (isLoadingDetail && types.isEmpty()) {
-
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        ChipPlaceholder(width = 56.dp)
-                        ChipPlaceholder(width = 44.dp)
-                    }
-                } else {
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), maxItemsInEachRow = 3) {
-                        types.forEach { t -> TypeChip(t) }
-                    }
-                }
-
-                if (errorDetail != null && types.isEmpty()) {
-                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 4.dp)) {
-                        Icon(
-                            imageVector = Icons.Rounded.Warning,
-                            contentDescription = "error",
-                            tint = Color.White.copy(alpha = 0.9f),
-                            modifier = Modifier.size(16.dp),
-                        )
-                        Spacer(Modifier.width(4.dp))
-                        Text(
-                            "Sin conexión",
-                            style = MaterialTheme.typography.labelSmall.copy(color = Color.White),
-                        )
-                    }
-                } else {
-                    Spacer(Modifier.height(4.dp))
-                }
-            }
-
-            // Derecha: imagen
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(100.dp),
-                contentAlignment = Alignment.Center,
-            ) {
                 val finalUrl = imageUrl ?: fallbackThumbUrl
-                if (finalUrl == null) {
-                    Box(
-                        Modifier
-                            .size(76.dp)
-                            .clip(CircleShape)
-                            .shimmer()
-                            .background(Color.White.copy(alpha = 0.35f)),
-                    )
-                } else {
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(finalUrl)
-                            .crossfade(true)
-                            .build(),
-                        contentDescription = name,
-                        modifier = Modifier
-                            .size(86.dp)
-                            .padding(end = 4.dp)
-                            .graphicsLayer { translationY = -4f },
-                        contentScale = ContentScale.Fit,
-                    )
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(150.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    if (finalUrl == null) {
+                        Box(
+                            Modifier
+                                .size(90.dp)
+                                .clip(CircleShape)
+                                .shimmer()
+                                .background(Color.White.copy(alpha = 0.35f)),
+                        )
+                    } else {
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(finalUrl)
+                                .crossfade(true)
+                                .build(),
+                            contentDescription = name,
+                            modifier = Modifier
+                                .size(110.dp)
+                                .padding(end = 6.dp)
+                                .graphicsLayer { translationY = -6f },
+                            contentScale = ContentScale.Fit,
+                        )
+                    }
                 }
             }
 
@@ -221,4 +256,22 @@ fun Modifier.shimmer(): Modifier = composed {
         label = "shimmerAlpha",
     )
     this.alpha(alpha)
+}
+
+@Preview
+@Composable
+fun PokemonSearchCardPreview() {
+    PokeAppTheme {
+        PokemonSearchCard(
+            index = 1,
+            number = 1,
+            name = "Pikachu",
+            types = listOf("Electric", "grass"),
+            imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/25.png",
+            fallbackThumbUrl = "R.drawable.poke001",
+            isLoadingDetail = false,
+            errorDetail = "Ha ocurrido un error",
+            onClick = {},
+        )
+    }
 }

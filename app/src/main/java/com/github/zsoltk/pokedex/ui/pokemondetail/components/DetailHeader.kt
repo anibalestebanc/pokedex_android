@@ -24,10 +24,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.github.zsoltk.pokedex.theme.PokeAppTheme
+import com.github.zsoltk.pokedex.ui.components.utils.PokeBackgroundUtil.primaryTypeColorRes
 
 @Composable
 fun DetailHeader(
@@ -38,61 +42,61 @@ fun DetailHeader(
     imageUrl: String?,
     headerColor: Color,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
-){
+    modifier: Modifier = Modifier,
+) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(headerColor)
+            .background(headerColor),
     ) {
         IconButton(
             onClick = onBack,
             modifier = Modifier
                 .padding(8.dp)
-                .align(Alignment.TopStart)
+                .align(Alignment.TopStart),
         ) {
             Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(24.dp))
 
         Box(
             modifier = Modifier
                 .size(200.dp)
                 .align(Alignment.TopEnd)
                 .offset(x = 24.dp, y = 24.dp)
-                .background(Color.White.copy(alpha = 0.15f), shape = CircleShape)
+                .background(Color.White.copy(alpha = 0.15f), shape = CircleShape),
         )
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .padding(top = 36.dp, bottom = 12.dp)
+                .padding(top = 42.dp, bottom = 12.dp),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(
                     text = name.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() },
                     color = Color.White,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
                         text = numberLabel,
                         color = Color.White,
                         fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
                     )
                     if (!genera.isNullOrBlank()) {
                         Text(
                             text = genera,
                             color = Color.White.copy(alpha = 0.9f),
-                            fontSize = 12.sp
+                            fontSize = 12.sp,
                         )
                     }
                 }
@@ -103,7 +107,7 @@ fun DetailHeader(
             ChipRow(
                 chips = types.map { it.replaceFirstChar { c -> if (c.isLowerCase()) c.titlecase() else c.toString() } },
                 chipColor = Color.White.copy(alpha = 0.25f),
-                contentColor = Color.White
+                contentColor = Color.White,
             )
 
             Box(
@@ -111,12 +115,12 @@ fun DetailHeader(
                     .fillMaxWidth()
                     .padding(top = 8.dp)
                     .height(160.dp),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Box(
                     modifier = Modifier
                         .size(140.dp)
-                        .background(Color.White.copy(alpha = 0.2f), shape = CircleShape)
+                        .background(Color.White.copy(alpha = 0.2f), shape = CircleShape),
                 )
                 AsyncImage(
                     model = imageUrl,
@@ -124,21 +128,26 @@ fun DetailHeader(
                     modifier = Modifier
                         .size(160.dp)
                         .padding(8.dp),
-                    contentScale = ContentScale.Fit
+                    contentScale = ContentScale.Fit,
                 )
             }
 
             Spacer(Modifier.height(8.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(24.dp)
-                    .background(
-                        color = Color.White,
-                        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
-                    )
-            )
+
+
         }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(16.dp)
+                .background(
+                    color = Color.White,
+                    shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+                ),
+        )
+
     }
 }
 
@@ -147,7 +156,7 @@ fun DetailHeader(
 fun ChipRow(
     chips: List<String>,
     chipColor: Color = Color(0xFFF2F2F2),
-    contentColor: Color = Color.Black
+    contentColor: Color = Color.Black,
 ) {
     FlowRow {
         chips.forEach { TypeChip(it, chipColor, contentColor) }
@@ -158,13 +167,29 @@ fun ChipRow(
 fun TypeChip(
     text: String,
     background: Color = Color(0xFFF2F2F2),
-    contentColor: Color = Color.Black
+    contentColor: Color = Color.Black,
 ) {
     Box(
         modifier = Modifier
             .background(background, shape = RoundedCornerShape(50))
-            .padding(horizontal = 10.dp, vertical = 6.dp)
+            .padding(horizontal = 10.dp, vertical = 6.dp),
     ) {
         Text(text, color = contentColor, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+    }
+}
+
+@Preview
+@Composable
+fun DetailHeaderPreview() {
+    PokeAppTheme {
+        DetailHeader(
+            name = "pikachu",
+            numberLabel = "002",
+            genera = "Seed Pokémon",
+            types = listOf("Electric"),
+            imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/",
+            headerColor = colorResource(id = primaryTypeColorRes(listOf("Electric"))),
+            onBack = {},
+        )
     }
 }

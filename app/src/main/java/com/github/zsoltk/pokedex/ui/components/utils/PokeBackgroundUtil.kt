@@ -13,7 +13,7 @@ object PokeBackgroundUtil {
             "poison", "ghost" -> R.color.poke_light_purple
             "ground", "rock" -> R.color.poke_light_brown
             "dark" -> R.color.poke_black
-            else -> R.color.poke_light_blue
+            else -> R. color.grey_500
         }
     }
 }
