@@ -1,4 +1,4 @@
-package com.github.zsoltk.pokedex.ui.search
+package com.github.zsoltk.pokedex.ui.searchresult
 
 import com.github.zsoltk.pokedex.domain.model.PokemonDetail
 

@@ -1,6 +1,6 @@
-package com.github.zsoltk.pokedex.ui.search
+package com.github.zsoltk.pokedex.ui.searchresult
 
-data class SearchUiState(
+data class SearchResultUiState(
     val query: String = "",
     val searchHistory: List<String> = emptyList(),
     val isLoadingIndex: Boolean = false,

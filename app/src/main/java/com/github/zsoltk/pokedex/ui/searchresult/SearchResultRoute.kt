@@ -1,4 +1,4 @@
-package com.github.zsoltk.pokedex.ui.search
+package com.github.zsoltk.pokedex.ui.searchresult
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,22 +30,22 @@ import com.github.zsoltk.pokedex.ui.components.PokemonSearchCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SearchRoute(
+fun SearchResultRoute(
     initialQuery: String,
     onBackClick: () -> Unit,
     onDetailClick: (String) -> Unit,
-    viewModel: SearchViewModel = koinViewModel(),
+    viewModel: SearchResultViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val items = viewModel.pagingFlow.collectAsLazyPagingItems()
     var isSetInitialQuery by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.onEvent(SearchEvent.OnStart)
+        viewModel.onEvent(SearchResultEvent.OnStart)
     }
     LaunchedEffect(initialQuery, isSetInitialQuery) {
         if (!isSetInitialQuery) {
-            viewModel.onEvent(SearchEvent.SetInitialQuery(initialQuery))
+            viewModel.onEvent(SearchResultEvent.SetInitialQuery(initialQuery))
             isSetInitialQuery = true
         }
     }
@@ -62,20 +62,20 @@ fun SearchRoute(
 @Composable
 fun SearchScreen(
     onDetailClick: (String) -> Unit,
-    searchUiState: SearchUiState,
-    onEvent: (SearchEvent) -> Unit,
+    searchUiState: SearchResultUiState,
+    onEvent: (SearchResultEvent) -> Unit,
     items: LazyPagingItems<PokemonCatalog>,
-    viewModel: SearchViewModel,
+    viewModel: SearchResultViewModel,
     modifier: Modifier = Modifier,
 ) {
     Column(Modifier.fillMaxSize()) {
         CustomSearchBar(
             query = searchUiState.query,
             onQueryChange = { newQuery ->
-                onEvent(SearchEvent.QueryChanged(newQuery))
+                onEvent(SearchResultEvent.QueryChanged(newQuery))
             },
             onSearch = {
-                onEvent(SearchEvent.SearchSubmit)
+                onEvent(SearchResultEvent.SearchSubmit)
             },
             searchState = searchUiState,
             onEvent = onEvent,

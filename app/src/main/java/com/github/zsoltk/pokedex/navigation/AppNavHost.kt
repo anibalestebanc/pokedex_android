@@ -22,9 +22,9 @@ import com.github.zsoltk.pokedex.ui.pokemondetail.navigation.navigateToOldPokemo
 import com.github.zsoltk.pokedex.ui.pokemondetail.navigation.navigateToPokemonDetail
 import com.github.zsoltk.pokedex.ui.pokemonlist.PokemonListRoute
 import com.github.zsoltk.pokedex.ui.pokemonlist.navigation.navigateToPokemonList
-import com.github.zsoltk.pokedex.ui.search.SearchRoute
-import com.github.zsoltk.pokedex.ui.search.navigation.SEARCH_QUERY_ARG
-import com.github.zsoltk.pokedex.ui.search.navigation.navigateToSearch
+import com.github.zsoltk.pokedex.ui.searchresult.SearchResultRoute
+import com.github.zsoltk.pokedex.ui.searchresult.navigation.SEARCH_QUERY_ARG
+import com.github.zsoltk.pokedex.ui.searchresult.navigation.navigateToSearchResult
 
 @Composable
 fun AppNavHost(
@@ -81,11 +81,11 @@ fun AppNavHost(
         }
 
         composable(
-            route = Route.Search.route,
+            route = Route.SearchResult.route,
             arguments = listOf(navArgument(SEARCH_QUERY_ARG) { type = NavType.StringType }),
         ) { backStackEntry ->
             val initialQuery = backStackEntry.arguments?.getString(SEARCH_QUERY_ARG).orEmpty()
-            SearchRoute(
+            SearchResultRoute(
                 initialQuery = initialQuery,
                 onBackClick = navController::popBackStack,
                 onDetailClick = { pokemonId ->
@@ -116,7 +116,7 @@ fun AppNavHost(
                     navController.previousBackStackEntry?.savedStateHandle?.set("search_query_result", query)
                 },
                 onSearchResult = { query ->
-                    navController.navigateToSearch(query)
+                    navController.navigateToSearchResult(query)
                 },
             )
         }

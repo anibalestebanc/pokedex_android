@@ -101,8 +101,8 @@ fun SearchFullscreenDialog(
                             val query = uiState.query.trim()
                             if (query.isNotEmpty()) {
                                 onEvent(SearchFullEvent.SearchSubmit)
+                                onSubmitResult(query)
                             }
-                            onSubmitResult(query)
                         },
                         onBack = { onDismiss() },
                     )
@@ -116,7 +116,7 @@ fun SearchFullscreenDialog(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                            .padding(horizontal = 16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
@@ -145,7 +145,7 @@ fun SearchFullscreenDialog(
                                         onEvent(SearchFullEvent.QueryChanged(item))
                                         onEvent(SearchFullEvent.SearchSubmit)
                                         onSubmitResult(item)
-                                    },
+                                    }
                             )
                         }
                     }

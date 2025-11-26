@@ -1,4 +1,4 @@
-package com.github.zsoltk.pokedex.ui.search
+package com.github.zsoltk.pokedex.ui.searchresult
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,14 +25,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-class SearchViewModel(
+class SearchResultViewModel(
     private val searchPokemon: SearchPokemonUseCase,
     private val repository: HistorySearchRepository,
     private val pokemonDetailRepository: PokemonDetailRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SearchUiState())
-    val uiState: StateFlow<SearchUiState> = _uiState
+    private val _uiState = MutableStateFlow(SearchResultUiState())
+    val uiState: StateFlow<SearchResultUiState> = _uiState
 
     private val queryFlow = MutableStateFlow("")
 
@@ -62,13 +62,13 @@ class SearchViewModel(
             )
     }
 
-    fun onEvent(event: SearchEvent) = when (event) {
-        SearchEvent.OnStart -> getSearchHistory()
-        is SearchEvent.SetInitialQuery -> initialSearch(event.text)
-        is SearchEvent.QueryChanged -> onQueryChanged(event.text)
-        SearchEvent.SearchSubmit -> submitSearch()
-        is SearchEvent.RemoveSuggestion -> removeSearchSuggestion(event.text)
-        is SearchEvent.SelectSuggestion -> selectSearchSuggestion(event.text)
+    fun onEvent(event: SearchResultEvent) = when (event) {
+        SearchResultEvent.OnStart -> getSearchHistory()
+        is SearchResultEvent.SetInitialQuery -> initialSearch(event.text)
+        is SearchResultEvent.QueryChanged -> onQueryChanged(event.text)
+        SearchResultEvent.SearchSubmit -> submitSearch()
+        is SearchResultEvent.RemoveSuggestion -> removeSearchSuggestion(event.text)
+        is SearchResultEvent.SelectSuggestion -> selectSearchSuggestion(event.text)
     }
 
     private fun selectSearchSuggestion(query: String) {

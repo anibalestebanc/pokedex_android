@@ -22,8 +22,8 @@ import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.unit.dp
-import com.github.zsoltk.pokedex.ui.search.SearchEvent
-import com.github.zsoltk.pokedex.ui.search.SearchUiState
+import com.github.zsoltk.pokedex.ui.searchresult.SearchResultEvent
+import com.github.zsoltk.pokedex.ui.searchresult.SearchResultUiState
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,8 +32,8 @@ fun CustomSearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
     onSearch: (String) -> Unit,
-    searchState: SearchUiState,
-    onEvent: (SearchEvent) -> Unit,
+    searchState: SearchResultUiState,
+    onEvent: (SearchResultEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -79,10 +79,10 @@ fun CustomSearchBar(
             SearchSuggestions(
                 historySearch = searchState.searchHistory,
                 onSelect = { q ->
-                    onEvent(SearchEvent.SelectSuggestion(q))
+                    onEvent(SearchResultEvent.SelectSuggestion(q))
                     expanded = false
                 },
-                onRemove = { q -> onEvent(SearchEvent.RemoveSuggestion(q)) }
+                onRemove = { q -> onEvent(SearchResultEvent.RemoveSuggestion(q)) }
             )
         }
     }
