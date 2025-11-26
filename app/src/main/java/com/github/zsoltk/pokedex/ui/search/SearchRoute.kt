@@ -13,7 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -35,16 +38,21 @@ fun SearchRoute(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val items = viewModel.pagingFlow.collectAsLazyPagingItems()
+    var isSetInitialQuery by rememberSaveable { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         viewModel.onEvent(SearchEvent.OnStart)
     }
-    LaunchedEffect(initialQuery) {
-        viewModel.onEvent(SearchEvent.SetInitialQuery(initialQuery))
+    LaunchedEffect(initialQuery, isSetInitialQuery) {
+        if (!isSetInitialQuery) {
+            viewModel.onEvent(SearchEvent.SetInitialQuery(initialQuery))
+            isSetInitialQuery = true
+        }
     }
 
     SearchScreen(
         onDetailClick= onDetailClick,
-        searchState = state,
+        searchUiState = state,
         onEvent = viewModel::onEvent,
         items = items,
         viewModel = viewModel,
@@ -54,7 +62,7 @@ fun SearchRoute(
 @Composable
 fun SearchScreen(
     onDetailClick: (String) -> Unit,
-    searchState: SearchUiState,
+    searchUiState: SearchUiState,
     onEvent: (SearchEvent) -> Unit,
     items: LazyPagingItems<PokemonCatalog>,
     viewModel: SearchViewModel,
@@ -62,21 +70,21 @@ fun SearchScreen(
 ) {
     Column(Modifier.fillMaxSize()) {
         CustomSearchBar(
-            query = searchState.query,
+            query = searchUiState.query,
             onQueryChange = { newQuery ->
                 onEvent(SearchEvent.QueryChanged(newQuery))
             },
             onSearch = {
                 onEvent(SearchEvent.SearchSubmit)
             },
-            searchState = searchState,
+            searchState = searchUiState,
             onEvent = onEvent,
         )
 
         val loadState = items.loadState
         val isEmptyList = items.itemCount == 0 &&
             loadState.refresh is LoadState.NotLoading &&
-            searchState.query.isNotBlank()
+            searchUiState.query.isNotBlank()
 
         LazyColumn(
             modifier = modifier,
@@ -104,7 +112,7 @@ fun SearchScreen(
                         fallbackThumbUrl = p.url,
                         isLoadingDetail = detailUiState.isLoading,
                         errorDetail = detailUiState.error,
-                        onClick = { onDetailClick(p.name) },
+                        onClick = { onDetailClick(p.id.toString()) },
                     )
                 }
             }
@@ -135,7 +143,7 @@ fun SearchScreen(
             if (isEmptyList) {
                 item(key = "empty") {
                     EmptyStateRow(
-                        text = "No se encontraron resultados para ${searchState.query}",
+                        text = "No se encontraron resultados para ${searchUiState.query}",
                     )
                 }
             }

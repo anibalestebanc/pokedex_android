@@ -10,6 +10,7 @@ import com.github.zsoltk.pokedex.domain.model.pokemons
 import com.github.zsoltk.pokedex.ui.home.HomeRoute
 import com.github.zsoltk.pokedex.ui.pokemondetail.PokemonDetailRoute
 import com.github.zsoltk.pokedex.ui.pokemondetail.PokemonDetailScreen
+import com.github.zsoltk.pokedex.ui.pokemondetail.navigation.POKEMON_ID_ARG
 import com.github.zsoltk.pokedex.ui.pokemondetail.navigation.POKEMON_NAME_ARG
 import com.github.zsoltk.pokedex.ui.pokemondetail.navigation.navigateToOldPokemonDetail
 import com.github.zsoltk.pokedex.ui.pokemondetail.navigation.navigateToPokemonDetail
@@ -63,12 +64,12 @@ fun AppNavHost(
 
         composable(
             route = Route.PokemonDetail.route,
-            arguments = listOf(navArgument(POKEMON_NAME_ARG) { type = NavType.StringType }),
+            arguments = listOf(navArgument(POKEMON_ID_ARG) { type = NavType.StringType }),
         ) { backStackEntry ->
-            val pokemonName: String = backStackEntry.arguments?.getString(POKEMON_NAME_ARG) ?: ""
+            val pokemonId: String = backStackEntry.arguments?.getString(POKEMON_ID_ARG) ?: ""
             PokemonDetailRoute(
                 onBackClick = navController::popBackStack,
-                pokemonName = pokemonName,
+                pokemonId = pokemonId,
             )
         }
 
@@ -80,8 +81,8 @@ fun AppNavHost(
             SearchRoute(
                 initialQuery = initialQuery,
                 onBackClick = navController::popBackStack,
-                onDetailClick = { pokemonName ->
-                    navController.navigateToPokemonDetail(pokemonName)
+                onDetailClick = { pokemonId ->
+                    navController.navigateToPokemonDetail(pokemonId)
                 }
             )
         }

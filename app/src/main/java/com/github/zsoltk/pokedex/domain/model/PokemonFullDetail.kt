@@ -16,6 +16,7 @@ data class PokemonFullDetail(
     val genera: String?,
     val flavorText: String?,
     val color: String?,
+    val description: String?,
     val habitat: String?,
     val eggGroups: List<String>,
     val captureRate: Int?,

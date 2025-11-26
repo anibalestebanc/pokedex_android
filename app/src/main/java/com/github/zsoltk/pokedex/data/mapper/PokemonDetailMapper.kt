@@ -84,6 +84,7 @@ fun PokemonDetail.combineWith(species: PokemonSpecies): PokemonFullDetail {
         genera = species.genera,
         flavorText = species.flavorText,
         color = species.color,
+        description = species.description,
         habitat = species.habitat,
         eggGroups = species.eggGroups,
         captureRate = species.captureRate,

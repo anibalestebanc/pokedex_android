@@ -16,8 +16,8 @@ class PokemonDetailViewModel(
 
     fun onEvent(action: DetailEvent) = viewModelScope.launch {
         when (action) {
-            is DetailEvent.OnStart -> getPokemonDetail(action.idOrName)
-            is DetailEvent.OnRetryClick -> retry(action.idOrName)
+            is DetailEvent.OnStart -> getPokemonDetail(action.pokemonId)
+            is DetailEvent.OnRetryClick -> retry(action.pokemonId)
         }
     }
 

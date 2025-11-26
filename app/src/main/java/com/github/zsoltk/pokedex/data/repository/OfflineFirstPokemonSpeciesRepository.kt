@@ -6,14 +6,16 @@ import com.github.zsoltk.pokedex.data.mapper.toDomain
 import com.github.zsoltk.pokedex.data.mapper.toEntity
 import com.github.zsoltk.pokedex.domain.model.PokemonSpecies
 import com.github.zsoltk.pokedex.domain.repository.PokemonSpeciesRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class OfflineFirstPokemonSpeciesRepository(
     private val remoteDataSource: PokemonSpeciesRemoteDataSource,
     private val pokemonSpeciesDao: PokemonSpeciesDao,
 ) : PokemonSpeciesRepository {
 
-    override suspend fun getPokemonSpecies(idOrName: String): Result<PokemonSpecies> {
-        return try {
+    override suspend fun getPokemonSpecies(idOrName: String): Result<PokemonSpecies> = withContext(Dispatchers.IO){
+        return@withContext try {
             val id = idOrName.toIntOrNull()
             if (id != null) {
                 pokemonSpeciesDao.getPokemonSpecies(id)?.let { speciesEntity ->

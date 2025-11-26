@@ -5,12 +5,13 @@ import androidx.navigation.NavController
 const val POKEMON_DETAIL = "pokemon_detail"
 const val OLD_POKEMON_DETAIL = "old_pokemon_detail"
 const val POKEMON_NAME_ARG = "pokemonName"
+const val POKEMON_ID_ARG = "pokemonId"
 
-const val POKEMON_DETAIL_ROUTE = "$POKEMON_DETAIL/{$POKEMON_NAME_ARG}"
+const val POKEMON_DETAIL_ROUTE = "$POKEMON_DETAIL/{$POKEMON_ID_ARG}"
 const val OLD_POKEMON_DETAIL_ROUTE = "$OLD_POKEMON_DETAIL/{$POKEMON_NAME_ARG}"
 
-fun NavController.navigateToPokemonDetail(pokemonName: String) {
-    navigate("$POKEMON_DETAIL/$pokemonName") {
+fun NavController.navigateToPokemonDetail(pokemonId: String) {
+    navigate("$POKEMON_DETAIL/$pokemonId") {
         launchSingleTop = true
     }
 }
