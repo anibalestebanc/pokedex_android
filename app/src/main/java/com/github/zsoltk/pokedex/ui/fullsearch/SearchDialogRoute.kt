@@ -39,7 +39,7 @@ fun SearchDialogRoute(
     initialQuery: String = "",
     onBackClick: () -> Unit,
     onSearchResult: (String) -> Unit,
-    saveOnStateHandle: (String) -> Unit,
+    onBackAndSaveStateHandle: (String) -> Unit,
     viewModel: SearchFullViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -57,12 +57,10 @@ fun SearchDialogRoute(
     SearchFullscreenDialog(
         uiState = uiState,
         onDismiss = { onBackClick() },
-        onSubmitResult = { query ->
-            saveOnStateHandle(query)
-            if (navigateToResult) {
-                onSearchResult(query)
-            } else {
-                onBackClick()
+        onSubmitResult = { q ->
+            when (navigateToResult) {
+                true -> onSearchResult(q)
+                false -> onBackAndSaveStateHandle(q)
             }
         },
         onEvent = viewModel::onEvent,
@@ -101,10 +99,10 @@ fun SearchFullscreenDialog(
                             val query = uiState.query.trim()
                             if (query.isNotEmpty()) {
                                 onEvent(SearchFullEvent.SearchSubmit)
-                                onSubmitResult(query)
                             }
+                            onSubmitResult(query)
                         },
-                        onBack = { onDismiss() },
+                        onBackClick = { onDismiss() },
                     )
                 },
             ) { inner ->

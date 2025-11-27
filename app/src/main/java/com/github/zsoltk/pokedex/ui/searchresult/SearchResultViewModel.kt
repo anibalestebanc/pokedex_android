@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.github.zsoltk.pokedex.domain.model.PokemonCatalog
-import com.github.zsoltk.pokedex.domain.repository.HistorySearchRepository
 import com.github.zsoltk.pokedex.domain.repository.PokemonDetailRepository
 import com.github.zsoltk.pokedex.domain.usecase.SearchPokemonUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,12 +21,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class SearchResultViewModel(
-    private val searchPokemon: SearchPokemonUseCase,
-    private val repository: HistorySearchRepository,
+    private val searchPokemonUseCase: SearchPokemonUseCase,
     private val pokemonDetailRepository: PokemonDetailRepository
 ) : ViewModel() {
 
@@ -35,7 +32,6 @@ class SearchResultViewModel(
     val uiState: StateFlow<SearchResultUiState> = _uiState
 
     private val queryFlow = MutableStateFlow("")
-
     private val detailFlows = mutableMapOf<Int, StateFlow<PokemonDetailUiState>>()
 
     val pagingFlow: Flow<PagingData<PokemonCatalog>> =
@@ -43,7 +39,7 @@ class SearchResultViewModel(
             .debounce(1000)
             .distinctUntilChanged()
             .flatMapLatest { q ->
-                searchPokemon(q.ifBlank { null })
+                searchPokemonUseCase(q.ifBlank { null })
             }.cachedIn(viewModelScope)
 
     fun observeDetail(id: Int): StateFlow<PokemonDetailUiState> = detailFlows.getOrPut(id) {
@@ -63,35 +59,9 @@ class SearchResultViewModel(
     }
 
     fun onEvent(event: SearchResultEvent) = when (event) {
-        SearchResultEvent.OnStart -> getSearchHistory()
         is SearchResultEvent.SetInitialQuery -> initialSearch(event.text)
         is SearchResultEvent.QueryChanged -> onQueryChanged(event.text)
-        SearchResultEvent.SearchSubmit -> submitSearch()
-        is SearchResultEvent.RemoveSuggestion -> removeSearchSuggestion(event.text)
-        is SearchResultEvent.SelectSuggestion -> selectSearchSuggestion(event.text)
-    }
-
-    private fun selectSearchSuggestion(query: String) {
-        _uiState.update { it.copy(query = query) }
-        queryFlow.value = query
-        saveSearchQuery(query)
-    }
-
-    private fun saveSearchQuery(query: String) = viewModelScope.launch {
-        if (query.isNotBlank()) {
-            repository.save(query)
-        }
-    }
-
-    private fun removeSearchSuggestion(query: String) = viewModelScope.launch {
-        repository.remove(query)
-    }
-
-    private fun getSearchHistory() = viewModelScope.launch {
-        repository.getHistorySearch(10)
-            .collect { history ->
-            _uiState.update { it.copy(searchHistory = history) }
-        }
+        SearchResultEvent.SubmitSearch -> submitSearch()
     }
 
     private fun onQueryChanged(query: String) {
@@ -101,12 +71,10 @@ class SearchResultViewModel(
     private fun initialSearch(query: String) {
         _uiState.update { it.copy(query = query) }
         queryFlow.value = query
-        saveSearchQuery(query)
     }
 
     private fun submitSearch() {
         val query = _uiState.value.query
         queryFlow.value = query
-        saveSearchQuery(query)
     }
 }

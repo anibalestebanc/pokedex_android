@@ -23,7 +23,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +35,9 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.zsoltk.pokedex.theme.PokeAppTheme
@@ -51,10 +56,19 @@ fun SearchInputPillCompact(
     val focusRequester = remember { FocusRequester() }
     val keyboard = LocalSoftwareKeyboardController.current
 
+    var tfValue by remember(value) {
+        mutableStateOf(TextFieldValue(text = value, selection = TextRange(value.length)))
+    }
+
+    LaunchedEffect(value) {
+        tfValue = TextFieldValue(text = value, selection = TextRange(value.length))
+    }
+
     LaunchedEffect(requestFocus) {
         if (requestFocus) {
             focusRequester.requestFocus()
             keyboard?.show()
+            tfValue = tfValue.copy(selection = TextRange(tfValue.text.length))
         }
     }
 
@@ -83,8 +97,11 @@ fun SearchInputPillCompact(
             Spacer(Modifier.width(8.dp))
 
             BasicTextField(
-                value = value,
-                onValueChange = onValueChange,
+                value = tfValue,
+                onValueChange = { newTfv ->
+                    tfValue = newTfv
+                    onValueChange(newTfv.text)
+                },
                 singleLine = true,
                 textStyle = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onSurface
@@ -102,7 +119,7 @@ fun SearchInputPillCompact(
                     .padding(vertical = 2.dp)
                     .focusRequester(focusRequester),
                 decorationBox = { inner ->
-                    if (value.isEmpty()) {
+                    if (tfValue.text.isEmpty()) {
                         Text(
                             text = placeholder,
                             style = MaterialTheme.typography.bodyMedium,
@@ -110,7 +127,7 @@ fun SearchInputPillCompact(
                         )
                     }
                     inner()
-                }
+                },
             )
 
             if (value.isNotEmpty()) {

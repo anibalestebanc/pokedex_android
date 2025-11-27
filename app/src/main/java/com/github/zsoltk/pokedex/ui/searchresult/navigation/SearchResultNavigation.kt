@@ -7,6 +7,8 @@ const val SEARCH_RESULT = "search_result"
 const val SEARCH_QUERY_ARG = "q"
 const val SEARCH_RESULT_ROUTE = "$SEARCH_RESULT/{$SEARCH_QUERY_ARG}"
 
+const val SEARCH_RESULT_KEY = "search_query_result"
+
 fun NavController.navigateToSearchResult(initialQuery: String) {
     val encoded = Uri.encode(initialQuery)
     navigate("$SEARCH_RESULT/$encoded") {

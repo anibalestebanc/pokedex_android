@@ -36,7 +36,10 @@ fun MainAppBar(
                     bottom = 24.dp
                 ),
             )
-            RoundedSearchBar(onSearchBarClicked)
+            RoundedSearchBar(
+                text = "Search Pokemon",
+                onSearchClick = onSearchBarClicked,
+            )
             Spacer(modifier = Modifier.height(32.dp))
             Menu(onMenuItemSelected = { menuItem ->
                 when (menuItem) {

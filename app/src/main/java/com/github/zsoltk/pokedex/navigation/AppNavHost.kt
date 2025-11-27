@@ -24,6 +24,7 @@ import com.github.zsoltk.pokedex.ui.pokemonlist.PokemonListRoute
 import com.github.zsoltk.pokedex.ui.pokemonlist.navigation.navigateToPokemonList
 import com.github.zsoltk.pokedex.ui.searchresult.SearchResultRoute
 import com.github.zsoltk.pokedex.ui.searchresult.navigation.SEARCH_QUERY_ARG
+import com.github.zsoltk.pokedex.ui.searchresult.navigation.SEARCH_RESULT_KEY
 import com.github.zsoltk.pokedex.ui.searchresult.navigation.navigateToSearchResult
 
 @Composable
@@ -44,7 +45,7 @@ fun AppNavHost(
             HomeRoute(
                 onBackClick = navController::popBackStack,
                 onPokemonListClick = navController::navigateToPokemonList,
-                onPokemonSearchClick = {
+                onSearchClick = {
                     navController.navigateToSearchDialog(navigateToResult = true)
                 }
             )
@@ -86,11 +87,15 @@ fun AppNavHost(
         ) { backStackEntry ->
             val initialQuery = backStackEntry.arguments?.getString(SEARCH_QUERY_ARG).orEmpty()
             SearchResultRoute(
+                appState = appState,
                 initialQuery = initialQuery,
                 onBackClick = navController::popBackStack,
                 onDetailClick = { pokemonId ->
                     navController.navigateToPokemonDetail(pokemonId)
-                }
+                },
+                onSearchClick = { q ->
+                    navController.navigateToSearchDialog(query = q, navigateToResult = false)
+                },
             )
         }
 
@@ -112,8 +117,9 @@ fun AppNavHost(
                 navigateToResult = navigateToResult,
                 initialQuery = initialQuery,
                 onBackClick = navController::popBackStack,
-                saveOnStateHandle = { query ->
-                    navController.previousBackStackEntry?.savedStateHandle?.set("search_query_result", query)
+                onBackAndSaveStateHandle = { query ->
+                    navController.previousBackStackEntry?.savedStateHandle?.set(SEARCH_RESULT_KEY, query)
+                    navController.popBackStack()
                 },
                 onSearchResult = { query ->
                     navController.navigateToSearchResult(query)

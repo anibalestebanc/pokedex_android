@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun RoundedSearchBar(
+    text: String,
     onSearchClick: () -> Unit,
 ) {
     val shape = RoundedCornerShape(24.dp)
@@ -36,7 +37,7 @@ fun RoundedSearchBar(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.6f)),
         modifier = Modifier
             .fillMaxWidth()
-            .height(48.dp)
+            .height(44.dp)
             .clip(shape)
             .clickable(
                 interactionSource = interaction,
@@ -53,7 +54,7 @@ fun RoundedSearchBar(
                 "Search icon",
             )
             Text(
-                text = "Search Pokemon",
+                text = text,
                 modifier = Modifier
                     .padding(start = 16.dp)
                     .weight(1f),
@@ -65,5 +66,5 @@ fun RoundedSearchBar(
 @Preview
 @Composable
 fun RoundedSearchBarPreview() {
-    RoundedSearchBar({})
+    RoundedSearchBar("Pokemon",{})
 }
