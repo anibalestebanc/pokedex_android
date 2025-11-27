@@ -1,11 +1,13 @@
 package com.github.zsoltk.pokedex.ui.pokemonlist.navigation
 
 import androidx.navigation.NavController
+import kotlinx.serialization.Serializable
 
-const val POKEMON_LIST_ROUTE = "pokemon_list"
+@Serializable
+object ListRoute
 
 fun NavController.navigateToPokemonList() {
-    navigate(POKEMON_LIST_ROUTE) {
+    navigate(route = ListRoute) {
         launchSingleTop = true
         restoreState = true
     }

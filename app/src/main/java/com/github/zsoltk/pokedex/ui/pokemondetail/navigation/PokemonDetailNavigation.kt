@@ -1,23 +1,21 @@
 package com.github.zsoltk.pokedex.ui.pokemondetail.navigation
 
 import androidx.navigation.NavController
+import kotlinx.serialization.Serializable
 
-const val POKEMON_DETAIL = "pokemon_detail"
-const val OLD_POKEMON_DETAIL = "old_pokemon_detail"
-const val POKEMON_NAME_ARG = "pokemonName"
-const val POKEMON_ID_ARG = "pokemonId"
-
-const val POKEMON_DETAIL_ROUTE = "$POKEMON_DETAIL/{$POKEMON_ID_ARG}"
-const val OLD_POKEMON_DETAIL_ROUTE = "$OLD_POKEMON_DETAIL/{$POKEMON_NAME_ARG}"
+@Serializable
+data class DetailRoute(val pokemonId: String)
 
 fun NavController.navigateToPokemonDetail(pokemonId: String) {
-    navigate("$POKEMON_DETAIL/$pokemonId") {
+    navigate(route = DetailRoute(pokemonId)) {
         launchSingleTop = true
     }
 }
+@Serializable
+data class OldPokemonDetailRoute(val pokemonName: String)
 
 fun NavController.navigateToOldPokemonDetail(pokemonName: String) {
-    navigate("$OLD_POKEMON_DETAIL/$pokemonName") {
+    navigate(route = OldPokemonDetailRoute(pokemonName)) {
         launchSingleTop = true
     }
 }

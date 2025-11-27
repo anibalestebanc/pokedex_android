@@ -1,11 +1,13 @@
 package com.github.zsoltk.pokedex.ui.home.navigation
 
 import androidx.navigation.NavController
+import kotlinx.serialization.Serializable
 
-const val HOME_ROUTE = "home"
+@Serializable
+object HomeRoute
 
 fun NavController.navigateToHome(popUpToStart: Boolean = false) {
-    navigate(HOME_ROUTE) {
+    navigate(route = HomeRoute) {
         launchSingleTop = true
         restoreState = true
         if (popUpToStart) {

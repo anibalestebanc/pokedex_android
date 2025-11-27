@@ -1,11 +1,13 @@
 package com.github.zsoltk.pokedex.ui.favorite.navigation
 
 import androidx.navigation.NavController
+import kotlinx.serialization.Serializable
 
-const val POKEMON_FAVORITE_ROUTE = "pokemon_favorite"
+@Serializable
+object FavoriteRoute
 
 fun NavController.navigateToFavorite() {
-    navigate(POKEMON_FAVORITE_ROUTE) {
+    navigate(route =  FavoriteRoute) {
         launchSingleTop = true
         restoreState = true
     }
