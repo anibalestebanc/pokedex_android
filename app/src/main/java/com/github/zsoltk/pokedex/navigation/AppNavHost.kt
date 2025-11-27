@@ -9,6 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.navArgument
 import com.github.zsoltk.pokedex.domain.model.pokemons
+import com.github.zsoltk.pokedex.ui.AppState
+import com.github.zsoltk.pokedex.ui.favorite.FavoriteRoute
 import com.github.zsoltk.pokedex.ui.fullsearch.SearchDialogRoute
 import com.github.zsoltk.pokedex.ui.fullsearch.navigation.SEARCH_DIALOG_NAVIGATION_ARG
 import com.github.zsoltk.pokedex.ui.fullsearch.navigation.SEARCH_DIALOG_QUERY_ARG
@@ -124,6 +126,12 @@ fun AppNavHost(
                 onSearchResult = { query ->
                     navController.navigateToSearchResult(query)
                 },
+            )
+        }
+
+        composable(Route.Favorite.route) {
+            FavoriteRoute(
+                onBackClick = navController::popBackStack,
             )
         }
     }

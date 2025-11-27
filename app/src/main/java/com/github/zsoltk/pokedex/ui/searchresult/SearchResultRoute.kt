@@ -28,7 +28,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.github.zsoltk.pokedex.domain.model.PokemonCatalog
-import com.github.zsoltk.pokedex.navigation.AppState
+import com.github.zsoltk.pokedex.ui.AppState
 import com.github.zsoltk.pokedex.ui.components.PokemonSearchCard
 import com.github.zsoltk.pokedex.ui.components.appbar.RoundedSearchBar
 import com.github.zsoltk.pokedex.ui.searchresult.navigation.SEARCH_RESULT_KEY

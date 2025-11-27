@@ -1,4 +1,4 @@
-package com.github.zsoltk.pokedex.navigation
+package com.github.zsoltk.pokedex.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
