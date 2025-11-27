@@ -35,10 +35,16 @@ class OfflineFirstPokemonDetailRepository(
 
     override suspend fun getPokemonDetail(nameOrId: String): Result<PokemonDetail> = withContext(Dispatchers.IO) {
         return@withContext try {
-            val pokemonDetailDto = remoteDataSource.getPokemon(nameOrId)
-            val pokemonDetail = pokemonDetailDto.toDomain()
-            pokemonDetailDao.insertReplace(pokemonDetail.toEntity())
-            Result.success(pokemonDetail)
+            val id = nameOrId.toIntOrNull()
+            if (id != null) {
+                pokemonDetailDao.getPokemonDetail(id)?.let {
+                    return@withContext Result.success(it.toDomain())
+                }
+            }
+            val remotePokemonDto = remoteDataSource.getPokemon(nameOrId)
+            val remotePokemon = remotePokemonDto.toDomain()
+            pokemonDetailDao.insertReplace(remotePokemon.toEntity())
+            Result.success(remotePokemon)
         } catch (e: Exception) {
             Result.failure(e)
         }

@@ -115,7 +115,12 @@ fun AppNavHost(
         }
 
         composable<FavoriteRoute> {
-            FavoriteRoute(onBackClick = navController::popBackStack)
+            FavoriteRoute(
+                onBackClick = navController::popBackStack,
+                onDetailClick = { pokemonId ->
+                    navController.navigateToPokemonDetail(pokemonId)
+                },
+            )
         }
     }
 }
