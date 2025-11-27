@@ -1,12 +1,14 @@
 package com.github.zsoltk.pokedex.ui.pokemondetail.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -31,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.github.zsoltk.pokedex.theme.PokeAppTheme
+import com.github.zsoltk.pokedex.ui.components.FavoriteToggleButton
 import com.github.zsoltk.pokedex.ui.components.utils.PokeBackgroundUtil.primaryTypeColorRes
 
 @Composable
@@ -40,8 +43,10 @@ fun DetailHeader(
     genera: String?,
     types: List<String>,
     imageUrl: String?,
+    isFavorite: Boolean,
     headerColor: Color,
-    onBack: () -> Unit,
+    onBackClick: () -> Unit,
+    onToggleFavorite: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -49,14 +54,27 @@ fun DetailHeader(
             .fillMaxWidth()
             .background(headerColor),
     ) {
-        IconButton(
-            onClick = onBack,
-            modifier = Modifier
-                .padding(8.dp)
-                .align(Alignment.TopStart),
-        ) {
-            Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+        Row (modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically){
+
+            IconButton(
+                onClick = onBackClick,
+                modifier = Modifier
+                    .size(40.dp),
+            ) {
+                Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+            }
+
+            FavoriteToggleButton(
+                isFavorite = isFavorite,
+                onToggle = onToggleFavorite,
+                modifier = Modifier
+            )
         }
+
 
         Spacer(Modifier.height(24.dp))
 
@@ -72,7 +90,7 @@ fun DetailHeader(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .padding(top = 42.dp, bottom = 12.dp),
+                .padding(top = 48.dp, bottom = 12.dp),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -89,14 +107,14 @@ fun DetailHeader(
                     Text(
                         text = numberLabel,
                         color = Color.White,
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                     )
                     if (!genera.isNullOrBlank()) {
                         Text(
                             text = genera,
                             color = Color.White.copy(alpha = 0.9f),
-                            fontSize = 12.sp,
+                            fontSize = 14.sp,
                         )
                     }
                 }
@@ -122,19 +140,23 @@ fun DetailHeader(
                         .size(140.dp)
                         .background(Color.White.copy(alpha = 0.2f), shape = CircleShape),
                 )
-                AsyncImage(
-                    model = imageUrl,
-                    contentDescription = name,
-                    modifier = Modifier
-                        .size(160.dp)
-                        .padding(8.dp),
-                    contentScale = ContentScale.Fit,
-                )
             }
 
             Spacer(Modifier.height(8.dp))
+        }
 
-
+        Box(modifier = Modifier
+            .align(Alignment.BottomCenter)
+            .size(250.dp)
+            .padding(start = 24.dp, bottom = 24.dp)
+        ) {
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = name,
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentScale = ContentScale.Fit,
+            )
         }
 
         Box(
@@ -158,7 +180,9 @@ fun ChipRow(
     chipColor: Color = Color(0xFFF2F2F2),
     contentColor: Color = Color.Black,
 ) {
-    FlowRow {
+    FlowRow(
+        maxItemsInEachRow = 1,
+    ) {
         chips.forEach { TypeChip(it, chipColor, contentColor) }
     }
 }
@@ -171,10 +195,11 @@ fun TypeChip(
 ) {
     Box(
         modifier = Modifier
+            .padding(vertical = 4.dp)
             .background(background, shape = RoundedCornerShape(50))
             .padding(horizontal = 10.dp, vertical = 6.dp),
     ) {
-        Text(text, color = contentColor, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+        Text(text, color = contentColor, fontSize = 14.sp, fontWeight = FontWeight.Medium)
     }
 }
 
@@ -186,10 +211,12 @@ fun DetailHeaderPreview() {
             name = "pikachu",
             numberLabel = "002",
             genera = "Seed Pokémon",
-            types = listOf("Electric"),
+            types = listOf("Electric", "Electric"),
+            isFavorite = false,
             imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/",
             headerColor = colorResource(id = primaryTypeColorRes(listOf("Electric"))),
-            onBack = {},
+            onBackClick = {},
+            onToggleFavorite = {},
         )
     }
 }

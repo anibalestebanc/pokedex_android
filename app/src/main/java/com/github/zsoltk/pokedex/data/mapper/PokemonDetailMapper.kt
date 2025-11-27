@@ -34,6 +34,7 @@ fun PokemonDetailDto.toDomain(): PokemonDetail {
         weight = weight ?: 0,
         abilities = abilitiesList,
         stats = statsList,
+        isFavorite = false,
         lastUpdated = PokeTimeUtils.getNow(),
     )
 }
@@ -49,6 +50,7 @@ fun PokemonDetail.toEntity(): PokemonDetailEntity =
         weight = weight,
         abilities = abilities,
         stats = stats,
+        isFavorite = isFavorite,
         lastUpdated = lastUpdated,
     )
 
@@ -62,6 +64,7 @@ fun PokemonDetailEntity.toDomain(): PokemonDetail = PokemonDetail(
     weight = weight,
     abilities = abilities,
     stats = stats,
+    isFavorite = isFavorite,
     lastUpdated = lastUpdated,
 )
 
@@ -81,6 +84,7 @@ fun PokemonDetail.combineWith(species: PokemonSpecies): PokemonFullDetail {
         abilities = abilities,
         stats = stats,
         sprites = sprites,
+        isFavorite = isFavorite,
         genera = species.genera,
         flavorText = species.flavorText,
         color = species.color,

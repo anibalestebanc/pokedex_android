@@ -3,12 +3,17 @@ package com.github.zsoltk.pokedex.ui.pokemondetail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.zsoltk.pokedex.domain.usecase.GetPokemonFullDetailUseCase
+import com.github.zsoltk.pokedex.domain.usecase.ObserveIsFavoriteUseCase
+import com.github.zsoltk.pokedex.domain.usecase.ToggleFavoriteUseCase
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class PokemonDetailViewModel(
-    private val getFullDetailUseCase: GetPokemonFullDetailUseCase
+    private val getFullDetailUseCase: GetPokemonFullDetailUseCase,
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
+    private val observeIsFavoriteUseCase: ObserveIsFavoriteUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DetailUiState())
@@ -18,8 +23,11 @@ class PokemonDetailViewModel(
         when (action) {
             is DetailEvent.OnStart -> getPokemonDetail(action.pokemonId)
             is DetailEvent.OnRetryClick -> retry(action.pokemonId)
+            is DetailEvent.OnToggleFavorite -> onToggleFavorite(action.pokemonId)
         }
     }
+
+    fun observeIsFavorite(id: String): Flow<Boolean> = observeIsFavoriteUseCase(id.toInt())
 
     fun getPokemonDetail(idOrName: String) = viewModelScope.launch {
         _uiState.value = DetailUiState(isLoading = true)
@@ -27,6 +35,13 @@ class PokemonDetailViewModel(
             _uiState.value = DetailUiState(data = detail)
         }.onFailure { e ->
             _uiState.value = DetailUiState(error = e.message ?: "Error")
+        }
+    }
+
+    fun onToggleFavorite(pokemonId: String) = viewModelScope.launch {
+        val id = pokemonId.toIntOrNull()
+        if (id != null) {
+            toggleFavoriteUseCase(id)
         }
     }
 

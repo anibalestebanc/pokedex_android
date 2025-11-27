@@ -41,17 +41,25 @@ fun PokemonDetailRoute(
     viewModel: PokemonDetailViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isFavorite by viewModel.observeIsFavorite(pokemonId).collectAsStateWithLifecycle(initialValue = false)
 
     LaunchedEffect(pokemonId) {
         viewModel.onEvent(DetailEvent.OnStart(pokemonId))
     }
 
-    PokemonDetailScreenV2(pokemonId, state = uiState, onEvent = viewModel::onEvent, onBackClick)
+    PokemonDetailScreenV2(
+        pokemonId = pokemonId,
+        isFavorite = isFavorite,
+        state = uiState,
+        onEvent = viewModel::onEvent,
+        onBackClick = onBackClick,
+    )
 }
 
 @Composable
 fun PokemonDetailScreenV2(
     pokemonId: String,
+    isFavorite: Boolean,
     state: DetailUiState,
     onEvent: (DetailEvent) -> Unit,
     onBackClick: () -> Unit,
@@ -67,8 +75,10 @@ fun PokemonDetailScreenV2(
 
         state.data != null -> PokemonDetailContent(
             data = state.data,
+            isFavorite = isFavorite,
             onRefresh = { onEvent.invoke(DetailEvent.OnRetryClick(pokemonId)) },
-            onBack = onBackClick,
+            onBackClick = onBackClick,
+            onToggleFavorite = { onEvent(DetailEvent.OnToggleFavorite(pokemonId)) },
         )
     }
 }
@@ -98,10 +108,13 @@ fun LoadingState() {
 @Composable
 fun PokemonDetailContent(
     data: PokemonFullDetail,
+    isFavorite: Boolean,
     onRefresh: () -> Unit,
-    onBack: () -> Unit,
+    onBackClick: () -> Unit,
+    onToggleFavorite : () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
     val scrollState = rememberScrollState()
 
     Column(
@@ -116,8 +129,10 @@ fun PokemonDetailContent(
             genera = data.genera,
             types = data.types,
             imageUrl = data.imageUrl,
+            isFavorite = isFavorite,
             headerColor = colorResource(id = primaryTypeColorRes(data.types)),
-            onBack = onBack,
+            onBackClick = onBackClick,
+            onToggleFavorite = onToggleFavorite,
         )
 
         // Tabs

@@ -12,6 +12,7 @@ data class PokemonFullDetail(
     val abilities: List<String>,
     val stats: List<Stat>,
     val sprites: PokemonSprites?,
+    val isFavorite: Boolean,
     // species values
     val genera: String?,
     val flavorText: String?,
