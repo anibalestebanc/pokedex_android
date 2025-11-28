@@ -136,6 +136,7 @@ dependencies {
     // Testing - JUnit 5
     testImplementation(libs.junit5.api)
     testRuntimeOnly(libs.junit5.engine)
+    testRuntimeOnly(libs.junit5.platform.launcher)
     testImplementation(libs.junit5.params)
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)

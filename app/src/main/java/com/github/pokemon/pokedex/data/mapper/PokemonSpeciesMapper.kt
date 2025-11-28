@@ -3,12 +3,12 @@ package com.github.pokemon.pokedex.data.mapper
 import com.github.pokemon.pokedex.core.database.entity.PokemonSpeciesEntity
 import com.github.pokemon.pokedex.data.datasource.remote.dto.PokemonSpeciesDto
 import com.github.pokemon.pokedex.domain.model.PokemonSpecies
-import com.github.pokemon.pokedex.utils.PokeTimeUtils
+import com.github.pokemon.pokedex.utils.PokeTimeUtil
 
 private fun String.cleanFlavor(): String =
     this.replace("\n", " ").replace("\u000c", " ").replace("\\s+".toRegex(), " ").trim()
 
-fun PokemonSpeciesDto.toDomain(preferredLang: String = "en"): PokemonSpecies {
+fun PokemonSpeciesDto.toDomain(pokeTimeUtil: PokeTimeUtil, preferredLang: String = "en"): PokemonSpecies {
     val genus = genera.firstOrNull { it.language?.name == preferredLang }?.genus
         ?: genera.firstOrNull()?.genus
     val flavor = flavor_text_entries.firstOrNull { it.language?.name == preferredLang }?.flavor_text
@@ -27,7 +27,7 @@ fun PokemonSpeciesDto.toDomain(preferredLang: String = "en"): PokemonSpecies {
         growthRate = growth_rate?.name,
         isLegendary = is_legendary,
         isMythical = is_mythical,
-        lastUpdated = PokeTimeUtils.getNow()
+        lastUpdated = pokeTimeUtil.now()
     )
 }
 

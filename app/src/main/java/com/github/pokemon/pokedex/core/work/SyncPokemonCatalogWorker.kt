@@ -8,7 +8,6 @@ import androidx.work.workDataOf
 import com.github.pokemon.pokedex.core.common.error.WorkerException
 import com.github.pokemon.pokedex.core.common.loggin.LoggerError
 import com.github.pokemon.pokedex.domain.repository.PokemonCatalogRepository
-import com.github.pokemon.pokedex.utils.PokeTimeUtils
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import retrofit2.HttpException
@@ -23,7 +22,8 @@ class SyncPokemonCatalogWorker(appContext: Context, params: WorkerParameters) :
         return repository.syncPokemonCatalog().fold(
             onSuccess = {
                 Log.d("SyncPokemonCatalogWorker", "Success sync pokemon catalog with $it items")
-                repository.setLastSyncAt(PokeTimeUtils.getNow())
+                val now = System.currentTimeMillis()
+                repository.setLastSyncAt(now)
                 return Result.success(workDataOf("synced" to true))
             },
             onFailure = { error ->

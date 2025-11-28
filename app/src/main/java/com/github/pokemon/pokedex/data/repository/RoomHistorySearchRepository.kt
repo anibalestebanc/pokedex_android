@@ -5,7 +5,7 @@ import com.github.pokemon.pokedex.core.common.loggin.LoggerError
 import com.github.pokemon.pokedex.core.database.dao.HistorySearchDao
 import com.github.pokemon.pokedex.core.database.entity.HistorySearchEntity
 import com.github.pokemon.pokedex.domain.repository.HistorySearchRepository
-import com.github.pokemon.pokedex.utils.PokeTimeUtils
+import com.github.pokemon.pokedex.utils.PokeTimeUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 
 class RoomHistorySearchRepository(
     private val searchHistoryDao: HistorySearchDao,
+    private val pokeTimeUtil: PokeTimeUtil
 ) : HistorySearchRepository {
 
     override fun getHistorySearch(limit: Int): Flow<List<String>> =
@@ -22,7 +23,7 @@ class RoomHistorySearchRepository(
         try {
             val q = normalizer(queryRaw)
             if (q.isBlank()) return@withContext
-            val now = PokeTimeUtils.getNow()
+            val now = pokeTimeUtil.now()
             val insertedId = searchHistoryDao.insertIgnore(HistorySearchEntity(query = q, timestamp = now))
             if (insertedId == -1L) {
                 searchHistoryDao.updateTimestamp(q, now)

@@ -8,7 +8,8 @@ import com.github.pokemon.pokedex.data.mapper.toDomain
 import com.github.pokemon.pokedex.data.mapper.toEntity
 import com.github.pokemon.pokedex.domain.model.PokemonDetail
 import com.github.pokemon.pokedex.domain.repository.PokemonDetailRepository
-import com.github.pokemon.pokedex.utils.RefreshDueUtil.isRefreshDue
+import com.github.pokemon.pokedex.utils.PokeTimeUtil
+import com.github.pokemon.pokedex.utils.RefreshDueUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -18,6 +19,8 @@ import kotlinx.coroutines.withContext
 class OfflineFirstPokemonDetailRepository(
     private val remoteDataSource: PokemonDetailRemoteDataSource,
     private val pokemonDetailDao: PokemonDetailDao,
+    private val pokeTimeUtil: PokeTimeUtil,
+    private val refreshDueUtil: RefreshDueUtil
 ) : PokemonDetailRepository {
 
     override fun observePokemonDetail(id: Int): Flow<PokemonDetail?> =
@@ -38,12 +41,12 @@ class OfflineFirstPokemonDetailRepository(
     override suspend fun getPokemonDetail(id: Int): Result<PokemonDetail> = withContext(Dispatchers.IO) {
         return@withContext try {
             pokemonDetailDao.getPokemonDetail(id)?.let { detailEntity ->
-                if (!isRefreshDue(detailEntity.lastUpdated)) {
+                if (!refreshDueUtil.isRefreshDue(detailEntity.lastUpdated)) {
                     return@withContext Result.success(detailEntity.toDomain())
                 }
             }
             val remotePokemonDto = remoteDataSource.getPokemon(id.toString())
-            val remotePokemon = remotePokemonDto.toDomain()
+            val remotePokemon = remotePokemonDto.toDomain(pokeTimeUtil)
             pokemonDetailDao.insertReplace(remotePokemon.toEntity())
             Result.success(remotePokemon)
         } catch (e: Exception) {

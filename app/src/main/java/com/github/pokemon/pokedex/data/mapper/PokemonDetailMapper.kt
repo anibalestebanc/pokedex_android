@@ -7,9 +7,9 @@ import com.github.pokemon.pokedex.domain.model.PokemonFullDetail
 import com.github.pokemon.pokedex.domain.model.PokemonSpecies
 import com.github.pokemon.pokedex.domain.model.PokemonSprites
 import com.github.pokemon.pokedex.domain.model.Stat
-import com.github.pokemon.pokedex.utils.PokeTimeUtils
+import com.github.pokemon.pokedex.utils.PokeTimeUtil
 
-fun PokemonDetailDto.toDomain(): PokemonDetail {
+fun PokemonDetailDto.toDomain(pokeTimeUtil: PokeTimeUtil): PokemonDetail {
     val typesList = types.sortedBy { it.slot ?: Int.MAX_VALUE }.mapNotNull { it.type?.name }
     val abilitiesList = abilities.sortedBy { it.slot ?: Int.MAX_VALUE }.mapNotNull { it.ability?.name }
     val statsList = stats.mapNotNull { s ->
@@ -35,7 +35,7 @@ fun PokemonDetailDto.toDomain(): PokemonDetail {
         abilities = abilitiesList,
         stats = statsList,
         isFavorite = false,
-        lastUpdated = PokeTimeUtils.getNow(),
+        lastUpdated = pokeTimeUtil.now(),
     )
 }
 
