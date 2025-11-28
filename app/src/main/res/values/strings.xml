@@ -42,6 +42,7 @@
   <string name="pokedex_title">Pokedex</string>
 
   <!--Pokemon Detail-->
+  <string name="pokemon_detail_title">Your favorite pokemons are here!</string>
   <string name="pokemon_detail_about">About</string>
   <string name="pokemon_detail_base_stats">Base stats</string>
   <string name="pokemon_detail_evolution">Evolution</string>

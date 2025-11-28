@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -18,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.zsoltk.pokedex.R
 import com.github.zsoltk.pokedex.ui.components.PokemonSearchCard
+import com.github.zsoltk.pokedex.ui.components.Title
 import com.github.zsoltk.pokedex.ui.components.common.EmptyStateScreen
 import com.github.zsoltk.pokedex.ui.components.common.ErrorStateScreen
 import org.koin.androidx.compose.koinViewModel
@@ -66,9 +69,23 @@ fun FavoriteScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
+
+                item(key = "header") {
+                    Title(
+                        text = stringResource(id = R.string.pokemon_detail_title),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(
+                            top = 36.dp,
+                            bottom = 16.dp,
+                            start = 16.dp,
+                            end = 16.dp,
+                        ),
+                    )
+                }
+
                 items(
                     count = uiState.favorites.count(),
-                    key = { index -> uiState.favorites[index].id }
+                    key = { index -> uiState.favorites[index].id },
                 ) { index ->
                     val pokemon = uiState.favorites[index]
                     PokemonSearchCard(
@@ -80,7 +97,7 @@ fun FavoriteScreen(
                         fallbackThumbUrl = pokemon.imageUrl,
                         isLoadingDetail = false,
                         errorDetail = null,
-                        onClick = { onDetailClick(pokemon.id.toString()) }
+                        onClick = { onDetailClick(pokemon.id.toString()) },
                     )
                 }
             }

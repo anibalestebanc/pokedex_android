@@ -42,6 +42,7 @@
   <string name="pokedex_title">Pokédex</string>
 
   <!--Pokemon Detail-->
+  <string name="pokemon_detail_title">Tus pokemons favoritos están aquí!</string>
   <string name="pokemon_detail_about">Acerca de</string>
   <string name="pokemon_detail_base_stats">Estadísticas base</string>
   <string name="pokemon_detail_evolution">Evolución</string>
