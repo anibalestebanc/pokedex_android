@@ -95,10 +95,10 @@ fun DetailHeader(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .padding(top = 48.dp, bottom = 12.dp),
+                .padding(top = 56.dp, bottom = 12.dp),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.Top,
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(
@@ -112,20 +112,18 @@ fun DetailHeader(
                     Text(
                         text = numberLabel,
                         color = Color.White,
-                        fontSize = 16.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                     )
                     if (!genera.isNullOrBlank()) {
                         Text(
                             text = genera,
                             color = Color.White.copy(alpha = 0.9f),
-                            fontSize = 14.sp,
+                            fontSize = 16.sp,
                         )
                     }
                 }
             }
-
-            Spacer(Modifier.height(8.dp))
 
             ChipRow(
                 chips = types.map { it.replaceFirstChar { c -> if (c.isLowerCase()) c.titlecase() else c.toString() } },
@@ -146,10 +144,6 @@ fun DetailHeader(
                         .background(Color.White.copy(alpha = 0.2f), shape = CircleShape),
                 )
             }
-
-            Spacer(Modifier.height(8.dp))
-
-
         }
 
         Box(
@@ -172,7 +166,7 @@ fun DetailHeader(
         Box(modifier = Modifier
             .align(Alignment.BottomCenter)
             .size(250.dp)
-            .padding(start = 24.dp, bottom = 24.dp)
+            .padding(bottom = 24.dp)
         ) {
             AsyncImage(
                 model = imageUrl,

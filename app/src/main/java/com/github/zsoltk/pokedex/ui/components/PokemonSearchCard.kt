@@ -28,7 +28,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Warning
+import androidx.compose.material.icons.rounded.ErrorOutline
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -36,14 +36,11 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -73,13 +70,6 @@ fun PokemonSearchCard(
     modifier: Modifier = Modifier,
 ) {
     val bgColor = colorResource(id = primaryTypeColorRes(types))
-    val bgGradient = remember(bgColor) {
-        Brush.linearGradient(
-            colors = listOf(bgColor.copy(alpha = 0.98f), bgColor.copy(alpha = 0.78f)),
-            start = Offset.Zero,
-            end = Offset.Infinite,
-        )
-    }
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -88,11 +78,11 @@ fun PokemonSearchCard(
             .clip(RoundedCornerShape(16.dp))
             .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-        border = BorderStroke(0.dp, Color.Transparent),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        border = BorderStroke(1.dp, Color.Transparent),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
 
-        Box(modifier = Modifier.background(bgGradient)) {
+        Box(modifier = Modifier.background(bgColor)) {
 
             Box(
                 modifier = Modifier
@@ -142,7 +132,6 @@ fun PokemonSearchCard(
                         isLoadingDetail && types.isEmpty() -> {
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                 ChipPlaceholder(width = 56.dp)
-                                ChipPlaceholder(width = 44.dp)
                             }
                         }
 
@@ -154,7 +143,7 @@ fun PokemonSearchCard(
                                     .padding(top = 4.dp),
                             ) {
                                 Icon(
-                                    imageVector = Icons.Rounded.Warning,
+                                    imageVector = Icons.Rounded.ErrorOutline,
                                     contentDescription = "error",
                                     tint = Color.White.copy(alpha = 0.9f),
                                     modifier = Modifier.size(16.dp),
@@ -173,6 +162,7 @@ fun PokemonSearchCard(
                                     .padding(top = 4.dp),
                                 horizontalArrangement = Arrangement.Start,
                                 verticalArrangement = Arrangement.Top,
+                                maxItemsInEachRow = 1
                             ) {
                                 types.take(3).forEach { t -> TypeChip(t) }
                             }
@@ -220,6 +210,7 @@ fun PokemonSearchCard(
 private fun TypeChip(type: String) {
     Box(
         modifier = Modifier
+            .padding(vertical = 2.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(Color.White.copy(alpha = 0.22f))
             .border(1.dp, Color.White.copy(alpha = 0.35f), RoundedCornerShape(12.dp))
@@ -258,7 +249,7 @@ fun Modifier.shimmer(): Modifier = composed {
     this.alpha(alpha)
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PokemonSearchCardPreview() {
     PokeAppTheme {
