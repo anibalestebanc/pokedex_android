@@ -19,6 +19,7 @@
   <string name="loading_content">Loading content…</string>
   <string name="empty_state_message">There’s no content to show right now.</string>
   <string name="error_generic_message">An unexpected error occurred. Please try again.</string>
+  <string name="error_no_internet_title">No internet connection</string>
   <string name="error_no_internet_message">Check your connection and try again.</string>
   <string name="error_not_found_message">We couldn’t find what you’re looking for.</string>
   <string name="search_recent">Recent searches</string>

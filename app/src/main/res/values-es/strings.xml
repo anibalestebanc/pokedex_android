@@ -18,6 +18,7 @@
   <string name="loading">Cargando…</string>
   <string name="loading_content">Cargando contenido…</string>
   <string name="empty_state_message">No hay contenido para mostrar por ahora.</string>
+  <string name="error_no_internet_title">Sin conexión a internet</string>
   <string name="error_generic_message">Ocurrió un error inesperado. Inténtalo nuevamente.</string>
   <string name="error_no_internet_message">Revisa tu conexión e inténtalo otra vez.</string>
   <string name="error_not_found_message">No pudimos encontrar lo que buscas.</string>
