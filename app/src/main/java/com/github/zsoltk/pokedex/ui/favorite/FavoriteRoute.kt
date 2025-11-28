@@ -5,11 +5,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.zsoltk.pokedex.R
 import com.github.zsoltk.pokedex.ui.components.PokemonSearchCard
+import com.github.zsoltk.pokedex.ui.components.common.EmptyStateScreen
+import com.github.zsoltk.pokedex.ui.components.common.ErrorStateScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -55,14 +54,10 @@ fun FavoriteScreen(
         }
 
         uiState.error?.let {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = stringResource(id = it))
-            }
+            ErrorStateScreen(
+                title = stringResource(id = it),
+                message = null,
+            )
         }
 
         if (uiState.favorites.isNotEmpty()) {
@@ -90,14 +85,10 @@ fun FavoriteScreen(
                 }
             }
         } else if (!uiState.isLoading && uiState.error == null) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(text = stringResource(id = R.string.favorite_no_favorites_yet))
-            }
+            EmptyStateScreen(
+                title = stringResource(id = R.string.favorite_no_favorites_yet),
+                message = null,
+            )
         }
     }
 }
