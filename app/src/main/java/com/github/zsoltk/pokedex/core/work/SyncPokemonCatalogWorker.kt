@@ -11,6 +11,8 @@ import com.github.zsoltk.pokedex.domain.repository.PokemonCatalogRepository
 import com.github.zsoltk.pokedex.utils.PokeTimeUtils
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import retrofit2.HttpException
+import java.io.IOException
 
 class SyncPokemonCatalogWorker(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params), KoinComponent {
@@ -18,18 +20,19 @@ class SyncPokemonCatalogWorker(appContext: Context, params: WorkerParameters) :
     private val repository: PokemonCatalogRepository by inject()
 
     override suspend fun doWork(): Result {
-        repository.syncPokemonCatalog().fold(
+        return repository.syncPokemonCatalog().fold(
             onSuccess = {
                 Log.d("SyncPokemonCatalogWorker", "Success sync pokemon catalog with $it items")
                 repository.setLastSyncAt(PokeTimeUtils.getNow())
                 return Result.success(workDataOf("synced" to true))
             },
-            onFailure = {
+            onFailure = { error ->
                 LoggerError.logError(
                     message = "Error sync pokemon catalog",
-                    error = WorkerException(cause = it.cause)
+                    error = WorkerException(cause = error.cause),
                 )
-                return Result.failure(workDataOf("synced" to false))
+                val isTransient = error is IOException || error is HttpException
+                if (isTransient) Result.retry() else Result.failure()
             },
         )
     }
