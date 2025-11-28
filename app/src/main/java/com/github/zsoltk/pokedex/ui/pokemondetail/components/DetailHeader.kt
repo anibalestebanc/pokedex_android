@@ -18,8 +18,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,11 +29,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.github.zsoltk.pokedex.R
 import com.github.zsoltk.pokedex.theme.PokeAppTheme
 import com.github.zsoltk.pokedex.ui.components.FavoriteToggleButton
 import com.github.zsoltk.pokedex.ui.components.utils.PokeBackgroundUtil.primaryTypeColorRes
@@ -47,6 +51,7 @@ fun DetailHeader(
     headerColor: Color,
     onBackClick: () -> Unit,
     onToggleFavorite: () -> Unit,
+    onShareClick: (String) -> Unit ,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -143,6 +148,25 @@ fun DetailHeader(
             }
 
             Spacer(Modifier.height(8.dp))
+
+
+        }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(vertical = 24.dp, horizontal = 16.dp),
+        ) {
+            IconButton(
+                modifier = modifier.size(40.dp),
+                onClick = { onShareClick(imageUrl.orEmpty()) },
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Share,
+                    contentDescription = stringResource(R.string.share),
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                )
+            }
         }
 
         Box(modifier = Modifier
@@ -217,6 +241,7 @@ fun DetailHeaderPreview() {
             headerColor = colorResource(id = primaryTypeColorRes(listOf("Electric"))),
             onBackClick = {},
             onToggleFavorite = {},
+            onShareClick = {}
         )
     }
 }

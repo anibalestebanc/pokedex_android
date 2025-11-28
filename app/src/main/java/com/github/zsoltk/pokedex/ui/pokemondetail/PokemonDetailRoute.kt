@@ -1,5 +1,6 @@
 package com.github.zsoltk.pokedex.ui.pokemondetail
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,11 +40,28 @@ fun PokemonDetailRoute(
     pokemonId: String,
     viewModel: PokemonDetailViewModel = koinViewModel(),
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isFavorite by viewModel.observeIsFavorite(pokemonId).collectAsStateWithLifecycle(initialValue = false)
 
     LaunchedEffect(pokemonId) {
         viewModel.onEvent(DetailEvent.OnStart(pokemonId))
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is DetailEffect.ShareUrl -> {
+                    val intent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, effect.url)
+                    }
+                    context.startActivity(
+                        Intent.createChooser(intent, context.getString(R.string.share))
+                    )
+                }
+            }
+        }
     }
 
     PokemonDetailScreenV2(
@@ -76,6 +95,7 @@ fun PokemonDetailScreenV2(
             onRefresh = { onEvent.invoke(DetailEvent.OnRetryClick(pokemonId)) },
             onBackClick = onBackClick,
             onToggleFavorite = { onEvent(DetailEvent.OnToggleFavorite(pokemonId)) },
+            onShareClick = { onEvent(DetailEvent.OnSharePokemon(it)) }
         )
     }
 }
@@ -87,6 +107,7 @@ fun PokemonDetailContent(
     onRefresh: () -> Unit,
     onBackClick: () -> Unit,
     onToggleFavorite : () -> Unit,
+    onShareClick : (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -108,6 +129,7 @@ fun PokemonDetailContent(
             headerColor = colorResource(id = primaryTypeColorRes(data.types)),
             onBackClick = onBackClick,
             onToggleFavorite = onToggleFavorite,
+            onShareClick = onShareClick
         )
 
         // Tabs

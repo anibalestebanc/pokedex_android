@@ -8,7 +8,9 @@ import com.github.zsoltk.pokedex.domain.usecase.GetPokemonFullDetailUseCase
 import com.github.zsoltk.pokedex.domain.usecase.ObserveIsFavoriteUseCase
 import com.github.zsoltk.pokedex.domain.usecase.ToggleFavoriteUseCase
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -21,6 +23,10 @@ class PokemonDetailViewModel(
     private val _uiState = MutableStateFlow(DetailUiState())
     val uiState: StateFlow<DetailUiState> = _uiState
 
+    private val _effect = MutableSharedFlow<DetailEffect>()
+    val effect: SharedFlow<DetailEffect> = _effect
+
+
     fun observeIsFavorite(id: String): Flow<Boolean> = observeIsFavoriteUseCase(id.toInt())
 
     fun onEvent(action: DetailEvent) = viewModelScope.launch {
@@ -28,6 +34,7 @@ class PokemonDetailViewModel(
             is DetailEvent.OnStart -> getPokemonDetail(action.pokemonId)
             is DetailEvent.OnRetryClick -> retry(action.pokemonId)
             is DetailEvent.OnToggleFavorite -> onToggleFavorite(action.pokemonId)
+            is DetailEvent.OnSharePokemon -> _effect.emit(DetailEffect.ShareUrl(action.imageUrl))
         }
     }
     fun getPokemonDetail(idOrName: String) = viewModelScope.launch {
