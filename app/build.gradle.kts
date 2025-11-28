@@ -123,6 +123,9 @@ dependencies {
     // Image Loading
     implementation(libs.coil)
 
+    // Leak Canary
+    implementation(libs.leakcanary.android)
+
     // Testing - JUnit 5
     testImplementation(libs.junit5.api)
     testRuntimeOnly(libs.junit5.engine)

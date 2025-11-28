@@ -16,6 +16,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
+import leakcanary.LeakCanary
 
 class PokeApplication : Application(), KoinComponent {
 
@@ -23,6 +24,11 @@ class PokeApplication : Application(), KoinComponent {
 
     override fun onCreate() {
         super.onCreate()
+
+        LeakCanary.config = LeakCanary.config.copy(
+            retainedVisibleThreshold = 3
+        )
+
         startKoin {
             androidLogger(Level.ERROR)
             androidContext(this@PokeApplication)
