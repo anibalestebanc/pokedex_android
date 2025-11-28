@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.ktlint)
@@ -12,9 +12,9 @@ plugins {
 
 android {
     compileSdk = 36
-    namespace = "com.github.zsoltk.pokedex"
+    namespace = "com.github.pokemon.pokedex"
     defaultConfig {
-        applicationId = "com.github.zsoltk.pokedex"
+        applicationId = "com.github.pokemon.pokedex"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
@@ -24,8 +24,15 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
             isMinifyEnabled = false
+            isDebuggable = true
+        }
+
+        release {
+            isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
