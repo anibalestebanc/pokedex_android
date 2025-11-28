@@ -26,10 +26,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.github.zsoltk.pokedex.R
 import com.github.zsoltk.pokedex.ui.components.appbar.SearchDialogTopBar
 import org.koin.androidx.compose.koinViewModel
 
@@ -94,7 +96,7 @@ fun SearchFullscreenDialog(
                     SearchDialogTopBar(
                         query = uiState.query,
                         onValueChange = { onEvent(SearchFullEvent.QueryChanged(it)) },
-                        placeholder = "Search Pokemon",
+                        placeholder = stringResource(id = R.string.search_bar_hint),
                         onSubmit = {
                             val query = uiState.query.trim()
                             if (query.isNotEmpty()) {
@@ -118,10 +120,10 @@ fun SearchFullscreenDialog(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text("Búsquedas recientes", style = MaterialTheme.typography.titleSmall)
+                        Text(stringResource(id = R.string.search_dialog_recent_searches), style = MaterialTheme.typography.titleSmall)
                         TextButton(
                             onClick = { onEvent(SearchFullEvent.RemoveAllHistory) },
-                        ) { Text("Limpiar") }
+                        ) { Text(stringResource(id = R.string.search_dialog_clear)) }
                     }
 
                     LazyColumn(
@@ -136,7 +138,7 @@ fun SearchFullscreenDialog(
 
                             ListItem(
                                 headlineContent = { Text(item) },
-                                leadingContent = { Icon(Icons.Rounded.History, null) },
+                                leadingContent = { Icon(Icons.Rounded.History, stringResource(id = R.string.search_dialog_history_icon_content_description)) },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable {

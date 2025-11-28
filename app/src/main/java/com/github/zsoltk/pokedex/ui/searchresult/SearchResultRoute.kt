@@ -20,6 +20,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -27,6 +28,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.github.zsoltk.pokedex.R
 import com.github.zsoltk.pokedex.domain.model.PokemonCatalog
 import com.github.zsoltk.pokedex.ui.AppState
 import com.github.zsoltk.pokedex.ui.components.PokemonSearchCard
@@ -87,7 +89,7 @@ fun SearchScreen(
 
         Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
             RoundedSearchBar(
-                text = uiState.query.ifBlank { "Search Pokemon" },
+                text = uiState.query.ifBlank { stringResource(id = R.string.search_bar_hint) },
                 onSearchClick = { onSearchClick(uiState.query) },
             )
         }
@@ -130,7 +132,7 @@ fun SearchScreen(
                     when (val ls = pagingItems.loadState.refresh) {
                         is LoadState.Loading -> item(key = "refresh-loading") { LoadingRow() }
                         is LoadState.Error -> item(key = "refresh-error") {
-                            ErrorRow(ls.error.message ?: "Error") { pagingItems.retry() }
+                            ErrorRow(ls.error.message ?: stringResource(id = R.string.search_result_error)) { pagingItems.retry() }
                         }
                         else -> Unit
                     }
@@ -140,12 +142,12 @@ fun SearchScreen(
                     if (loadState.append is LoadState.Error) {
                         val err = loadState.append as LoadState.Error
                         item(key = "append-error") {
-                            ErrorRow(err.error.message ?: "Error al cargar más") { pagingItems.retry() }
+                            ErrorRow(err.error.message ?: stringResource(id = R.string.search_result_load_more_error)) { pagingItems.retry() }
                         }
                     }
 
                     if (isEmptyList) {
-                        item(key = "empty") { EmptyStateRow("No se encontraron resultados para ${uiState.query}") }
+                        item(key = "empty") { EmptyStateRow(stringResource(id = R.string.search_result_empty, uiState.query)) }
                     }
                 }
 

@@ -2,6 +2,7 @@ package com.github.zsoltk.pokedex.ui.favorite
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.zsoltk.pokedex.R
 import com.github.zsoltk.pokedex.domain.usecase.GetFavoritesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,7 +25,7 @@ class FavoriteViewModel(private val getFavoritesUseCase: GetFavoritesUseCase) : 
         _uiState.update { it.copy(isLoading = true, error = null) }
         getFavoritesUseCase()
             .catch { error ->
-                _uiState.update { it.copy(isLoading = false, error = "Error loading favorites") }
+                _uiState.update { it.copy(isLoading = false, error = R.string.favorite_error_loading) }
             }
             .collect { favorites ->
                 _uiState.update { it.copy(isLoading = false, favorites = favorites) }

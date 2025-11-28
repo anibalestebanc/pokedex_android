@@ -8,6 +8,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -22,16 +23,17 @@ fun PokeBottomBar(
         tonalElevation = 3.dp
     ){
         destinations.forEach { dest ->
+            val label = stringResource(id = dest.label)
             NavigationBarItem(
                 selected = selectedId == dest.id,
                 onClick = { onSelect(dest.id) },
                 icon = {
                     Icon(
                         dest.selectedIcon,
-                        contentDescription = dest.label,
+                        contentDescription = label,
                     )
                 },
-                label = { Text(dest.label) },
+                label = { Text(label) },
                 alwaysShowLabel = true,
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.onSurface,

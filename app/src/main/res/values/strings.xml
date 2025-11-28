@@ -1,3 +1,90 @@
 <resources>
-    <string name="app_name">Pokedex</string>
+  <string name="app_name">Pokedex</string>
+  <!-- utils strings -->
+  <string name="ok">OK</string>
+  <string name="cancel">Cancel</string>
+  <string name="close">Close</string>
+  <string name="retry">Retry</string>
+  <string name="continue_action">Continue</string>
+  <string name="back">Back</string>
+  <string name="dismiss">Dismiss</string>
+  <string name="save">Save</string>
+  <string name="delete">Delete</string>
+  <string name="edit">Edit</string>
+  <string name="share">Share</string>
+  <string name="settings">Settings</string>
+
+  <!-- generic strings -->
+  <string name="empty_state_message">There’s no content to show right now.</string>
+  <string name="error_generic_message">An unexpected error occurred. Please try again.</string>
+  <string name="error_no_internet_message">Check your connection and try again.</string>
+  <string name="error_not_found_message">We couldn’t find what you’re looking for.</string>
+  <string name="search_recent">Recent searches</string>
+
+  <!-- Home -->
+  <string name="main_app_bar_title">What Pokémon\nare you looking for?</string>
+  <string name="search_bar_hint">Search Pokemon</string>
+  <string name="search_icon_content_description">Search icon</string>
+  <string name="news_section_title">Pokémon News</string>
+  <string name="news_section_view_all">View All</string>
+
+  <!-- Menu -->
+  <string name="menu_pokedex">Pokedex</string>
+  <string name="menu_moves">Moves</string>
+  <string name="menu_abilities">Abilities</string>
+  <string name="menu_items">Items</string>
+  <string name="menu_locations">Locations</string>
+  <string name="menu_type_charts">Type charts</string>
+
+  <!--Pokemon List-->
+  <string name="pokedex_title">Pokedex</string>
+
+  <!--Pokemon Detail-->
+  <string name="pokemon_detail_about">About</string>
+  <string name="pokemon_detail_base_stats">Base stats</string>
+  <string name="pokemon_detail_evolution">Evolution</string>
+  <string name="pokemon_detail_moves">Moves</string>
+  <string name="pokemon_detail_hp">HP</string>
+  <string name="pokemon_detail_attack">Attack</string>
+  <string name="pokemon_detail_defense">Defense</string>
+  <string name="pokemon_detail_sp_atk">Sp. Atk</string>
+  <string name="pokemon_detail_sp_def">Sp. Def</string>
+  <string name="pokemon_detail_speed">Speed</string>
+  <string name="pokemon_detail_total">Total</string>
+  <string name="pokemon_detail_height">Height</string>
+  <string name="pokemon_detail_weight">Weight</string>
+  <string name="pokemon_detail_habitat">Habitat</string>
+  <string name="pokemon_detail_egg_groups">Egg groups</string>
+  <string name="pokemon_detail_abilities">Abilities</string>
+  <string name="pokemon_detail_growth">Growth</string>
+  <string name="pokemon_detail_capture">Capture</string>
+  <string name="pokemon_detail_happiness">Happiness</string>
+  <string name="pokemon_detail_legendary">Legendary</string>
+  <string name="pokemon_detail_mythical">Mythical</string>
+  <string name="tbd">TBD</string>
+
+  <!--Search Result-->
+  <string name="search_result_error">Error</string>
+  <string name="search_result_load_more_error">Error loading more</string>
+  <string name="search_result_empty">No results found for %1$s</string>
+
+  <!--Search Dialog-->
+  <string name="search_dialog_recent_searches">Recent searches</string>
+  <string name="search_dialog_no_recent_searches">No recent searches</string>
+  <string name="search_dialog_clear">Clear</string>
+  <string name="search_dialog_remove">Remove</string>
+  <string name="search_dialog_history_icon_content_description">History icon</string>
+
+  <!--Favorite-->
+  <string name="favorite_no_favorites_yet">No favorites yet</string>
+  <string name="favorite_error_loading">Error loading favorites</string>
+
+  <!--Bottom Bar-->
+  <string name="bottom_bar_home">Home</string>
+  <string name="bottom_bar_search">Search</string>
+  <string name="bottom_bar_favorite">Favorite</string>
+
+  <!--Common-->
+  <string name="common_back">Back</string>
+
 </resources>

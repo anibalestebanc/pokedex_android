@@ -11,8 +11,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.github.zsoltk.pokedex.R
 
 @Composable
 fun RoundedSearchFieldV2(
@@ -28,8 +30,8 @@ fun RoundedSearchFieldV2(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         singleLine = true,
-        placeholder = { Text("Search Pokemon") },
-        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+        placeholder = { Text(stringResource(id = R.string.search_bar_hint)) },
+        leadingIcon = { Icon(Icons.Default.Search, contentDescription = stringResource(id = R.string.search_icon_content_description)) },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = { onSearch() }),
     )

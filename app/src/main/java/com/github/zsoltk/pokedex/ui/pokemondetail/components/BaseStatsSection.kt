@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.github.zsoltk.pokedex.R
@@ -29,13 +30,13 @@ data class Stat(
 @Composable
 fun BaseStatsSection(pokemon: Pokemon) {
     val stats = listOf(
-        Stat("HP", pokemon.hp),
-        Stat("Attack", pokemon.attack),
-        Stat("Defense", pokemon.defense),
-        Stat("Sp. Atk", pokemon.specialAttack),
-        Stat("Sp. Def", pokemon.specialDefense),
-        Stat("Speed", pokemon.speed),
-        Stat("Total", pokemon.total, 600)
+        Stat(stringResource(id = R.string.pokemon_detail_hp), pokemon.hp),
+        Stat(stringResource(id = R.string.pokemon_detail_attack), pokemon.attack),
+        Stat(stringResource(id = R.string.pokemon_detail_defense), pokemon.defense),
+        Stat(stringResource(id = R.string.pokemon_detail_sp_atk), pokemon.specialAttack),
+        Stat(stringResource(id = R.string.pokemon_detail_sp_def), pokemon.specialDefense),
+        Stat(stringResource(id = R.string.pokemon_detail_speed), pokemon.speed),
+        Stat(stringResource(id = R.string.pokemon_detail_total), pokemon.total, 600)
     )
 
     StatsTable(stats)

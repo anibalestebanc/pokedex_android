@@ -1,0 +1,90 @@
+<resources>
+  <string name="app_name">Pokedex</string>
+  <!-- utils strings -->
+  <string name="ok">Aceptar</string>
+  <string name="cancel">Cancelar</string>
+  <string name="close">Cerrar</string>
+  <string name="retry">Reintentar</string>
+  <string name="continue_action">Continuar</string>
+  <string name="back">Atrás</string>
+  <string name="dismiss">Descartar</string>
+  <string name="save">Guardar</string>
+  <string name="delete">Eliminar</string>
+  <string name="edit">Editar</string>
+  <string name="share">Compartir</string>
+  <string name="settings">Configuración</string>
+
+  <!-- generic strings -->
+  <string name="empty_state_message">No hay contenido para mostrar por ahora.</string>
+  <string name="error_generic_message">Ocurrió un error inesperado. Inténtalo nuevamente.</string>
+  <string name="error_no_internet_message">Revisa tu conexión e inténtalo otra vez.</string>
+  <string name="error_not_found_message">No pudimos encontrar lo que buscas.</string>
+  <string name="search_recent">Búsquedas recientes</string>
+
+  <!--Home-->
+  <string name="main_app_bar_title">¿Qué Pokémon\nestás buscando?</string>
+  <string name="search_bar_hint">Buscar Pokémon</string>
+  <string name="search_icon_content_description">Icono de búsqueda</string>
+  <string name="news_section_title">Noticias de Pokémon</string>
+  <string name="news_section_view_all">Ver todo</string>
+
+  <!--Menu-->
+  <string name="menu_pokedex">Pokédex</string>
+  <string name="menu_moves">Movimientos</string>
+  <string name="menu_abilities">Habilidades</string>
+  <string name="menu_items">Objetos</string>
+  <string name="menu_locations">Ubicaciones</string>
+  <string name="menu_type_charts">Tablas de tipos</string>
+
+  <!--Pokemon List-->
+  <string name="pokedex_title">Pokédex</string>
+
+  <!--Pokemon Detail-->
+  <string name="pokemon_detail_about">Acerca de</string>
+  <string name="pokemon_detail_base_stats">Estadísticas base</string>
+  <string name="pokemon_detail_evolution">Evolución</string>
+  <string name="pokemon_detail_moves">Movimientos</string>
+  <string name="pokemon_detail_hp">PS</string>
+  <string name="pokemon_detail_attack">Ataque</string>
+  <string name="pokemon_detail_defense">Defensa</string>
+  <string name="pokemon_detail_sp_atk">At. Esp.</string>
+  <string name="pokemon_detail_sp_def">Def. Esp.</string>
+  <string name="pokemon_detail_speed">Velocidad</string>
+  <string name="pokemon_detail_total">Total</string>
+  <string name="pokemon_detail_height">Altura</string>
+  <string name="pokemon_detail_weight">Peso</string>
+  <string name="pokemon_detail_habitat">Hábitat</string>
+  <string name="pokemon_detail_egg_groups">Grupos de huevo</string>
+  <string name="pokemon_detail_abilities">Habilidades</string>
+  <string name="pokemon_detail_growth">Crecimiento</string>
+  <string name="pokemon_detail_capture">Captura</string>
+  <string name="pokemon_detail_happiness">Felicidad</string>
+  <string name="pokemon_detail_legendary">Legendario</string>
+  <string name="pokemon_detail_mythical">Mítico</string>
+  <string name="tbd">PD</string>
+
+  <!--Search Result-->
+  <string name="search_result_error">Error</string>
+  <string name="search_result_load_more_error">Error al cargar más</string>
+  <string name="search_result_empty">No se encontraron resultados para %1$s</string>
+
+  <!--Search Dialog-->
+  <string name="search_dialog_recent_searches">Búsquedas recientes</string>
+  <string name="search_dialog_no_recent_searches">Sin búsquedas recientes</string>
+  <string name="search_dialog_clear">Limpiar</string>
+  <string name="search_dialog_remove">Eliminar</string>
+  <string name="search_dialog_history_icon_content_description">Icono de historial</string>
+
+  <!--Favorite-->
+  <string name="favorite_no_favorites_yet">Aún no hay favoritos</string>
+  <string name="favorite_error_loading">Error al cargar los favoritos</string>
+
+  <!--Bottom Bar-->
+  <string name="bottom_bar_home">Inicio</string>
+  <string name="bottom_bar_search">Buscar</string>
+  <string name="bottom_bar_favorite">Favoritos</string>
+
+  <!--Common-->
+  <string name="common_back">Atrás</string>
+
+</resources>

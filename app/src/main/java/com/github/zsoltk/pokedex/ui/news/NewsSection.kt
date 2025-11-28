@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,7 +44,7 @@ fun NewsHeaderSection() {
 @Composable
 fun NewsHeader() {
     Text(
-        text = "Pokémon News",
+        text = stringResource(id = R.string.news_section_title),
         style = MaterialTheme.typography.titleLarge.copy(
             fontWeight = FontWeight.W900
         )
@@ -53,7 +54,7 @@ fun NewsHeader() {
 @Composable
 fun NewsViewAll() {
     Text(
-        text = "View All",
+        text = stringResource(id = R.string.news_section_view_all),
         style = MaterialTheme.typography.bodyMedium.copy(
             color = colorResource(id = R.color.poke_blue)
         )

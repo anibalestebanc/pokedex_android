@@ -18,7 +18,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.github.zsoltk.pokedex.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +37,7 @@ fun SearchSuggestions(
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Búsquedas recientes", style = MaterialTheme.typography.labelLarge)
+                Text(stringResource(R.string.search_dialog_recent_searches), style = MaterialTheme.typography.labelLarge)
             }
         }
         historySearch.forEach { q ->
@@ -44,7 +46,7 @@ fun SearchSuggestions(
                 leadingContent = { Icon(Icons.Default.History, contentDescription = null) },
                 trailingContent = {
                     IconButton(onClick = { onRemove(q) }) {
-                        Icon(Icons.Default.Close, contentDescription = "Eliminar")
+                        Icon(Icons.Default.Close, contentDescription = stringResource(R.string.search_dialog_remove))
                     }
                 },
                 modifier = Modifier
@@ -56,7 +58,7 @@ fun SearchSuggestions(
         }
         if (historySearch.isEmpty()) {
             ListItem(
-                headlineContent = { Text("Sin búsquedas recientes", style = MaterialTheme.typography.labelLarge) },
+                headlineContent = { Text(stringResource(R.string.search_dialog_no_recent_searches), style = MaterialTheme.typography.labelLarge) },
                 leadingContent = { Icon(Icons.Default.History, contentDescription = null) }
             )
         }

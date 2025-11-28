@@ -15,8 +15,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.zsoltk.pokedex.R
 import com.github.zsoltk.pokedex.theme.PokeAppTheme
 import com.github.zsoltk.pokedex.ui.components.SearchInputPillCompact
 
@@ -45,7 +47,7 @@ fun SearchDialogTopBar(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(id = R.string.common_back),
                     tint = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.size(24.dp),
                 )
@@ -70,7 +72,7 @@ fun SearchFullscreenTopBarPreview() {
         SearchDialogTopBar(
             query = "",
             onValueChange = {},
-            placeholder = "Search Pokémon",
+            placeholder = stringResource(id = R.string.search_bar_hint),
             onBackClick = {},
             onSubmit = {},
         )

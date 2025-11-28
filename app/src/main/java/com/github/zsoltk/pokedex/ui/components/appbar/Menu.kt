@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.zsoltk.pokedex.ui.components.PokeBallSmall
@@ -32,7 +33,7 @@ fun Menu(onMenuItemSelected: (MenuItem) -> Unit) {
 
     TableRenderer(cols = 2, cellSpacing = 5.dp, items = menuItems) { cell ->
         MenuItemButton(
-            text = cell.item.label,
+            text = stringResource(id = cell.item.label),
             color = colorResource(cell.item.colorResId),
             onClick = { onMenuItemSelected(cell.item) },
         )

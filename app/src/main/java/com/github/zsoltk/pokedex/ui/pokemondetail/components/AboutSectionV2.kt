@@ -16,9 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.zsoltk.pokedex.R
 import com.github.zsoltk.pokedex.domain.model.PokemonFullDetail
 
 @Composable
@@ -30,38 +32,38 @@ fun AboutSectionV2(data: PokemonFullDetail) {
             Spacer(Modifier.height(12.dp))
         }
 
-        KeyValueRow("Height", String.format("%.1f m", data.heightMeters))
-        KeyValueRow("Weight", String.format("%.1f kg", data.weightKg))
+        KeyValueRow(stringResource(R.string.pokemon_detail_height), String.format("%.1f m", data.heightMeters))
+        KeyValueRow(stringResource(R.string.pokemon_detail_weight), String.format("%.1f kg", data.weightKg))
 
         if (!data.habitat.isNullOrBlank()) {
-            KeyValueRow("Habitat", data.habitat!!.replaceFirstChar { it.uppercase() })
+            KeyValueRow(stringResource(R.string.pokemon_detail_habitat), data.habitat!!.replaceFirstChar { it.uppercase() })
         }
 
         if (data.eggGroups.isNotEmpty()) {
-            Text("Egg groups", fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 8.dp, bottom = 4.dp))
+            Text(stringResource(R.string.pokemon_detail_egg_groups), fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 8.dp, bottom = 4.dp))
             ChipRow(chips = data.eggGroups.map { it.replaceFirstChar { c -> if (c.isLowerCase()) c.titlecase() else c.toString() } })
         }
 
         if (data.abilities.isNotEmpty()) {
-            Text("Abilities", fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 12.dp, bottom = 4.dp))
+            Text(stringResource(R.string.pokemon_detail_abilities), fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(top = 12.dp, bottom = 4.dp))
             ChipRow(chips = data.abilities.map { it.replace('-', ' ').replaceFirstChar { c -> if (c.isLowerCase()) c.titlecase() else c.toString() } })
         }
 
         Row(Modifier.padding(top = 12.dp)) {
-            data.growthRate?.let { KeyValueSmall("Growth", it.replaceFirstChar { c -> if (c.isLowerCase()) c.titlecase() else c.toString() }) }
+            data.growthRate?.let { KeyValueSmall(stringResource(R.string.pokemon_detail_growth), it.replaceFirstChar { c -> if (c.isLowerCase()) c.titlecase() else c.toString() }) }
             Spacer(Modifier.width(16.dp))
-            data.captureRate?.let { KeyValueSmall("Capture", it.toString()) }
+            data.captureRate?.let { KeyValueSmall(stringResource(R.string.pokemon_detail_capture), it.toString()) }
             Spacer(Modifier.width(16.dp))
-            data.baseHappiness?.let { KeyValueSmall("Happiness", it.toString()) }
+            data.baseHappiness?.let { KeyValueSmall(stringResource(R.string.pokemon_detail_happiness), it.toString()) }
         }
 
         if (data.isLegendary || data.isMythical) {
             Spacer(Modifier.height(12.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                if (data.isLegendary) TagPill("Legendary", Color(0xFF8E24AA))
+                if (data.isLegendary) TagPill(stringResource(R.string.pokemon_detail_legendary), Color(0xFF8E24AA))
                 if (data.isMythical) {
                     Spacer(Modifier.width(8.dp))
-                    TagPill("Mythical", Color(0xFFD81B60))
+                    TagPill(stringResource(R.string.pokemon_detail_mythical), Color(0xFFD81B60))
                 }
             }
         }

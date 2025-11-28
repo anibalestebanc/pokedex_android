@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -122,7 +123,7 @@ private fun ErrorView(onRetryClicked: () -> Unit) {
                 modifier = Modifier.padding(bottom = 16.dp),
             )
             Button(onClick = onRetryClicked) {
-                Text("Retry")
+                Text(stringResource(R.string.retry))
             }
         }
     }
@@ -136,7 +137,7 @@ private fun ContentView(pokemons: List<Pokemon>, onPokemonSelected: (Pokemon) ->
             .padding(32.dp),
     ) {
         Title(
-            text = "Pokedex",
+            text = stringResource(R.string.pokedex_title),
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(
                 top = 64.dp,

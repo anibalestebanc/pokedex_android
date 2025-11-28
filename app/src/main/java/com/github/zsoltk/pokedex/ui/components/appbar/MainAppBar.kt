@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.zsoltk.pokedex.R
 import com.github.zsoltk.pokedex.ui.components.PokeBallBackground
 import com.github.zsoltk.pokedex.ui.components.Title
 import com.github.zsoltk.pokedex.ui.home.HomeEvent
@@ -29,7 +31,7 @@ fun MainAppBar(
             )
         ) {
             Title(
-                text = "What Pokémon\nare you looking for?",
+                text = stringResource(id = R.string.main_app_bar_title),
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(
                     top = 48.dp,
@@ -37,7 +39,7 @@ fun MainAppBar(
                 ),
             )
             RoundedSearchBar(
-                text = "Search Pokemon",
+                text = stringResource(id = R.string.search_bar_hint),
                 onSearchClick = onSearchBarClicked,
             )
             Spacer(modifier = Modifier.height(32.dp))

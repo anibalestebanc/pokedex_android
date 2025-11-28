@@ -1,5 +1,6 @@
 package com.github.zsoltk.pokedex.ui.pokemondetail
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -25,10 +26,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.zsoltk.pokedex.R
+import com.github.zsoltk.pokedex.domain.model.Pokemon
+import com.github.zsoltk.pokedex.domain.model.color
+import com.github.zsoltk.pokedex.domain.model.pokemons
 import com.github.zsoltk.pokedex.ui.components.LoadImage
 import com.github.zsoltk.pokedex.ui.components.PokeBallLarge
 import com.github.zsoltk.pokedex.ui.components.PokemonTypeLabels
@@ -36,9 +41,6 @@ import com.github.zsoltk.pokedex.ui.components.Rotate
 import com.github.zsoltk.pokedex.ui.components.RotateIndefinitely
 import com.github.zsoltk.pokedex.ui.components.Title
 import com.github.zsoltk.pokedex.ui.components.TypeLabelMetrics.Companion.MEDIUM
-import com.github.zsoltk.pokedex.domain.model.Pokemon
-import com.github.zsoltk.pokedex.domain.model.color
-import com.github.zsoltk.pokedex.domain.model.pokemons
 import com.github.zsoltk.pokedex.ui.pokemondetail.components.AboutSection
 import com.github.zsoltk.pokedex.ui.pokemondetail.components.BaseStatsSection
 import com.github.zsoltk.pokedex.ui.pokemondetail.components.EvolutionSection
@@ -148,16 +150,15 @@ private fun BoxScope.HeaderLeft(pokemon: Pokemon) {
     }
 }
 
-private enum class Sections(val title: String) {
-    About("About"),
-    BaseStats("Base stats"),
-    Evolution("Evolution"),
-    Moves("Moves")
+private enum class Sections(@StringRes val title: Int) {
+    About(R.string.pokemon_detail_about),
+    BaseStats(R.string.pokemon_detail_base_stats),
+    Evolution(R.string.pokemon_detail_evolution),
+    Moves(R.string.pokemon_detail_moves)
 }
 
 @Composable
 private fun BoxScope.CardContent(pokemon: Pokemon) {
-    val sectionTitles = remember { Sections.entries.map { it.title } }
     var selectedTab by remember { mutableStateOf(Sections.BaseStats) }
     Box(
         modifier = Modifier
@@ -169,11 +170,11 @@ private fun BoxScope.CardContent(pokemon: Pokemon) {
 
                 Spacer(modifier = Modifier.height(32.dp))
                 SecondaryTabRow(selectedTabIndex = selectedTab.ordinal) {
-                    sectionTitles.forEachIndexed { index, text ->
+                    Sections.entries.forEach { section ->
                         Tab(
-                            selected = selectedTab.ordinal == index,
-                            text = { Text(text) },
-                            onClick = { selectedTab = Sections.entries.getOrElse(index) { Sections.BaseStats } },
+                            selected = selectedTab == section,
+                            onClick = { selectedTab = section },
+                            text = { Text(stringResource(section.title)) },
                         )
                     }
                 }
