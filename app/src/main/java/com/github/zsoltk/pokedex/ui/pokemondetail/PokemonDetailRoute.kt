@@ -63,8 +63,8 @@ fun PokemonDetailScreenV2(
     onBackClick: () -> Unit,
 ) {
     when {
-        state.isLoading && state.data == null -> LoadingScreen(message = stringResource(R.string.loading))
-        state.error != null && state.data == null -> ErrorWithRetryScreen(
+        state.isLoading -> LoadingScreen(message = stringResource(R.string.loading))
+        state.error != null -> ErrorWithRetryScreen(
             title = stringResource(state.error),
             retryText = stringResource(R.string.retry),
             onRetry = { onEvent(DetailEvent.OnRetryClick(pokemonId)) },

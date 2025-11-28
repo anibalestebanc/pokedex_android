@@ -3,6 +3,7 @@ package com.github.zsoltk.pokedex.ui.pokemondetail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.zsoltk.pokedex.R
+import com.github.zsoltk.pokedex.core.common.error.NotFoundException
 import com.github.zsoltk.pokedex.domain.usecase.GetPokemonFullDetailUseCase
 import com.github.zsoltk.pokedex.domain.usecase.ObserveIsFavoriteUseCase
 import com.github.zsoltk.pokedex.domain.usecase.ToggleFavoriteUseCase
@@ -30,17 +31,25 @@ class PokemonDetailViewModel(
         }
     }
     fun getPokemonDetail(idOrName: String) = viewModelScope.launch {
+        val id = idOrName.toIntOrNull()
+        if (id == null) {
+            _uiState.value = DetailUiState(error = R.string.error_generic_message)
+            return@launch
+        }
         _uiState.value = DetailUiState(isLoading = true)
-        getFullDetailUseCase(idOrName).onSuccess { detail ->
+        getFullDetailUseCase(idOrName.toInt()).onSuccess { detail ->
             _uiState.value = DetailUiState(data = detail)
         }.onFailure { e ->
+            if (e is NotFoundException) {
+                _uiState.value = DetailUiState(error = R.string.error_not_found_message)
+                return@launch
+            }
             _uiState.value = DetailUiState(error = R.string.error_generic_message)
         }
     }
 
     fun onToggleFavorite(pokemonId: String) = viewModelScope.launch {
-        val id = pokemonId.toIntOrNull()
-        if (id != null) {
+        pokemonId.toIntOrNull()?.let { id ->
             toggleFavoriteUseCase(id)
         }
     }

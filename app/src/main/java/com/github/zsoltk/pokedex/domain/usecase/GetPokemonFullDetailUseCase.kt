@@ -12,10 +12,9 @@ class GetPokemonFullDetailUseCase(
     private val pokemonDetailRepository: PokemonDetailRepository,
     private val speciesRepository: PokemonSpeciesRepository
 ) {
-    suspend operator fun invoke(idOrName: String): Result<PokemonFullDetail> = supervisorScope {
-
-        val detailDeferred = async { pokemonDetailRepository.getPokemonDetail(idOrName) }
-        val speciesDeferred = async { speciesRepository.getPokemonSpecies(idOrName) }
+    suspend operator fun invoke(id: Int): Result<PokemonFullDetail> = supervisorScope {
+        val detailDeferred = async { pokemonDetailRepository.getPokemonDetail(id) }
+        val speciesDeferred = async { speciesRepository.getPokemonSpecies(id) }
 
         val detailResult = detailDeferred.await()
         val speciesResult = speciesDeferred.await()

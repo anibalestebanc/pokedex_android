@@ -9,7 +9,7 @@ interface PokemonDetailRepository {
     fun observeFavorites(): Flow<List<PokemonDetail>>
 
     fun observeIsFavorite(id: Int): Flow<Boolean>
-    suspend fun getPokemonDetail(nameOrId: String): Result<PokemonDetail>
+    suspend fun getPokemonDetail(id: Int): Result<PokemonDetail>
 
     suspend fun setFavorite(id: Int, favorite: Boolean) : Result<Unit>
 

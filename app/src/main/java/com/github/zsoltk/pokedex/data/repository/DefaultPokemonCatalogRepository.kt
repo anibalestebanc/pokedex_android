@@ -1,6 +1,7 @@
 package com.github.zsoltk.pokedex.data.repository
 
 import androidx.room.withTransaction
+import com.github.zsoltk.pokedex.core.common.loggin.LoggerError
 import com.github.zsoltk.pokedex.core.database.PokemonDatabase
 import com.github.zsoltk.pokedex.data.datasource.local.PokemonCatalogLocalDataSource
 import com.github.zsoltk.pokedex.data.mapper.toEntity
@@ -25,6 +26,7 @@ class DefaultPokemonCatalogRepository(
             }
             Result.success(items.size)
         } catch (e: Exception) {
+            LoggerError.logError("Error sync pokemon catalog", error = e)
             Result.failure(e)
         }
     }

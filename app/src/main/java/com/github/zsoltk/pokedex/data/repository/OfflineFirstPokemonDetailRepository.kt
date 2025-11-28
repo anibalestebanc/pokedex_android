@@ -1,12 +1,14 @@
 package com.github.zsoltk.pokedex.data.repository
 
 import com.github.zsoltk.pokedex.core.common.error.NotFoundException
+import com.github.zsoltk.pokedex.core.common.loggin.LoggerError
 import com.github.zsoltk.pokedex.core.database.dao.PokemonDetailDao
 import com.github.zsoltk.pokedex.data.datasource.remote.PokemonDetailRemoteDataSource
 import com.github.zsoltk.pokedex.data.mapper.toDomain
 import com.github.zsoltk.pokedex.data.mapper.toEntity
 import com.github.zsoltk.pokedex.domain.model.PokemonDetail
 import com.github.zsoltk.pokedex.domain.repository.PokemonDetailRepository
+import com.github.zsoltk.pokedex.utils.RefreshDueUtil.isRefreshDue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -23,7 +25,7 @@ class OfflineFirstPokemonDetailRepository(
             .map { entity -> entity?.toDomain() }
             .onStart {
                 if (pokemonDetailDao.getPokemonDetail(id) == null) {
-                    getPokemonDetail(id.toString())
+                    getPokemonDetail(id)
                 }
             }
 
@@ -33,19 +35,19 @@ class OfflineFirstPokemonDetailRepository(
 
     override fun observeIsFavorite(id: Int): Flow<Boolean> = pokemonDetailDao.observeIsFavorite(id)
 
-    override suspend fun getPokemonDetail(nameOrId: String): Result<PokemonDetail> = withContext(Dispatchers.IO) {
+    override suspend fun getPokemonDetail(id: Int): Result<PokemonDetail> = withContext(Dispatchers.IO) {
         return@withContext try {
-            val id = nameOrId.toIntOrNull()
-            if (id != null) {
-                pokemonDetailDao.getPokemonDetail(id)?.let {
-                    return@withContext Result.success(it.toDomain())
+            pokemonDetailDao.getPokemonDetail(id)?.let { detailEntity ->
+                if (!isRefreshDue(detailEntity.lastUpdated)) {
+                    return@withContext Result.success(detailEntity.toDomain())
                 }
             }
-            val remotePokemonDto = remoteDataSource.getPokemon(nameOrId)
+            val remotePokemonDto = remoteDataSource.getPokemon(id.toString())
             val remotePokemon = remotePokemonDto.toDomain()
             pokemonDetailDao.insertReplace(remotePokemon.toEntity())
             Result.success(remotePokemon)
         } catch (e: Exception) {
+            LoggerError.logError("Error getting pokemon detail with id: $id", error = e)
             Result.failure(e)
         }
     }
@@ -55,6 +57,7 @@ class OfflineFirstPokemonDetailRepository(
             pokemonDetailDao.setFavorite(id, favorite)
             Result.success(Unit)
         } catch (e: Exception) {
+            LoggerError.logError("Error setting favorite with id: $id", error = e)
             Result.failure(e)
         }
     }
@@ -69,6 +72,7 @@ class OfflineFirstPokemonDetailRepository(
             pokemonDetailDao.setFavorite(id, newValue)
             Result.success(newValue)
         } catch (e: Exception) {
+            LoggerError.logError("Error toggling favorite with id: $id", error = e)
             Result.failure(e)
         }
     }
