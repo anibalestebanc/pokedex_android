@@ -3,9 +3,11 @@ package com.github.pokemon.pokedex.di
 import androidx.room.Room
 import com.github.pokemon.pokedex.core.database.PokemonDatabase
 import com.github.pokemon.pokedex.core.network.RetrofitFactory
+import com.github.pokemon.pokedex.data.datasource.cache.PokemonCatalogCacheDataSource
+import com.github.pokemon.pokedex.data.datasource.cache.RoomCatalogCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.local.PokemonCatalogLocalDataSource
 import com.github.pokemon.pokedex.data.datasource.local.PrefsPokemonCatalogLocalDataSource
-import com.github.pokemon.pokedex.data.datasource.remote.PokemonCatalogRemoteDatasource
+import com.github.pokemon.pokedex.data.datasource.remote.PokemonCatalogRemoteDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.PokemonDetailRemoteDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.PokemonSpeciesRemoteDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.RetrofitCatalogRemoteDataSource
@@ -51,11 +53,14 @@ val dataModule = module {
             klass = PokemonApiV2::class.java,
         )
     }
+    //CacheDatasource
+    singleOf(::RoomCatalogCacheDataSource) { bind<PokemonCatalogCacheDataSource>() }
+
     //LocalDataSource
     singleOf(::PrefsPokemonCatalogLocalDataSource) { bind<PokemonCatalogLocalDataSource>() }
 
     //RemoteDataSource
-    singleOf(::RetrofitCatalogRemoteDataSource) { bind<PokemonCatalogRemoteDatasource>() }
+    singleOf(::RetrofitCatalogRemoteDataSource) { bind<PokemonCatalogRemoteDataSource>() }
     singleOf(::RetrofitPokemonDetailRemoteDataSource) { bind<PokemonDetailRemoteDataSource>() }
     singleOf(::RetrofitPokemonSpeciesRemoteDataSource) { bind<PokemonSpeciesRemoteDataSource>() }
 

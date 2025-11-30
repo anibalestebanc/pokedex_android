@@ -1,5 +1,9 @@
 package com.github.pokemon.pokedex.domain.usecase
 
+import com.github.pokemon.pokedex.Charmander
+import com.github.pokemon.pokedex.CharmanderSpecies
+import com.github.pokemon.pokedex.Pikachu
+import com.github.pokemon.pokedex.PikachuSpecies
 import com.github.pokemon.pokedex.core.common.error.NetworkException
 import com.github.pokemon.pokedex.core.common.error.NotFoundException
 import com.github.pokemon.pokedex.core.common.error.ServerException

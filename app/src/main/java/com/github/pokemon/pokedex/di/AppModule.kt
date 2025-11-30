@@ -1,6 +1,8 @@
 package com.github.pokemon.pokedex.di
 
 import android.app.Application
+import com.github.pokemon.pokedex.core.common.loggin.DefaultLoggerError
+import com.github.pokemon.pokedex.core.common.loggin.LoggerError
 import com.github.pokemon.pokedex.core.network.BaseUrlProvider
 import com.github.pokemon.pokedex.core.network.utils.NetworkMonitor
 import com.github.pokemon.pokedex.core.network.utils.OnlineNetworkMonitor
@@ -27,6 +29,7 @@ val appModule = module {
             context = get<Application>(),
         )
     }
+    single<LoggerError> { DefaultLoggerError() }
 
     single<PokeTimeUtil> { DefaultPokeTimeUtil() }
 

@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 
 class RoomHistorySearchRepository(
     private val searchHistoryDao: HistorySearchDao,
+    private val loggerError: LoggerError,
     private val pokeTimeUtil: PokeTimeUtil
 ) : HistorySearchRepository {
 
@@ -30,7 +31,7 @@ class RoomHistorySearchRepository(
             }
         } catch (e: Exception) {
             val error = DatabaseOperationException(message = "Error saving search query: $queryRaw", cause = e)
-            LoggerError.logError(error = error)
+            loggerError.logError(error = error)
         }
     }
 

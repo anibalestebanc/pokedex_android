@@ -2,9 +2,13 @@ package com.github.pokemon.pokedex.domain.usecase
 
 import androidx.paging.PagingData
 import app.cash.turbine.test
+import com.github.pokemon.pokedex.BulbasaurCatalog
+import com.github.pokemon.pokedex.PikachuCatalog
+import com.github.pokemon.pokedex.SquirtleCatalog
 import com.github.pokemon.pokedex.core.common.error.DatabaseOperationException
 import com.github.pokemon.pokedex.domain.model.PokemonCatalog
 import com.github.pokemon.pokedex.domain.repository.SearchPokemonRepository
+import com.github.pokemon.pokedex.toListUsingDiffer
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.every

@@ -6,7 +6,7 @@ import com.github.pokemon.pokedex.data.datasource.remote.dto.PokemonCatalogDto
 
 class RetrofitCatalogRemoteDataSource(
     private val pokemonApiV2: PokemonApiV2
-) : PokemonCatalogRemoteDatasource {
+) : PokemonCatalogRemoteDataSource {
 
     override suspend fun fetchFullCatalog(): List<PokemonCatalogDto> =
         safeApiCall {

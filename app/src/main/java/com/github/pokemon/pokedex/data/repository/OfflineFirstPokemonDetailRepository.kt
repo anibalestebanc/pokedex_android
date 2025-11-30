@@ -19,6 +19,7 @@ import kotlinx.coroutines.withContext
 class OfflineFirstPokemonDetailRepository(
     private val remoteDataSource: PokemonDetailRemoteDataSource,
     private val pokemonDetailDao: PokemonDetailDao,
+    private val loggerError: LoggerError,
     private val pokeTimeUtil: PokeTimeUtil,
     private val refreshDueUtil: RefreshDueUtil
 ) : PokemonDetailRepository {
@@ -50,7 +51,7 @@ class OfflineFirstPokemonDetailRepository(
             pokemonDetailDao.insertReplace(remotePokemon.toEntity())
             Result.success(remotePokemon)
         } catch (e: Exception) {
-            LoggerError.logError("Error getting pokemon detail with id: $id", error = e)
+            loggerError.logError("Error getting pokemon detail with id: $id", error = e)
             Result.failure(e)
         }
     }
@@ -60,7 +61,7 @@ class OfflineFirstPokemonDetailRepository(
             pokemonDetailDao.setFavorite(id, favorite)
             Result.success(Unit)
         } catch (e: Exception) {
-            LoggerError.logError("Error setting favorite with id: $id", error = e)
+            loggerError.logError("Error setting favorite with id: $id", error = e)
             Result.failure(e)
         }
     }
@@ -75,7 +76,7 @@ class OfflineFirstPokemonDetailRepository(
             pokemonDetailDao.setFavorite(id, newValue)
             Result.success(newValue)
         } catch (e: Exception) {
-            LoggerError.logError("Error toggling favorite with id: $id", error = e)
+            loggerError.logError("Error toggling favorite with id: $id", error = e)
             Result.failure(e)
         }
     }

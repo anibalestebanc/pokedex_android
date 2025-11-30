@@ -1,32 +1,30 @@
 package com.github.pokemon.pokedex.data.repository
 
-import androidx.room.withTransaction
 import com.github.pokemon.pokedex.core.common.loggin.LoggerError
-import com.github.pokemon.pokedex.core.database.PokemonDatabase
+import com.github.pokemon.pokedex.data.datasource.cache.PokemonCatalogCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.local.PokemonCatalogLocalDataSource
 import com.github.pokemon.pokedex.data.mapper.toEntity
-import com.github.pokemon.pokedex.data.datasource.remote.PokemonCatalogRemoteDatasource
+import com.github.pokemon.pokedex.data.datasource.remote.PokemonCatalogRemoteDataSource
 import com.github.pokemon.pokedex.domain.repository.PokemonCatalogRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class DefaultPokemonCatalogRepository(
-    private val remoteDataSource: PokemonCatalogRemoteDatasource,
+    private val remoteDataSource: PokemonCatalogRemoteDataSource,
     private val localDataSource: PokemonCatalogLocalDataSource,
-    private val database: PokemonDatabase,
+    private val cacheDataSource: PokemonCatalogCacheDataSource,
+    private val loggerError: LoggerError,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : PokemonCatalogRepository {
 
-    override suspend fun syncPokemonCatalog(): Result<Int> = withContext(Dispatchers.IO) {
+    override suspend fun syncPokemonCatalog(): Result<Int> = withContext(dispatcher) {
         return@withContext try {
-            val dao = database.pokemonCatalogDao()
             val items = remoteDataSource.fetchFullCatalog().map { it.toEntity() }
-            database.withTransaction {
-                dao.clear()
-                dao.insertAll(items)
-            }
+            cacheDataSource.clearAndInsertAllCatalog(items)
             Result.success(items.size)
         } catch (e: Exception) {
-            LoggerError.logError("Error sync pokemon catalog", error = e)
+            loggerError.logError("Error sync pokemon catalog", error = e)
             Result.failure(e)
         }
     }

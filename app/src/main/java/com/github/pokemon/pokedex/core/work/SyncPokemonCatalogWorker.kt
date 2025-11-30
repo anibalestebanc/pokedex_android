@@ -6,7 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.github.pokemon.pokedex.core.common.error.WorkerException
-import com.github.pokemon.pokedex.core.common.loggin.LoggerError
+import com.github.pokemon.pokedex.core.common.loggin.DefaultLoggerError
 import com.github.pokemon.pokedex.domain.repository.PokemonCatalogRepository
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -27,7 +27,7 @@ class SyncPokemonCatalogWorker(appContext: Context, params: WorkerParameters) :
                 return Result.success(workDataOf("synced" to true))
             },
             onFailure = { error ->
-                LoggerError.logError(
+                DefaultLoggerError().logError(
                     message = "Error sync pokemon catalog",
                     error = WorkerException(cause = error.cause),
                 )

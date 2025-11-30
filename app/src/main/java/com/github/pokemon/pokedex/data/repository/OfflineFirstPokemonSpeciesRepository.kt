@@ -15,6 +15,7 @@ import kotlinx.coroutines.withContext
 class OfflineFirstPokemonSpeciesRepository(
     private val remoteDataSource: PokemonSpeciesRemoteDataSource,
     private val pokemonSpeciesDao: PokemonSpeciesDao,
+    private val loggerError: LoggerError,
     private val pokeTimeUtil: PokeTimeUtil,
     private val refreshDueUtil: RefreshDueUtil
 ) : PokemonSpeciesRepository {
@@ -30,7 +31,7 @@ class OfflineFirstPokemonSpeciesRepository(
             pokemonSpeciesDao.insertReplace(pokemonSpecies.toEntity())
             Result.success(pokemonSpecies)
         } catch (e: Exception) {
-            LoggerError.logError("Error getting pokemon species with id: $id", error = e)
+            loggerError.logError("Error getting pokemon species with id: $id", error = e)
             Result.failure(e)
         }
     }

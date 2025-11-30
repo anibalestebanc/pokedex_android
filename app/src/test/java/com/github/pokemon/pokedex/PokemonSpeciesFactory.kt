@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.domain.usecase
+package com.github.pokemon.pokedex
 
 import com.github.pokemon.pokedex.domain.model.PokemonSpecies
 
