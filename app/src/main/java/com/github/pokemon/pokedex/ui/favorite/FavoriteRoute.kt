@@ -72,7 +72,7 @@ fun FavoriteScreen(
 
                 item(key = "header") {
                     Title(
-                        text = stringResource(id = R.string.pokemon_detail_title),
+                        text = stringResource(id = R.string.favorite_title),
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(
                             top = 36.dp,

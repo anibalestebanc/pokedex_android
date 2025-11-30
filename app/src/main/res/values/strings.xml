@@ -25,7 +25,7 @@
   <string name="search_recent">Recent searches</string>
 
   <!-- Home -->
-  <string name="main_app_bar_title">What Pokémon\nare you looking for?</string>
+  <string name="main_app_bar_title">What Pokémon are you looking for?</string>
   <string name="search_bar_hint">Search Pokemon</string>
   <string name="search_icon_content_description">Search icon</string>
   <string name="news_section_title">Pokémon News</string>
@@ -43,7 +43,6 @@
   <string name="pokedex_title">Pokedex</string>
 
   <!--Pokemon Detail-->
-  <string name="pokemon_detail_title">Your favorite pokemons are here!</string>
   <string name="pokemon_detail_about">About</string>
   <string name="pokemon_detail_base_stats">Base stats</string>
   <string name="pokemon_detail_evolution">Evolution</string>
@@ -80,6 +79,7 @@
   <string name="search_dialog_history_icon_content_description">History icon</string>
 
   <!--Favorite-->
+  <string name="favorite_title">Your favorite Pokémons!</string>
   <string name="favorite_no_favorites_yet">No favorites yet</string>
   <string name="favorite_error_loading">Error loading favorites</string>
 

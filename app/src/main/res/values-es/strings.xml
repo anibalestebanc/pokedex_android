@@ -43,7 +43,6 @@
   <string name="pokedex_title">Pokédex</string>
 
   <!--Pokemon Detail-->
-  <string name="pokemon_detail_title">Tus pokemons favoritos están aquí!</string>
   <string name="pokemon_detail_about">Acerca de</string>
   <string name="pokemon_detail_base_stats">Estadísticas base</string>
   <string name="pokemon_detail_evolution">Evolución</string>
@@ -80,6 +79,7 @@
   <string name="search_dialog_history_icon_content_description">Icono de historial</string>
 
   <!--Favorite-->
+  <string name="favorite_title">Tus Pokémon favoritos!</string>
   <string name="favorite_no_favorites_yet">Aún no hay favoritos</string>
   <string name="favorite_error_loading">Error al cargar los favoritos</string>
 
