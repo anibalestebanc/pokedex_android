@@ -44,7 +44,7 @@ class OfflineFirstPokemonSpeciesRepositoryTest {
     @MockK
     lateinit var refreshDue: RefreshDueUtil
 
-    private val dispatcher = StandardTestDispatcher()
+    private val testDispatcher = StandardTestDispatcher()
     private lateinit var repository: OfflineFirstPokemonSpeciesRepository
 
     @BeforeEach
@@ -56,7 +56,7 @@ class OfflineFirstPokemonSpeciesRepositoryTest {
             loggerError = loggerError,
             pokeTimeUtil = pokeTimeUtil,
             refreshDueUtil = refreshDue,
-            coroutineDispatcher = dispatcher
+            coroutineDispatcher = testDispatcher
         )
     }
 
@@ -65,7 +65,7 @@ class OfflineFirstPokemonSpeciesRepositoryTest {
 
 
     @Test
-    fun `should return cached species when cache exists and is not due`() = runTest(dispatcher) {
+    fun `should return cached species when cache exists and is not due`() = runTest(testDispatcher) {
         // given
         val id = 1
         val pikachuEntity = PikachuSpeciesEntity
@@ -85,7 +85,7 @@ class OfflineFirstPokemonSpeciesRepositoryTest {
     }
 
     @Test
-    fun `should fetch remote and cache when cache missing`() = runTest(dispatcher) {
+    fun `should fetch remote and cache when cache missing`() = runTest(testDispatcher) {
         // given
         val id = 1
         coEvery { cacheDataSource.getSpecieById(id) } returns null
@@ -107,7 +107,7 @@ class OfflineFirstPokemonSpeciesRepositoryTest {
     }
 
     @Test
-    fun `should fetch remote and cache when cache is due`() = runTest(dispatcher) {
+    fun `should fetch remote and cache when cache is due`() = runTest(testDispatcher) {
         // given
         val id = 2
         val charmanderEntity = CharmanderSpeciesEntity
@@ -132,7 +132,7 @@ class OfflineFirstPokemonSpeciesRepositoryTest {
     }
 
     @Test
-    fun `should log and return failure when cache get throws`() = runTest(dispatcher) {
+    fun `should log and return failure when cache get throws`() = runTest(testDispatcher) {
         // given
         val id = 1
         val expected = DatabaseOperationException("Error to get species")
@@ -150,7 +150,7 @@ class OfflineFirstPokemonSpeciesRepositoryTest {
     }
 
     @Test
-    fun `should log and return failure when remote throws`() = runTest(dispatcher) {
+    fun `should log and return failure when remote throws`() = runTest(testDispatcher) {
         // given
         val id = 1
         val pikachuEntity = PikachuSpeciesEntity
