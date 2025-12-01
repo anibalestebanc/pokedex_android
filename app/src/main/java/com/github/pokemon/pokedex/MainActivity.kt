@@ -1,21 +1,30 @@
 package com.github.pokemon.pokedex
 
+import android.graphics.Color
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.github.pokemon.pokedex.core.network.utils.NetworkMonitor
 import com.github.pokemon.pokedex.ui.rememberAppState
 import com.github.pokemon.pokedex.theme.PokeAppTheme
 import com.github.pokemon.pokedex.ui.PokeApp
 import org.koin.android.ext.android.inject
 
-class MainActivity : AppCompatActivity() {
-    private val networkMonitor: NetworkMonitor by  inject()
+class MainActivity : ComponentActivity() {
+    private val networkMonitor: NetworkMonitor by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT)
+        )
+
         setContent {
             val appState = rememberAppState(networkMonitor)
             PokeAppTheme {

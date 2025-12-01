@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.appcompat)
     implementation(libs.core.ktx)
+    implementation(libs.core.splashscreen)
 
     // Lifecycle
     implementation(libs.lifecycle.runtime.ktx)
