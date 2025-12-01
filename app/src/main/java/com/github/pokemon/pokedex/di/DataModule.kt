@@ -3,9 +3,11 @@ package com.github.pokemon.pokedex.di
 import androidx.room.Room
 import com.github.pokemon.pokedex.core.database.PokemonDatabase
 import com.github.pokemon.pokedex.core.network.RetrofitFactory
+import com.github.pokemon.pokedex.data.datasource.cache.DetailCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.cache.HistorySearchCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.cache.PokemonCatalogCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.cache.RoomCatalogCacheDataSource
+import com.github.pokemon.pokedex.data.datasource.cache.RoomDetailCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.cache.RoomHistorySearchCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.cache.RoomSearchCacheDatasource
 import com.github.pokemon.pokedex.data.datasource.cache.RoomSpeciesCacheDataSource
@@ -51,7 +53,6 @@ val dataModule = module {
     single { get<PokemonDatabase>().pokemonDetailDao() }
     single { get<PokemonDatabase>().pokemonSpeciesDao() }
 
-
     //Api
     factory<PokemonApiV2> {
         RetrofitFactory.createService(
@@ -64,6 +65,7 @@ val dataModule = module {
     singleOf(::RoomHistorySearchCacheDataSource) { bind<HistorySearchCacheDataSource>() }
     singleOf(::RoomSpeciesCacheDataSource) { bind<SpeciesCacheDataSource>() }
     singleOf(::RoomSearchCacheDatasource) { bind<SearchCacheDatasource>() }
+    singleOf(::RoomDetailCacheDataSource) { bind<DetailCacheDataSource>() }
 
     //LocalDataSource
     singleOf(::PrefsPokemonCatalogLocalDataSource) { bind<PokemonCatalogLocalDataSource>() }
@@ -79,5 +81,4 @@ val dataModule = module {
     singleOf(::RoomHistorySearchRepository) { bind<HistorySearchRepository>() }
     singleOf(::OfflineFirstPokemonDetailRepository) { bind<PokemonDetailRepository>() }
     singleOf(::OfflineFirstPokemonSpeciesRepository) { bind<PokemonSpeciesRepository>() }
-
 }
