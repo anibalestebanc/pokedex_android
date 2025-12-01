@@ -9,10 +9,10 @@ import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,7 +37,7 @@ fun FavoriteToggleButton(
             .graphicsLayer { scaleX = scale; scaleY = scale }
     ) {
         val icon = if (isFavorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder
-        val tint = if (isFavorite) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surface
+        val tint = if (isFavorite) Color.White else Color.White
         Icon(icon, contentDescription = if (isFavorite) "Unfavorite" else "Favorite", tint = tint)
     }
 }

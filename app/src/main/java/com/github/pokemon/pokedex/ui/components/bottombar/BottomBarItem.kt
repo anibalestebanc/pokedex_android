@@ -17,7 +17,6 @@ data class BottomBarItem(
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
     val qualifiedName: String,
-   // val route: KClass<*>,
 )
 
 val TopBottomBarDestinations = listOf(
@@ -27,7 +26,6 @@ val TopBottomBarDestinations = listOf(
         selectedIcon = Icons.Outlined.Home,
         unselectedIcon = Icons.Outlined.Home,
         qualifiedName = HomeRoute::class.qualifiedName!!,
-      //  route = HomeRoute::class,
     ),
     BottomBarItem(
         id = "search",
@@ -35,7 +33,6 @@ val TopBottomBarDestinations = listOf(
         selectedIcon = Icons.Outlined.Search,
         unselectedIcon = Icons.Outlined.Search,
         qualifiedName = SearchResultRoute::class.qualifiedName!!,
-    //    route = SearchResultRoute::class,
     ),
     BottomBarItem(
         id = "favorite",
@@ -43,6 +40,5 @@ val TopBottomBarDestinations = listOf(
         selectedIcon = Icons.Outlined.FavoriteBorder,
         unselectedIcon = Icons.Outlined.FavoriteBorder,
         qualifiedName = FavoriteRoute::class.qualifiedName!!,
-      //  route = FavoriteRoute::class,
     ),
 )

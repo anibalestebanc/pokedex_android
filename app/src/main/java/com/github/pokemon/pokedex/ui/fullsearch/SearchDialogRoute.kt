@@ -78,6 +78,9 @@ fun SearchFullscreenDialog(
     onSubmitResult: (String) -> Unit,
     onEvent: (SearchFullEvent) -> Unit,
 ) {
+    val colorScheme = MaterialTheme.colorScheme
+    val shapes = MaterialTheme.shapes
+    val typography = MaterialTheme.typography
 
     val keyboard = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -90,63 +93,78 @@ fun SearchFullscreenDialog(
         },
         properties = DialogProperties(usePlatformDefaultWidth = false),
     ) {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            Scaffold(
-                topBar = {
-                    SearchDialogTopBar(
-                        query = uiState.query,
-                        onValueChange = { onEvent(SearchFullEvent.QueryChanged(it)) },
-                        placeholder = stringResource(id = R.string.search_bar_hint),
-                        onSubmit = {
-                            val query = uiState.query.trim()
-                            if (query.isNotEmpty()) {
-                                onEvent(SearchFullEvent.SearchSubmit)
-                            }
-                            onSubmitResult(query)
-                        },
-                        onBackClick = { onDismiss() },
-                    )
-                },
-            ) { inner ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(inner),
-                ) {
-                    Row(
+        MaterialTheme(colorScheme = colorScheme, typography = typography, shapes = shapes) {
+            Surface {
+                Scaffold(
+                    topBar = {
+                        SearchDialogTopBar(
+                            query = uiState.query,
+                            onValueChange = { onEvent(SearchFullEvent.QueryChanged(it)) },
+                            placeholder = stringResource(id = R.string.search_bar_hint),
+                            onSubmit = {
+                                val query = uiState.query.trim()
+                                if (query.isNotEmpty()) {
+                                    onEvent(SearchFullEvent.SearchSubmit)
+                                }
+                                onSubmitResult(query)
+                            },
+                            onBackClick = { onDismiss() },
+                        )
+                    },
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ) { inner ->
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
+                            .fillMaxSize()
+                            .padding(inner),
                     ) {
-                        Text(stringResource(id = R.string.search_dialog_recent_searches), style = MaterialTheme.typography.titleSmall)
-                        TextButton(
-                            onClick = { onEvent(SearchFullEvent.RemoveAllHistory) },
-                        ) { Text(stringResource(id = R.string.search_dialog_clear)) }
-                    }
-
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(bottom = 24.dp),
-                    ) {
-                        items(
-                            count = uiState.searchHistory.size,
-                            key = { it },
-                        ) { index ->
-                            val item = uiState.searchHistory[index]
-
-                            ListItem(
-                                headlineContent = { Text(item) },
-                                leadingContent = { Icon(Icons.Rounded.History, stringResource(id = R.string.search_dialog_history_icon_content_description)) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        onEvent(SearchFullEvent.QueryChanged(item))
-                                        onEvent(SearchFullEvent.SearchSubmit)
-                                        onSubmitResult(item)
-                                    }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                stringResource(id = R.string.search_dialog_recent_searches),
+                                color = MaterialTheme.colorScheme.onSurface,
+                                style = MaterialTheme.typography.titleSmall,
                             )
+                            TextButton(
+                                onClick = { onEvent(SearchFullEvent.RemoveAllHistory) },
+                            ) { Text(
+                                text = stringResource(id = R.string.search_dialog_clear),
+                                color = MaterialTheme.colorScheme.onSurface)
+                            }
+                        }
+
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(bottom = 24.dp),
+                        ) {
+                            items(
+                                count = uiState.searchHistory.size,
+                                key = { it },
+                            ) { index ->
+                                val item = uiState.searchHistory[index]
+
+                                ListItem(
+                                    headlineContent = { Text(item, color = MaterialTheme.colorScheme.onSurface) },
+                                    leadingContent = {
+                                        Icon(
+                                            Icons.Rounded.History,
+                                            stringResource(id = R.string.search_dialog_history_icon_content_description),
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            onEvent(SearchFullEvent.QueryChanged(item))
+                                            onEvent(SearchFullEvent.SearchSubmit)
+                                            onSubmitResult(item)
+                                        },
+                                )
+                            }
                         }
                     }
                 }

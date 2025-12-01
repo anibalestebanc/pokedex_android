@@ -158,7 +158,7 @@ fun DetailHeader(
                 Icon(
                     imageVector = Icons.Outlined.Share,
                     contentDescription = stringResource(R.string.share),
-                    tint = MaterialTheme.colorScheme.onPrimary,
+                    tint = Color.White,
                 )
             }
         }
@@ -183,7 +183,7 @@ fun DetailHeader(
                 .fillMaxWidth()
                 .height(16.dp)
                 .background(
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.background,
                     shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
                 ),
         )

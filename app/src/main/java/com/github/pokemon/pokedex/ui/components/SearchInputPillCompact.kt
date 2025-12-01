@@ -32,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextRange
@@ -73,7 +72,7 @@ fun SearchInputPillCompact(
     }
 
     Surface(
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surface,
         shape = shape,
         tonalElevation = 0.dp,
         shadowElevation = 0.dp,
@@ -91,7 +90,7 @@ fun SearchInputPillCompact(
             Icon(
                 Icons.Default.Search,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(Modifier.width(8.dp))
@@ -113,7 +112,7 @@ fun SearchInputPillCompact(
                         onSubmit()
                     }
                 ),
-                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
                 modifier = Modifier
                     .weight(1f)
                     .padding(vertical = 2.dp)
@@ -123,7 +122,7 @@ fun SearchInputPillCompact(
                         Text(
                             text = placeholder,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     inner()
@@ -135,7 +134,7 @@ fun SearchInputPillCompact(
                 Icon(
                     imageVector = Icons.Rounded.Close,
                     contentDescription = "Clear",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    tint = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
                         .size(18.dp)
                         .clickable(

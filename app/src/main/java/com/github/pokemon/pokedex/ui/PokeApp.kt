@@ -18,15 +18,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.navigation.AppNavHost
-import com.github.pokemon.pokedex.theme.DarkColorScheme
-import com.github.pokemon.pokedex.theme.LightColorScheme
+import com.github.pokemon.pokedex.theme.HighContrastDarkColorScheme
+import com.github.pokemon.pokedex.theme.HighContrastLightColorScheme
 import com.github.pokemon.pokedex.ui.components.bottombar.PokeBottomBar
 
 @Composable
 fun PokeApp(appState: AppState) {
 
     val darkTheme = isSystemInDarkTheme()
-    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+    val colorScheme = if (darkTheme) HighContrastDarkColorScheme else HighContrastLightColorScheme
 
     val snackbarHostState = remember { SnackbarHostState() }
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()

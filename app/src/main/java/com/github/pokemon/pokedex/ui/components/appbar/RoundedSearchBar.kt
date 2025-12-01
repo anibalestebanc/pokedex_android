@@ -54,12 +54,16 @@ fun RoundedSearchBar(
             Icon(
                 Icons.Default.Search,
                 contentDescription = stringResource(id = R.string.search_icon_content_description),
+                tint = MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 text = text,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .padding(start = 16.dp)
                     .weight(1f),
+
             )
         }
     }

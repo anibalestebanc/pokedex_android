@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,17 +19,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.domain.model.PokemonFullDetail
+import com.github.pokemon.pokedex.domain.model.PokemonSprites
 
 @Composable
 fun AboutSectionV2(data: PokemonFullDetail) {
-    Column(Modifier.fillMaxWidth().padding(16.dp)) {
+    Column(Modifier.fillMaxWidth()
+        .background(MaterialTheme.colorScheme.surface)
+        .padding(16.dp)
+    ) {
         val description = data.description ?: data.flavorText
         if (!description.isNullOrBlank()) {
-            Text(description, color = Color(0xFF424242))
+            Text(description, color = MaterialTheme.colorScheme.onSurface)
             Spacer(Modifier.height(12.dp))
         }
 
@@ -60,10 +66,10 @@ fun AboutSectionV2(data: PokemonFullDetail) {
         if (data.isLegendary || data.isMythical) {
             Spacer(Modifier.height(12.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                if (data.isLegendary) TagPill(stringResource(R.string.pokemon_detail_legendary), Color(0xFF8E24AA))
+                if (data.isLegendary) TagPill(stringResource(R.string.pokemon_detail_legendary), MaterialTheme.colorScheme.primary)
                 if (data.isMythical) {
                     Spacer(Modifier.width(8.dp))
-                    TagPill(stringResource(R.string.pokemon_detail_mythical), Color(0xFFD81B60))
+                    TagPill(stringResource(R.string.pokemon_detail_mythical),MaterialTheme.colorScheme.secondary)
                 }
             }
         }
@@ -78,7 +84,7 @@ fun KeyValueRow(label: String, value: String) {
             .padding(vertical = 6.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(label, color = Color.Gray)
+        Text(label, color = MaterialTheme.colorScheme.onSurface)
         Text(value, fontWeight = FontWeight.SemiBold)
     }
 }
@@ -86,7 +92,7 @@ fun KeyValueRow(label: String, value: String) {
 @Composable
 fun KeyValueSmall(label: String, value: String) {
     Column {
-        Text(label, color = Color.Gray, fontSize = 12.sp)
+        Text(label, color = MaterialTheme.colorScheme.onSurface, fontSize = 12.sp)
         Text(value, fontWeight = FontWeight.Medium)
     }
 }
@@ -100,4 +106,40 @@ fun TagPill(text: String, color: Color) {
     ) {
         Text(text, color = color, fontWeight = FontWeight.SemiBold, fontSize = 12.sp)
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AboutSectionV2Preview(){
+    AboutSectionV2(
+        PokemonFullDetail(
+            id = 25,
+            name = "Pikachu",
+            isFavorite = true,
+            imageUrl = "url",
+            sprites = PokemonSprites(
+                dreamWorld = null,
+                home = null,
+                officialArtwork = null,
+                fallbackFront = null,
+            ),
+            types = listOf("Electric"),
+            abilities = listOf("Lightning Rod"),
+            stats = listOf(),
+            flavorText = "This is a description",
+            weightKg = 1.0,
+            heightMeters = 1.0,
+            numberLabel = "001",
+            genera = "Pikachu",
+            color = "Yellow",
+            description = "This is a description",
+            habitat = "Forest",
+            eggGroups = listOf("Monster"),
+            captureRate = 1,
+            baseHappiness = 1,
+            growthRate = "Fast",
+            isLegendary = false,
+            isMythical = false,
+        )
+    )
 }
