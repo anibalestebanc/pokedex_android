@@ -11,7 +11,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.pokemon.pokedex.R
-import com.github.pokemon.pokedex.ui.components.PokeBallBackground
 import com.github.pokemon.pokedex.ui.components.Title
 import com.github.pokemon.pokedex.ui.home.HomeEvent
 import com.github.pokemon.pokedex.ui.home.model.MenuItem
@@ -21,7 +20,6 @@ fun MainAppBar(
     onSearchBarClicked: () -> Unit,
     onEvent: (HomeEvent) -> Unit,
 ) {
-    LargeAppBar(background = { PokeBallBackground() }) {
         Column(
             modifier = Modifier.padding(
                 top = 32.dp,
@@ -50,10 +48,10 @@ fun MainAppBar(
                 }
             })
         }
-    }
+
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewMainAppBar() {
     MainAppBar(onEvent = { }, onSearchBarClicked = { })
