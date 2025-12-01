@@ -11,6 +11,8 @@ import com.github.pokemon.pokedex.utils.PokeTimeUtil
 import com.github.pokemon.pokedex.utils.DefaultPokeTimeUtil
 import com.github.pokemon.pokedex.utils.DefaultRefreshDueUtil
 import com.github.pokemon.pokedex.utils.RefreshDueUtil
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.named
 import org.koin.core.module.dsl.withOptions
@@ -20,6 +22,10 @@ val appModule = module {
 
     single<String> { BaseUrlProvider.getBaseUrl() } withOptions {
         named("default_base_url")
+    }
+
+    single<CoroutineDispatcher> { Dispatchers.IO } withOptions {
+        named("io_dispatcher")
     }
 
     single { SyncPokemonCatalogWorkScheduler(androidContext()) }

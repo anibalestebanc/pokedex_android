@@ -7,6 +7,8 @@ import com.github.pokemon.pokedex.data.datasource.cache.HistorySearchCacheDataSo
 import com.github.pokemon.pokedex.data.datasource.cache.PokemonCatalogCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.cache.RoomCatalogCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.cache.RoomHistorySearchCacheDataSource
+import com.github.pokemon.pokedex.data.datasource.cache.RoomSpeciesCacheDataSource
+import com.github.pokemon.pokedex.data.datasource.cache.SpeciesCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.local.PokemonCatalogLocalDataSource
 import com.github.pokemon.pokedex.data.datasource.local.PrefsPokemonCatalogLocalDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.PokemonCatalogRemoteDataSource
@@ -58,6 +60,7 @@ val dataModule = module {
     //CacheDatasource
     singleOf(::RoomCatalogCacheDataSource) { bind<PokemonCatalogCacheDataSource>() }
     singleOf(::RoomHistorySearchCacheDataSource) { bind<HistorySearchCacheDataSource>() }
+    singleOf(::RoomSpeciesCacheDataSource) { bind<SpeciesCacheDataSource>() }
 
     //LocalDataSource
     singleOf(::PrefsPokemonCatalogLocalDataSource) { bind<PokemonCatalogLocalDataSource>() }
