@@ -33,8 +33,8 @@ fun FavoriteRoute(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.onEvent(FavoriteEvent.OnStart)
+    LaunchedEffect(viewModel) {
+        viewModel.onAction(FavoriteAction.OnStart)
     }
 
     FavoriteScreen(
@@ -49,7 +49,7 @@ fun FavoriteScreen(
     onDetailClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(Modifier.fillMaxSize()) {
+    Column(modifier.fillMaxSize()) {
         if (uiState.isLoading) {
             Box(modifier = Modifier.fillMaxSize()) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))

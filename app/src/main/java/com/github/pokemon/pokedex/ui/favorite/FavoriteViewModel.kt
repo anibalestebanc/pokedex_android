@@ -15,9 +15,9 @@ class FavoriteViewModel(private val getFavoritesUseCase: GetFavoritesUseCase) : 
     private val _uiState = MutableStateFlow(FavoriteUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun onEvent(event: FavoriteEvent) {
+    fun onAction(event: FavoriteAction) {
         when (event) {
-            is FavoriteEvent.OnStart -> getFavorites()
+            is FavoriteAction.OnStart -> getFavorites()
         }
     }
 
