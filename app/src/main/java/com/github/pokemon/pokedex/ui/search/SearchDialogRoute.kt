@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.fullsearch
+package com.github.pokemon.pokedex.ui.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,21 +42,21 @@ fun SearchDialogRoute(
     onBackClick: () -> Unit,
     onSearchResult: (String) -> Unit,
     onBackAndSaveStateHandle: (String) -> Unit,
-    viewModel: SearchFullViewModel = koinViewModel(),
+    viewModel: SearchViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.onEvent(SearchFullEvent.OnStart)
+    LaunchedEffect(viewModel) {
+        viewModel.onAction(SearchAction.OnStart)
     }
 
     LaunchedEffect(initialQuery) {
         if (initialQuery.isNotEmpty()) {
-            viewModel.onEvent(SearchFullEvent.SetInitialQuery(initialQuery))
+            viewModel.onAction(SearchAction.SetInitialQuery(initialQuery))
         }
     }
 
-    SearchFullscreenDialog(
+    SearchDialogScreen(
         uiState = uiState,
         onDismiss = { onBackClick() },
         onSubmitResult = { q ->
@@ -65,18 +65,18 @@ fun SearchDialogRoute(
                 false -> onBackAndSaveStateHandle(q)
             }
         },
-        onEvent = viewModel::onEvent,
+        onAction = viewModel::onAction,
     )
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchFullscreenDialog(
-    uiState: SearchFullUiState,
+fun SearchDialogScreen(
+    uiState: SearchUiState,
     onDismiss: () -> Unit,
     onSubmitResult: (String) -> Unit,
-    onEvent: (SearchFullEvent) -> Unit,
+    onAction: (SearchAction) -> Unit,
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val shapes = MaterialTheme.shapes
@@ -99,12 +99,12 @@ fun SearchFullscreenDialog(
                     topBar = {
                         SearchDialogTopBar(
                             query = uiState.query,
-                            onValueChange = { onEvent(SearchFullEvent.QueryChanged(it)) },
+                            onValueChange = { onAction(SearchAction.QueryChanged(it)) },
                             placeholder = stringResource(id = R.string.search_bar_hint),
                             onSubmit = {
                                 val query = uiState.query.trim()
                                 if (query.isNotEmpty()) {
-                                    onEvent(SearchFullEvent.SearchSubmit)
+                                    onAction(SearchAction.SearchSubmit)
                                 }
                                 onSubmitResult(query)
                             },
@@ -131,7 +131,7 @@ fun SearchFullscreenDialog(
                                 style = MaterialTheme.typography.titleSmall,
                             )
                             TextButton(
-                                onClick = { onEvent(SearchFullEvent.RemoveAllHistory) },
+                                onClick = { onAction(SearchAction.RemoveAllHistory) },
                             ) { Text(
                                 text = stringResource(id = R.string.search_dialog_clear),
                                 color = MaterialTheme.colorScheme.onSurface)
@@ -159,8 +159,8 @@ fun SearchFullscreenDialog(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .clickable {
-                                            onEvent(SearchFullEvent.QueryChanged(item))
-                                            onEvent(SearchFullEvent.SearchSubmit)
+                                            onAction(SearchAction.QueryChanged(item))
+                                            onAction(SearchAction.SearchSubmit)
                                             onSubmitResult(item)
                                         },
                                 )

@@ -11,9 +11,9 @@ import com.github.pokemon.pokedex.domain.model.pokemons
 import com.github.pokemon.pokedex.ui.AppState
 import com.github.pokemon.pokedex.ui.favorite.FavoriteRoute
 import com.github.pokemon.pokedex.ui.favorite.navigation.FavoriteRoute
-import com.github.pokemon.pokedex.ui.fullsearch.SearchDialogRoute
-import com.github.pokemon.pokedex.ui.fullsearch.navigation.SearchDialogRoute
-import com.github.pokemon.pokedex.ui.fullsearch.navigation.navigateToSearchDialog
+import com.github.pokemon.pokedex.ui.search.SearchDialogRoute
+import com.github.pokemon.pokedex.ui.search.navigation.SearchDialogRoute
+import com.github.pokemon.pokedex.ui.search.navigation.navigateToSearchDialog
 import com.github.pokemon.pokedex.ui.home.HomeRoute
 import com.github.pokemon.pokedex.ui.home.navigation.HomeRoute
 import com.github.pokemon.pokedex.ui.pokemondetail.PokemonDetailRoute

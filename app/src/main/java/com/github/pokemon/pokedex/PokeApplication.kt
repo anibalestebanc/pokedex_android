@@ -34,6 +34,7 @@ class PokeApplication : Application(), KoinComponent {
             androidContext(this@PokeApplication)
             modules(appModule, dataModule, domainModule, presentationModule)
         }
+
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
             enqueueSyncCatalogUseCase()
         }

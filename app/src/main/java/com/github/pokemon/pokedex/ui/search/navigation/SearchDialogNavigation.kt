@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.fullsearch.navigation
+package com.github.pokemon.pokedex.ui.search.navigation
 
 import androidx.navigation.NavController
 import kotlinx.serialization.Serializable

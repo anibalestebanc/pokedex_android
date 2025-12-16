@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.fullsearch
+package com.github.pokemon.pokedex.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,18 +8,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class SearchFullViewModel(private val repository: HistorySearchRepository) : ViewModel() {
+class SearchViewModel(private val repository: HistorySearchRepository) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SearchFullUiState())
-    val uiState: StateFlow<SearchFullUiState> = _uiState
+    private val _uiState = MutableStateFlow(SearchUiState())
+    val uiState: StateFlow<SearchUiState> = _uiState
 
-    fun onEvent(event: SearchFullEvent) = when (event) {
-        SearchFullEvent.OnStart -> getSearchHistory()
-        is SearchFullEvent.SetInitialQuery -> initialQuery(event.query)
-        is SearchFullEvent.SearchSubmit -> submitSearch()
-        is SearchFullEvent.SelectSuggestion ->  selectSearchSuggestion(event.query)
-        is SearchFullEvent.QueryChanged -> onQueryChanged(event.query)
-        SearchFullEvent.RemoveAllHistory -> deleteSearchHistory()
+    fun onAction(event: SearchAction) = when (event) {
+        SearchAction.OnStart -> getSearchHistory()
+        is SearchAction.SetInitialQuery -> initialQuery(event.query)
+        is SearchAction.SearchSubmit -> submitSearch()
+        is SearchAction.SelectSuggestion ->  selectSearchSuggestion(event.query)
+        is SearchAction.QueryChanged -> onQueryChanged(event.query)
+        SearchAction.RemoveAllHistory -> deleteSearchHistory()
     }
 
     private fun initialQuery(query: String) {

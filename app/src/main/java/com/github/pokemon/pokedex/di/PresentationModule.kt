@@ -1,7 +1,7 @@
 package com.github.pokemon.pokedex.di
 
 import com.github.pokemon.pokedex.ui.favorite.FavoriteViewModel
-import com.github.pokemon.pokedex.ui.fullsearch.SearchFullViewModel
+import com.github.pokemon.pokedex.ui.search.SearchViewModel
 import com.github.pokemon.pokedex.ui.home.HomeViewModel
 import com.github.pokemon.pokedex.ui.pokemondetail.PokemonDetailViewModel
 import com.github.pokemon.pokedex.ui.pokemonlist.PokemonListViewModel
@@ -15,6 +15,6 @@ val presentationModule = module {
     viewModelOf(::PokemonListViewModel)
     viewModelOf(::PokemonDetailViewModel)
     viewModelOf(::SearchResultViewModel)
-    viewModelOf(::SearchFullViewModel)
+    viewModelOf(::SearchViewModel)
     viewModelOf(::FavoriteViewModel)
 }

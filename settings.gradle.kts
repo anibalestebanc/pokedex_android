@@ -26,4 +26,4 @@ dependencyResolutionManagement {
     }
 }
 include(":app")
-rootProject.name = "Pokedex"
+rootProject.name = "pokedex_android"
