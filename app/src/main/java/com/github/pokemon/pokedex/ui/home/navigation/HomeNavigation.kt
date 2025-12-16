@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import kotlinx.serialization.Serializable
 
 @Serializable
-object HomeRoute
+data object HomeRoute
 
 fun NavController.navigateToHome(popUpToStart: Boolean = false) {
     navigate(route = HomeRoute) {

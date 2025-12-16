@@ -45,7 +45,6 @@ fun AppNavHost(
 
         composable<HomeRoute> {
             HomeRoute(
-                onBackClick = navController::popBackStack,
                 onPokemonListClick = navController::navigateToPokemonList,
                 onSearchClick = {
                     navController.navigateToSearchDialog(navigateToSearch = true)

@@ -12,13 +12,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.ui.components.Title
-import com.github.pokemon.pokedex.ui.home.HomeEvent
 import com.github.pokemon.pokedex.ui.home.model.MenuItem
 
 @Composable
 fun MainAppBar(
     onSearchBarClicked: () -> Unit,
-    onEvent: (HomeEvent) -> Unit,
+    onOptionSelected: (MenuItem) -> Unit,
 ) {
         Column(
             modifier = Modifier.padding(
@@ -41,12 +40,7 @@ fun MainAppBar(
                 onSearchClick = onSearchBarClicked,
             )
             Spacer(modifier = Modifier.height(32.dp))
-            Menu(onMenuItemSelected = { menuItem ->
-                when (menuItem) {
-                    is MenuItem.Pokedex -> onEvent(HomeEvent.OpenPokedex)
-                    else -> Unit
-                }
-            })
+            Menu(onMenuItemSelected = onOptionSelected)
         }
 
 }
@@ -54,5 +48,5 @@ fun MainAppBar(
 @Preview(showBackground = true)
 @Composable
 fun PreviewMainAppBar() {
-    MainAppBar(onEvent = { }, onSearchBarClicked = { })
+    MainAppBar(onOptionSelected = { }, onSearchBarClicked = { })
 }
