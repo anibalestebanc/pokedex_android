@@ -18,10 +18,10 @@ import com.github.pokemon.pokedex.ui.home.navigation.HomeRoute
 import com.github.pokemon.pokedex.ui.detail.DetailRoute
 import com.github.pokemon.pokedex.ui.detail.navigation.DetailRoute
 import com.github.pokemon.pokedex.ui.detail.navigation.navigateToDetail
-import com.github.pokemon.pokedex.ui.searchresult.SearchResultRoute
-import com.github.pokemon.pokedex.ui.searchresult.navigation.SEARCH_RESULT_KEY
-import com.github.pokemon.pokedex.ui.searchresult.navigation.SearchResultRoute
-import com.github.pokemon.pokedex.ui.searchresult.navigation.navigateToSearchResult
+import com.github.pokemon.pokedex.ui.search_list.SearchListRoute
+import com.github.pokemon.pokedex.ui.search_list.navigation.SEARCH_LIST_KEY
+import com.github.pokemon.pokedex.ui.search_list.navigation.SearchRoute
+import com.github.pokemon.pokedex.ui.search_list.navigation.navigateToSearchList
 
 @Composable
 fun AppNavHost(
@@ -52,12 +52,11 @@ fun AppNavHost(
             )
         }
 
-        composable<SearchResultRoute>{ backStackEntry ->
-            val searchRoute: SearchResultRoute = backStackEntry.toRoute()
-            SearchResultRoute(
+        composable<SearchRoute>{ backStackEntry ->
+            val searchRoute: SearchRoute = backStackEntry.toRoute()
+            SearchListRoute(
                 appState = appState,
                 initialQuery = searchRoute.query,
-                onBackClick = navController::popBackStack,
                 onDetailClick = { pokemonId ->
                     navController.navigateToDetail(pokemonId)
                 },
@@ -80,11 +79,11 @@ fun AppNavHost(
                 initialQuery = searchRoute.query,
                 onBackClick = navController::popBackStack,
                 onBackAndSaveStateHandle = { query ->
-                    navController.previousBackStackEntry?.savedStateHandle?.set(SEARCH_RESULT_KEY, query)
+                    navController.previousBackStackEntry?.savedStateHandle?.set(SEARCH_LIST_KEY, query)
                     navController.popBackStack()
                 },
                 onSearchResult = { query ->
-                    navController.navigateToSearchResult(query)
+                    navController.navigateToSearchList(query)
                 },
             )
         }

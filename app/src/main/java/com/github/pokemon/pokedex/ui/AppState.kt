@@ -15,7 +15,7 @@ import com.github.pokemon.pokedex.ui.components.bottombar.BottomBarItem
 import com.github.pokemon.pokedex.ui.components.bottombar.TopBottomBarDestinations
 import com.github.pokemon.pokedex.ui.favorite.navigation.FavoriteRoute
 import com.github.pokemon.pokedex.ui.home.navigation.HomeRoute
-import com.github.pokemon.pokedex.ui.searchresult.navigation.SearchResultRoute
+import com.github.pokemon.pokedex.ui.search_list.navigation.SearchRoute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -73,7 +73,7 @@ class AppState(
         val d = currentDestination() ?: return null
         val isHome = d.hierarchy.any { it.route?.startsWith(HomeRoute::class.qualifiedName!!) == true }
         val isFav = d.hierarchy.any { it.route?.startsWith(FavoriteRoute::class.qualifiedName!!) == true }
-        val isSearch = d.hierarchy.any { it.route?.startsWith(SearchResultRoute::class.qualifiedName!!) == true }
+        val isSearch = d.hierarchy.any { it.route?.startsWith(SearchRoute::class.qualifiedName!!) == true }
         return when {
             isHome -> "home"
             isFav -> "favorite"
@@ -93,8 +93,8 @@ class AppState(
                 }
             }
 
-            SearchResultRoute::class.qualifiedName -> {
-                navController.navigate(SearchResultRoute(query = "")) {
+            SearchRoute::class.qualifiedName -> {
+                navController.navigate(SearchRoute(query = "")) {
                     popUpTo(navController.graph.startDestinationId) { saveState = true }
                     launchSingleTop = true
                     restoreState = true

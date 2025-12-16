@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.searchresult
+package com.github.pokemon.pokedex.ui.search_list
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,20 +32,19 @@ import com.github.pokemon.pokedex.ui.components.common.EmptyStateScreen
 import com.github.pokemon.pokedex.ui.components.common.ErrorWithRetryScreen
 import com.github.pokemon.pokedex.ui.components.common.LoadingScreen
 import com.github.pokemon.pokedex.ui.components.common.SimpleLoadingMore
-import com.github.pokemon.pokedex.ui.searchresult.navigation.SEARCH_RESULT_KEY
+import com.github.pokemon.pokedex.ui.search_list.navigation.SEARCH_LIST_KEY
 import com.github.pokemon.pokedex.utils.getAndConsume
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SearchResultRoute(
+fun SearchListRoute(
     appState: AppState,
     initialQuery: String,
     onSearchClick: (String) -> Unit,
-    onBackClick: () -> Unit,
     onDetailClick: (String) -> Unit,
-    viewModel: SearchResultViewModel = koinViewModel(),
+    viewModel: SearchListViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val pagingItems = viewModel.pagingFlow.collectAsLazyPagingItems()
@@ -53,20 +52,20 @@ fun SearchResultRoute(
 
     val backStackEntry by appState.navController.currentBackStackEntryAsState()
     LaunchedEffect(backStackEntry) {
-        backStackEntry?.savedStateHandle?.getAndConsume<String>(SEARCH_RESULT_KEY)?.let { q ->
-            viewModel.onEvent(SearchResultEvent.QueryChanged(q))
-            viewModel.onEvent(SearchResultEvent.SubmitSearch)
+        backStackEntry?.savedStateHandle?.getAndConsume<String>(SEARCH_LIST_KEY)?.let { q ->
+            viewModel.onAction(SearchListAction.QueryChanged(q))
+            viewModel.onAction(SearchListAction.SubmitSearch)
         }
     }
 
     LaunchedEffect(initialQuery, seeded) {
         if (!seeded) {
-            viewModel.onEvent(SearchResultEvent.SetInitialQuery(initialQuery))
+            viewModel.onAction(SearchListAction.SetInitialQuery(initialQuery))
             seeded = true
         }
     }
 
-    SearchScreen(
+    SearchListScreen(
         uiState = uiState,
         onSearchClick = onSearchClick,
         onDetailClick = onDetailClick,
@@ -76,15 +75,15 @@ fun SearchResultRoute(
 }
 
 @Composable
-fun SearchScreen(
+fun SearchListScreen(
     uiState: SearchResultUiState,
     onSearchClick: (String) -> Unit,
     onDetailClick: (String) -> Unit,
     pagingItems: LazyPagingItems<PokemonCatalog>? = null,
-    observeDetail: (Int) -> Flow<PokemonDetailUiState>,
+    observeDetail: (Int) -> Flow<SearchListUiState>,
     modifier: Modifier = Modifier,
 ) {
-    Column(Modifier.fillMaxSize()) {
+    Column(modifier.fillMaxSize()) {
 
         Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
             RoundedSearchBar(
@@ -130,7 +129,7 @@ fun SearchScreen(
             ) { index ->
                 pagingItems[index]?.let { p ->
                     val detailUiState by remember(p.id) { observeDetail(p.id) }.collectAsStateWithLifecycle(
-                        initialValue = PokemonDetailUiState(isLoading = true),
+                        initialValue = SearchListUiState(isLoading = true),
                     )
                     PokemonSearchCard(
                         index = index + 1,
@@ -163,13 +162,13 @@ fun SearchScreen(
 
 @Preview
 @Composable
-fun SearchScreenPreview() {
-    SearchScreen(
+fun SearchListScreenPreview() {
+    SearchListScreen(
         onDetailClick = {},
         onSearchClick = {},
         uiState = SearchResultUiState(),
         pagingItems = null,
-        observeDetail = { flowOf(PokemonDetailUiState()) }
+        observeDetail = { flowOf(SearchListUiState()) }
     )
 }
 

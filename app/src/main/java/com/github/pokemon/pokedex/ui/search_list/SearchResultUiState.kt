@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.searchresult
+package com.github.pokemon.pokedex.ui.search_list
 
 data class SearchResultUiState(
     val query: String = "",

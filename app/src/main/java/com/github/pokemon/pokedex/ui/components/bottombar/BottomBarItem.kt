@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.ui.favorite.navigation.FavoriteRoute
 import com.github.pokemon.pokedex.ui.home.navigation.HomeRoute
-import com.github.pokemon.pokedex.ui.searchresult.navigation.SearchResultRoute
+import com.github.pokemon.pokedex.ui.search_list.navigation.SearchRoute
 
 data class BottomBarItem(
     val id: String,
@@ -32,7 +32,7 @@ val TopBottomBarDestinations = listOf(
         label = R.string.bottom_bar_search,
         selectedIcon = Icons.Outlined.Search,
         unselectedIcon = Icons.Outlined.Search,
-        qualifiedName = SearchResultRoute::class.qualifiedName!!,
+        qualifiedName = SearchRoute::class.qualifiedName!!,
     ),
     BottomBarItem(
         id = "favorite",

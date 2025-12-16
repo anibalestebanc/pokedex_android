@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.searchresult
+package com.github.pokemon.pokedex.ui.search_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-class SearchResultViewModel(
+class SearchListViewModel(
     private val searchPokemonUseCase: SearchPokemonUseCase,
     private val pokemonDetailRepository: PokemonDetailRepository
 ) : ViewModel() {
@@ -32,7 +32,7 @@ class SearchResultViewModel(
     val uiState: StateFlow<SearchResultUiState> = _uiState
 
     private val queryFlow = MutableStateFlow("")
-    private val detailFlows = mutableMapOf<Int, StateFlow<PokemonDetailUiState>>()
+    private val detailFlows = mutableMapOf<Int, StateFlow<SearchListUiState>>()
 
     val pagingFlow: Flow<PagingData<PokemonCatalog>> =
         queryFlow
@@ -42,26 +42,26 @@ class SearchResultViewModel(
                 searchPokemonUseCase(q.ifBlank { null })
             }.cachedIn(viewModelScope)
 
-    fun observeDetail(id: Int): StateFlow<PokemonDetailUiState> = detailFlows.getOrPut(id) {
+    fun observeDetail(id: Int): StateFlow<SearchListUiState> = detailFlows.getOrPut(id) {
         pokemonDetailRepository.observePokemonDetail(id)
             .map { detail ->
-                PokemonDetailUiState(detail = detail, isLoading = false, error = null)
+                SearchListUiState(detail = detail, isLoading = false, error = null)
             }.onStart {
-                emit(PokemonDetailUiState(isLoading = true))
+                emit(SearchListUiState(isLoading = true))
             }.catch { e ->
-                emit(PokemonDetailUiState(isLoading = false, error = e.message))
+                emit(SearchListUiState(isLoading = false, error = e.message))
             }
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5_000),
-                initialValue = PokemonDetailUiState(isLoading = true),
+                initialValue = SearchListUiState(isLoading = true),
             )
     }
 
-    fun onEvent(event: SearchResultEvent) = when (event) {
-        is SearchResultEvent.SetInitialQuery -> initialSearch(event.text)
-        is SearchResultEvent.QueryChanged -> onQueryChanged(event.text)
-        SearchResultEvent.SubmitSearch -> submitSearch()
+    fun onAction(event: SearchListAction) = when (event) {
+        is SearchListAction.SetInitialQuery -> initialSearch(event.text)
+        is SearchListAction.QueryChanged -> onQueryChanged(event.text)
+        SearchListAction.SubmitSearch -> submitSearch()
     }
 
     private fun onQueryChanged(query: String) {
