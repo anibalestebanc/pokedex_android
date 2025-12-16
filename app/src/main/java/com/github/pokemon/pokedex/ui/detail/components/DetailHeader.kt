@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.pokemondetail.components
+package com.github.pokemon.pokedex.ui.detail.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

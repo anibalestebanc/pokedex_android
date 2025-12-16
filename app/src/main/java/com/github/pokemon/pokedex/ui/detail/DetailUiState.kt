@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.pokemondetail
+package com.github.pokemon.pokedex.ui.detail
 
 import androidx.annotation.StringRes
 import com.github.pokemon.pokedex.domain.model.PokemonFullDetail

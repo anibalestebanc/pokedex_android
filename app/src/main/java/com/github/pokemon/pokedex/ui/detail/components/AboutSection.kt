@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.pokemondetail.components
+package com.github.pokemon.pokedex.ui.detail.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +27,7 @@ import com.github.pokemon.pokedex.domain.model.PokemonFullDetail
 import com.github.pokemon.pokedex.domain.model.PokemonSprites
 
 @Composable
-fun AboutSectionV2(data: PokemonFullDetail) {
+fun AboutSection(data: PokemonFullDetail) {
     Column(Modifier.fillMaxWidth()
         .background(MaterialTheme.colorScheme.surface)
         .padding(16.dp)
@@ -110,8 +110,8 @@ fun TagPill(text: String, color: Color) {
 
 @Preview(showBackground = true)
 @Composable
-fun AboutSectionV2Preview(){
-    AboutSectionV2(
+fun AboutSectionPreview(){
+    AboutSection(
         PokemonFullDetail(
             id = 25,
             name = "Pikachu",

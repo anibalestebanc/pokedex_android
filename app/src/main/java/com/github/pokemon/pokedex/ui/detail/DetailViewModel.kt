@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.pokemondetail
+package com.github.pokemon.pokedex.ui.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class PokemonDetailViewModel(
+class DetailViewModel(
     private val getFullDetailUseCase: GetPokemonFullDetailUseCase,
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
     private val observeIsFavoriteUseCase: ObserveIsFavoriteUseCase
@@ -23,44 +23,45 @@ class PokemonDetailViewModel(
     private val _uiState = MutableStateFlow(DetailUiState())
     val uiState: StateFlow<DetailUiState> = _uiState
 
-    private val _effect = MutableSharedFlow<DetailEffect>()
-    val effect: SharedFlow<DetailEffect> = _effect
+    private val _uiEffect = MutableSharedFlow<DetailUiEffect>()
+    val uiEffect: SharedFlow<DetailUiEffect> = _uiEffect
 
 
     fun observeIsFavorite(id: String): Flow<Boolean> = observeIsFavoriteUseCase(id.toInt())
 
-    fun onEvent(action: DetailEvent) = viewModelScope.launch {
+    fun onAction(action: DetailAction) = viewModelScope.launch {
         when (action) {
-            is DetailEvent.OnStart -> getPokemonDetail(action.pokemonId)
-            is DetailEvent.OnRetryClick -> retry(action.pokemonId)
-            is DetailEvent.OnToggleFavorite -> onToggleFavorite(action.pokemonId)
-            is DetailEvent.OnSharePokemon -> _effect.emit(DetailEffect.ShareUrl(action.imageUrl))
+            is DetailAction.OnStart -> getPokemonDetail(action.pokemonId)
+            is DetailAction.OnRetryDetailClick -> retryDetail(action.pokemonId)
+            is DetailAction.OnToggleFavorite -> onToggleFavorite(action.pokemonId)
+            is DetailAction.OnSharePokemon -> _uiEffect.emit(DetailUiEffect.ShareUrl(action.imageUrl))
         }
     }
-    fun getPokemonDetail(idOrName: String) = viewModelScope.launch {
+    private fun getPokemonDetail(idOrName: String) = viewModelScope.launch {
         val id = idOrName.toIntOrNull()
         if (id == null) {
             _uiState.value = DetailUiState(error = R.string.error_generic_message)
             return@launch
         }
         _uiState.value = DetailUiState(isLoading = true)
-        getFullDetailUseCase(idOrName.toInt()).onSuccess { detail ->
-            _uiState.value = DetailUiState(data = detail)
-        }.onFailure { e ->
-            if (e is NotFoundException) {
-                _uiState.value = DetailUiState(error = R.string.error_not_found_message)
-                return@launch
+        getFullDetailUseCase(idOrName.toInt())
+            .onSuccess { detail ->
+                _uiState.value = DetailUiState(data = detail)
+            }.onFailure { e ->
+                if (e is NotFoundException) {
+                    _uiState.value = DetailUiState(error = R.string.error_not_found_message)
+                    return@launch
+                }
+                _uiState.value = DetailUiState(error = R.string.error_generic_message)
             }
-            _uiState.value = DetailUiState(error = R.string.error_generic_message)
-        }
     }
 
-    fun onToggleFavorite(pokemonId: String) = viewModelScope.launch {
+    private fun onToggleFavorite(pokemonId: String) = viewModelScope.launch {
         pokemonId.toIntOrNull()?.let { id ->
             toggleFavoriteUseCase(id)
         }
     }
 
-    fun retry(idOrName: String) = getPokemonDetail(idOrName)
+    private fun retryDetail(idOrName: String) = getPokemonDetail(idOrName)
 
 }

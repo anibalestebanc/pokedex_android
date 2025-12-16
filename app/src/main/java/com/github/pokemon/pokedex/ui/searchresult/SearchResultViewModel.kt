@@ -36,7 +36,7 @@ class SearchResultViewModel(
 
     val pagingFlow: Flow<PagingData<PokemonCatalog>> =
         queryFlow
-            .debounce(1000)
+            .debounce(1_000)
             .distinctUntilChanged()
             .flatMapLatest { q ->
                 searchPokemonUseCase(q.ifBlank { null })

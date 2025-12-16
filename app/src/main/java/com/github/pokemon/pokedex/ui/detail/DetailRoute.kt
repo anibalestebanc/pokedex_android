@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.pokemondetail
+package com.github.pokemon.pokedex.ui.detail
 
 import android.content.Intent
 import androidx.compose.foundation.background
@@ -21,81 +21,87 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.domain.model.PokemonFullDetail
 import com.github.pokemon.pokedex.theme.PokeAppTheme
 import com.github.pokemon.pokedex.ui.components.common.ErrorWithRetryScreen
 import com.github.pokemon.pokedex.ui.components.common.LoadingScreen
 import com.github.pokemon.pokedex.ui.components.utils.PokeBackgroundUtil.primaryTypeColorRes
-import com.github.pokemon.pokedex.ui.pokemondetail.components.AboutSectionV2
-import com.github.pokemon.pokedex.ui.pokemondetail.components.BaseStatsSectionV2
-import com.github.pokemon.pokedex.ui.pokemondetail.components.DetailHeader
-import com.github.pokemon.pokedex.ui.pokemondetail.components.SectionTabs
+import com.github.pokemon.pokedex.ui.detail.components.AboutSection
+import com.github.pokemon.pokedex.ui.detail.components.BaseStatsSection
+import com.github.pokemon.pokedex.ui.detail.components.DetailHeader
+import com.github.pokemon.pokedex.ui.detail.components.SectionTabs
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun PokemonDetailRoute(
+fun DetailRoute(
     onBackClick: () -> Unit,
     pokemonId: String,
-    viewModel: PokemonDetailViewModel = koinViewModel(),
+    viewModel: DetailViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isFavorite by viewModel.observeIsFavorite(pokemonId).collectAsStateWithLifecycle(initialValue = false)
 
     LaunchedEffect(pokemonId) {
-        viewModel.onEvent(DetailEvent.OnStart(pokemonId))
+        viewModel.onAction(DetailAction.OnStart(pokemonId))
     }
 
     LaunchedEffect(Unit) {
-        viewModel.effect.collect { effect ->
-            when (effect) {
-                is DetailEffect.ShareUrl -> {
-                    val intent = Intent(Intent.ACTION_SEND).apply {
-                        type = "text/plain"
-                        putExtra(Intent.EXTRA_TEXT, effect.url)
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.uiEffect.collect { effect ->
+                when (effect) {
+                    is DetailUiEffect.ShareUrl -> {
+                        val intent = Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_TEXT, effect.url)
+                        }
+                        context.startActivity(
+                            Intent.createChooser(intent, context.getString(R.string.share)),
+                        )
                     }
-                    context.startActivity(
-                        Intent.createChooser(intent, context.getString(R.string.share))
-                    )
                 }
             }
         }
     }
 
-    PokemonDetailScreenV2(
+    DetailScreen(
         pokemonId = pokemonId,
         isFavorite = isFavorite,
-        state = uiState,
-        onEvent = viewModel::onEvent,
+        uiState = uiState,
+        onAction = viewModel::onAction,
         onBackClick = onBackClick,
     )
 }
 
 @Composable
-fun PokemonDetailScreenV2(
+fun DetailScreen(
     pokemonId: String,
     isFavorite: Boolean,
-    state: DetailUiState,
-    onEvent: (DetailEvent) -> Unit,
+    uiState: DetailUiState,
+    onAction: (DetailAction) -> Unit,
     onBackClick: () -> Unit,
 ) {
     when {
-        state.isLoading -> LoadingScreen(message = stringResource(R.string.loading))
-        state.error != null -> ErrorWithRetryScreen(
-            title = stringResource(state.error),
+        uiState.isLoading -> LoadingScreen(message = stringResource(R.string.loading))
+        uiState.error != null -> ErrorWithRetryScreen(
+            title = stringResource(uiState.error),
             retryText = stringResource(R.string.retry),
-            onRetry = { onEvent(DetailEvent.OnRetryClick(pokemonId)) },
+            onRetry = { onAction(DetailAction.OnRetryDetailClick(pokemonId)) },
         )
 
-        state.data != null -> PokemonDetailContent(
-            data = state.data,
+        uiState.data != null -> PokemonDetailContent(
+            data = uiState.data,
             isFavorite = isFavorite,
-            onRefresh = { onEvent.invoke(DetailEvent.OnRetryClick(pokemonId)) },
+            onRefresh = { onAction(DetailAction.OnRetryDetailClick(pokemonId)) },
             onBackClick = onBackClick,
-            onToggleFavorite = { onEvent(DetailEvent.OnToggleFavorite(pokemonId)) },
-            onShareClick = { onEvent(DetailEvent.OnSharePokemon(it)) }
+            onToggleFavorite = { onAction(DetailAction.OnToggleFavorite(pokemonId)) },
+            onShareClick = { onAction(DetailAction.OnSharePokemon(it)) }
         )
     }
 }
@@ -144,8 +150,8 @@ fun PokemonDetailContent(
         )
 
         when (selectedTab) {
-            0 -> AboutSectionV2(data)
-            1 -> BaseStatsSectionV2(stats = data.stats)
+            0 -> AboutSection(data)
+            1 -> BaseStatsSection(stats = data.stats)
         }
         Spacer(Modifier.height(16.dp))
     }
@@ -153,9 +159,9 @@ fun PokemonDetailContent(
 
 @Preview
 @Composable
-fun PokemonDetailScreenV2Preview() {
+fun DetailScreenPreview() {
     PokeAppTheme {
-         PokemonDetailScreenV2(
+         DetailScreen(
              "Pikachu"
              ,true
              ,DetailUiState()

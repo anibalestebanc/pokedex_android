@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.toRoute
-import com.github.pokemon.pokedex.domain.model.pokemons
 import com.github.pokemon.pokedex.ui.AppState
 import com.github.pokemon.pokedex.ui.favorite.FavoriteRoute
 import com.github.pokemon.pokedex.ui.favorite.navigation.FavoriteRoute
@@ -16,15 +15,9 @@ import com.github.pokemon.pokedex.ui.search.navigation.SearchDialogRoute
 import com.github.pokemon.pokedex.ui.search.navigation.navigateToSearchDialog
 import com.github.pokemon.pokedex.ui.home.HomeRoute
 import com.github.pokemon.pokedex.ui.home.navigation.HomeRoute
-import com.github.pokemon.pokedex.ui.pokemondetail.PokemonDetailRoute
-import com.github.pokemon.pokedex.ui.pokemondetail.PokemonDetailScreen
-import com.github.pokemon.pokedex.ui.pokemondetail.navigation.DetailRoute
-import com.github.pokemon.pokedex.ui.pokemondetail.navigation.OldPokemonDetailRoute
-import com.github.pokemon.pokedex.ui.pokemondetail.navigation.navigateToOldPokemonDetail
-import com.github.pokemon.pokedex.ui.pokemondetail.navigation.navigateToPokemonDetail
-import com.github.pokemon.pokedex.ui.pokemonlist.PokemonListRoute
-import com.github.pokemon.pokedex.ui.pokemonlist.navigation.ListRoute
-import com.github.pokemon.pokedex.ui.pokemonlist.navigation.navigateToPokemonList
+import com.github.pokemon.pokedex.ui.detail.DetailRoute
+import com.github.pokemon.pokedex.ui.detail.navigation.DetailRoute
+import com.github.pokemon.pokedex.ui.detail.navigation.navigateToDetail
 import com.github.pokemon.pokedex.ui.searchresult.SearchResultRoute
 import com.github.pokemon.pokedex.ui.searchresult.navigation.SEARCH_RESULT_KEY
 import com.github.pokemon.pokedex.ui.searchresult.navigation.SearchResultRoute
@@ -45,32 +38,15 @@ fun AppNavHost(
 
         composable<HomeRoute> {
             HomeRoute(
-                onPokemonListClick = navController::navigateToPokemonList,
                 onSearchClick = {
                     navController.navigateToSearchDialog(navigateToSearch = true)
                 },
             )
         }
 
-        composable<ListRoute> {
-            PokemonListRoute(
-                onBackClick = navController::popBackStack,
-                onPokemonDetailClick = { pokemonName ->
-                    navController.navigateToOldPokemonDetail(pokemonName)
-                }
-            )
-        }
-
-        composable<OldPokemonDetailRoute> { backStackEntry ->
-            val detailRoute: OldPokemonDetailRoute = backStackEntry.toRoute()
-            val pokemon = pokemons.find { it.name == detailRoute.pokemonName }
-                ?: throw IllegalArgumentException("Pokemon Name ${detailRoute.pokemonName} not found")
-            PokemonDetailScreen(pokemon = pokemon)
-        }
-
         composable<DetailRoute> { backStackEntry ->
             val detailRoute: DetailRoute = backStackEntry.toRoute()
-            PokemonDetailRoute(
+            DetailRoute(
                 onBackClick = navController::popBackStack,
                 pokemonId = detailRoute.pokemonId,
             )
@@ -83,7 +59,7 @@ fun AppNavHost(
                 initialQuery = searchRoute.query,
                 onBackClick = navController::popBackStack,
                 onDetailClick = { pokemonId ->
-                    navController.navigateToPokemonDetail(pokemonId)
+                    navController.navigateToDetail(pokemonId)
                 },
                 onSearchClick = { q ->
                     navController.navigateToSearchDialog(query = q)
@@ -117,7 +93,7 @@ fun AppNavHost(
             FavoriteRoute(
                 onBackClick = navController::popBackStack,
                 onDetailClick = { pokemonId ->
-                    navController.navigateToPokemonDetail(pokemonId)
+                    navController.navigateToDetail(pokemonId)
                 },
             )
         }

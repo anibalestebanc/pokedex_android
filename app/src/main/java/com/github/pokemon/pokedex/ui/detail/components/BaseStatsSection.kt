@@ -1,4 +1,6 @@
-package com.github.pokemon.pokedex.ui.pokemondetail.components
+@file:JvmName("BaseStatsSectionKt")
+
+package com.github.pokemon.pokedex.ui.detail.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -26,7 +28,7 @@ import androidx.compose.ui.unit.dp
 typealias PokemonStat = com.github.pokemon.pokedex.domain.model.Stat
 
 @Composable
-fun BaseStatsSectionV2(stats: List<PokemonStat>) {
+fun BaseStatsSection(stats: List<PokemonStat>) {
     val order = listOf("hp", "attack", "defense", "special-attack", "special-defense", "speed")
     val statsMap = stats.associateBy { it.name.lowercase() }
     val items = order.map { key ->
@@ -102,8 +104,8 @@ fun StatBar(progress: Float, color: Color, modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun BaseStatsSectionV2Preview() {
-    BaseStatsSectionV2(
+fun BaseStatsSectionPreview() {
+    BaseStatsSection(
         stats = listOf(
             PokemonStat("hp", 100),
             PokemonStat("attack", 49),
