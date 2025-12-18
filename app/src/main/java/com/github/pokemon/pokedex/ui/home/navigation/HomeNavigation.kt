@@ -1,13 +1,11 @@
 package com.github.pokemon.pokedex.ui.home.navigation
 
 import androidx.navigation.NavController
-import kotlinx.serialization.Serializable
+import com.github.pokemon.pokedex.navigation.ScreenRoute.HomeScreenRoute
 
-@Serializable
-data object HomeRoute
 
 fun NavController.navigateToHome(popUpToStart: Boolean = false) {
-    navigate(route = HomeRoute) {
+    navigate(route = HomeScreenRoute) {
         launchSingleTop = true
         restoreState = true
         if (popUpToStart) {

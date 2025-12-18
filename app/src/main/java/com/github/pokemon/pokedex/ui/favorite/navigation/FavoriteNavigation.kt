@@ -1,13 +1,11 @@
 package com.github.pokemon.pokedex.ui.favorite.navigation
 
 import androidx.navigation.NavController
-import kotlinx.serialization.Serializable
+import com.github.pokemon.pokedex.navigation.ScreenRoute
 
-@Serializable
-object FavoriteRoute
 
 fun NavController.navigateToFavorite() {
-    navigate(route =  FavoriteRoute) {
+    navigate(route = ScreenRoute.FavoriteScreenRoute) {
         launchSingleTop = true
         restoreState = true
     }

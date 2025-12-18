@@ -1,13 +1,10 @@
 package com.github.pokemon.pokedex.ui.detail.navigation
 
 import androidx.navigation.NavController
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class DetailRoute(val pokemonId: String)
+import com.github.pokemon.pokedex.navigation.ScreenRoute.DetailScreenRoute
 
 fun NavController.navigateToDetail(pokemonId: String) {
-    navigate(route = DetailRoute(pokemonId)) {
+    navigate(route = DetailScreenRoute(pokemonId)) {
         launchSingleTop = true
     }
 }

@@ -11,11 +11,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.github.pokemon.pokedex.core.network.utils.NetworkMonitor
+import com.github.pokemon.pokedex.navigation.ScreenRoute.FavoriteScreenRoute
+import com.github.pokemon.pokedex.navigation.ScreenRoute.HomeScreenRoute
+import com.github.pokemon.pokedex.navigation.ScreenRoute.SearchListScreenRoute
 import com.github.pokemon.pokedex.ui.components.bottombar.BottomBarItem
 import com.github.pokemon.pokedex.ui.components.bottombar.TopBottomBarDestinations
-import com.github.pokemon.pokedex.ui.favorite.navigation.FavoriteRoute
-import com.github.pokemon.pokedex.ui.home.navigation.HomeRoute
-import com.github.pokemon.pokedex.ui.searchlist.navigation.SearchRoute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -71,9 +71,9 @@ class AppState(
     @Composable
     fun currentTopLevelDestinationIdV2(): String? {
         val d = currentDestination() ?: return null
-        val isHome = d.hierarchy.any { it.route?.startsWith(HomeRoute::class.qualifiedName!!) == true }
-        val isFav = d.hierarchy.any { it.route?.startsWith(FavoriteRoute::class.qualifiedName!!) == true }
-        val isSearch = d.hierarchy.any { it.route?.startsWith(SearchRoute::class.qualifiedName!!) == true }
+        val isHome = d.hierarchy.any { it.route?.startsWith(HomeScreenRoute::class.qualifiedName!!) == true }
+        val isFav = d.hierarchy.any { it.route?.startsWith(FavoriteScreenRoute::class.qualifiedName!!) == true }
+        val isSearch = d.hierarchy.any { it.route?.startsWith(SearchListScreenRoute::class.qualifiedName!!) == true }
         return when {
             isHome -> "home"
             isFav -> "favorite"
@@ -85,24 +85,24 @@ class AppState(
     fun navigateToTopLevelDestination(destId: String) {
         val dest = topDestinations.first { it.id == destId }
         when (dest.qualifiedName) {
-            HomeRoute::class.qualifiedName -> {
-                navController.navigate(HomeRoute) {
+            HomeScreenRoute::class.qualifiedName -> {
+                navController.navigate(HomeScreenRoute) {
                     popUpTo(navController.graph.startDestinationId) { saveState = true }
                     launchSingleTop = true
                     restoreState = true
                 }
             }
 
-            SearchRoute::class.qualifiedName -> {
-                navController.navigate(SearchRoute(query = "")) {
+            SearchListScreenRoute::class.qualifiedName -> {
+                navController.navigate(SearchListScreenRoute(query = "")) {
                     popUpTo(navController.graph.startDestinationId) { saveState = true }
                     launchSingleTop = true
                     restoreState = true
                 }
             }
 
-            FavoriteRoute::class.qualifiedName -> {
-                navController.navigate(FavoriteRoute) {
+            FavoriteScreenRoute::class.qualifiedName -> {
+                navController.navigate(FavoriteScreenRoute) {
                     popUpTo(navController.graph.startDestinationId) { saveState = true }
                     launchSingleTop = true
                     restoreState = true
@@ -110,5 +110,4 @@ class AppState(
             }
         }
     }
-
 }

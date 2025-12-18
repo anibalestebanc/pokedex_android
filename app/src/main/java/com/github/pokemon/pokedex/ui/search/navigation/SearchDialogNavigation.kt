@@ -1,13 +1,12 @@
 package com.github.pokemon.pokedex.ui.search.navigation
 
 import androidx.navigation.NavController
-import kotlinx.serialization.Serializable
+import com.github.pokemon.pokedex.navigation.ScreenRoute.SearchScreenRoute
+import com.github.pokemon.pokedex.utils.emptyString
 
-@Serializable
-data class SearchDialogRoute(val navigateToSearch: Boolean = false, val query: String = "")
 
-fun NavController.navigateToSearchDialog(navigateToSearch: Boolean = false, query: String = "") {
-    navigate(route = SearchDialogRoute(navigateToSearch, query)) {
+fun NavController.navigateToSearchDialog(navigateToSearch: Boolean = false, query: String = emptyString()) {
+    navigate(route = SearchScreenRoute(navigateToSearch, query)) {
         launchSingleTop = true
     }
 }
