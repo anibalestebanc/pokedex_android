@@ -25,7 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-typealias PokemonStat = com.github.pokemon.pokedex.domain.model.Stat
+typealias PokemonStat = com.github.pokemon.pokedex.domain.model.PokemonStat
 
 @Composable
 fun BaseStatsSection(stats: List<PokemonStat>) {

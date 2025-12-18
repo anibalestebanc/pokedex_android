@@ -1,9 +1,6 @@
 package com.github.pokemon.pokedex.domain.model
 
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class Stat(
+data class PokemonStat(
     val name: String,
     val value: Int,
 )

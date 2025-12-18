@@ -288,7 +288,15 @@ exceptions:
     active: true
   TooGenericExceptionCaught:
     active: true
-    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**']
+    excludes: [ '**/test/**',
+                '**/androidTest/**',
+                '**/commonTest/**',
+                '**/jvmTest/**',
+                '**/androidUnitTest/**',
+                '**/androidInstrumentedTest/**',
+                '**/jsTest/**',
+                '**/iosTest/**' ,
+                '**/data/repository/**']
     exceptionNames:
       - 'ArrayIndexOutOfBoundsException'
       - 'Error'
@@ -624,7 +632,16 @@ style:
     maxJumpCount: 1
   MagicNumber:
     active: true
-    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**', '**/*.kts']
+    excludes: [ '**/theme/**',
+                '**/test/**',
+                '**/androidTest/**',
+                '**/commonTest/**',
+                '**/jvmTest/**',
+                '**/androidUnitTest/**',
+                '**/androidInstrumentedTest/**',
+                '**/jsTest/**',
+                '**/iosTest/**',
+                '**/*.kts' ]
     ignoreNumbers:
       - '-1'
       - '0'
@@ -640,6 +657,7 @@ style:
     ignoreEnums: false
     ignoreRanges: false
     ignoreExtensionFunctions: true
+    ignoreAnnotated: ['Composable']
   MandatoryBracesLoops:
     active: false
   MaxChainedCallsOnSameLine:

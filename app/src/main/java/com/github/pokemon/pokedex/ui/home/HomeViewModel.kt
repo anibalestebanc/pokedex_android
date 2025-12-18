@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
-class HomeViewModel() : ViewModel() {
+class HomeViewModel : ViewModel() {
     private val _uiEffect = MutableSharedFlow<HomeEffect>()
     val uiEffect: SharedFlow<HomeEffect> = _uiEffect
 

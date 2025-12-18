@@ -9,7 +9,7 @@ data class PokemonDetail(
     val height: Int,
     val weight: Int,
     val abilities: List<String>,
-    val stats: List<Stat>,
+    val stats: List<PokemonStat>,
     val isFavorite: Boolean,
     val lastUpdated: Long
 )

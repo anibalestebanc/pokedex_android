@@ -10,7 +10,7 @@ data class PokemonFullDetail(
     val heightMeters: Double,
     val weightKg: Double,
     val abilities: List<String>,
-    val stats: List<Stat>,
+    val stats: List<PokemonStat>,
     val sprites: PokemonSprites?,
     val isFavorite: Boolean,
     // species values

@@ -3,7 +3,7 @@ package com.github.pokemon.pokedex.core.database.converts
 import androidx.room.TypeConverter
 import com.github.pokemon.pokedex.core.database.DatabaseJson.dbJson
 import com.github.pokemon.pokedex.domain.model.PokemonSprites
-import com.github.pokemon.pokedex.domain.model.Stat
+import com.github.pokemon.pokedex.domain.model.PokemonStat
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 
@@ -30,16 +30,16 @@ class PokemonDetailTypeConverters {
         else dbJson.decodeFromString(ListSerializer(kotlinx.serialization.serializer()), value)
 
     @TypeConverter
-    fun listStatToText(value: List<Stat>?): String {
+    fun listStatToText(value: List<PokemonStat>?): String {
         val payload = (value ?: emptyList()).map { StatDb(it.name, it.value) }
         return dbJson.encodeToString(ListSerializer(StatDb.serializer()), payload)
     }
 
     @TypeConverter
-    fun textToListStat(value: String): List<Stat> {
+    fun textToListStat(value: String): List<PokemonStat> {
         if (value.isBlank()) return emptyList()
         val payload = dbJson.decodeFromString(ListSerializer(StatDb.serializer()), value)
-        return payload.map { Stat(name = it.name, value = it.value) }
+        return payload.map { PokemonStat(name = it.name, value = it.value) }
     }
 
     @TypeConverter

@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.github.pokemon.pokedex.core.database.converts.PokemonDetailTypeConverters
 import com.github.pokemon.pokedex.domain.model.PokemonSprites
-import com.github.pokemon.pokedex.domain.model.Stat
+import com.github.pokemon.pokedex.domain.model.PokemonStat
 
 @Entity(tableName = "pokemon_detail")
 @TypeConverters(PokemonDetailTypeConverters::class)
@@ -18,7 +18,7 @@ data class PokemonDetailEntity(
     val height: Int,
     val weight: Int,
     val abilities: List<String>,
-    val stats: List<Stat>,
+    val stats: List<PokemonStat>,
     val isFavorite: Boolean,
     val lastUpdated: Long,
 )

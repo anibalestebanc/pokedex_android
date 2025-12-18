@@ -4,9 +4,11 @@ import com.github.pokemon.pokedex.core.common.error.NetworkException
 import com.github.pokemon.pokedex.core.common.error.NotFoundException
 import com.github.pokemon.pokedex.core.common.error.ServerException
 import com.github.pokemon.pokedex.core.common.error.UnknownException
+import kotlinx.coroutines.CancellationException
 import retrofit2.HttpException
 import java.io.IOException
 
+@Suppress("TooGenericExceptionCaught")
 suspend inline fun <T> safeApiCall(crossinline block: suspend () -> T): T {
     return try {
         block()
@@ -18,7 +20,10 @@ suspend inline fun <T> safeApiCall(crossinline block: suspend () -> T): T {
         }
     } catch (e: IOException) {
         throw NetworkException(cause = e)
-    } catch (e: Exception) {
+    } catch (e : CancellationException){
+        throw e
+    }
+    catch (e: Exception) {
         throw UnknownException(cause = e)
     }
 }
