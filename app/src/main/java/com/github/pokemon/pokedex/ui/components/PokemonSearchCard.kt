@@ -57,7 +57,7 @@ import com.github.pokemon.pokedex.theme.PokeAppTheme
 import com.github.pokemon.pokedex.ui.components.utils.PokeBackgroundUtil.primaryTypeColorRes
 
 @Composable
-fun PokemonSearchCard(
+fun SearchListCard(
     index: Int,
     number: Int?,
     name: String,
@@ -251,9 +251,9 @@ fun Modifier.shimmer(): Modifier = composed {
 
 @Preview(showBackground = true)
 @Composable
-fun PokemonSearchCardPreview() {
+fun SearchListCardPreview() {
     PokeAppTheme {
-        PokemonSearchCard(
+        SearchListCard(
             index = 1,
             number = 1,
             name = "Pikachu",

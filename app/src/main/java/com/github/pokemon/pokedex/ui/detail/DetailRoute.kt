@@ -28,7 +28,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.domain.model.PokemonFullDetail
 import com.github.pokemon.pokedex.theme.PokeAppTheme
-import com.github.pokemon.pokedex.ui.components.common.ErrorWithRetryScreen
+import com.github.pokemon.pokedex.ui.components.common.RetryErrorScreen
 import com.github.pokemon.pokedex.ui.components.common.LoadingScreen
 import com.github.pokemon.pokedex.ui.components.utils.PokeBackgroundUtil.primaryTypeColorRes
 import com.github.pokemon.pokedex.ui.detail.components.AboutSection
@@ -89,7 +89,7 @@ fun DetailScreen(
 ) {
     when {
         uiState.isLoading -> LoadingScreen(message = stringResource(R.string.loading))
-        uiState.error != null -> ErrorWithRetryScreen(
+        uiState.error != null -> RetryErrorScreen(
             title = stringResource(uiState.error),
             retryText = stringResource(R.string.retry),
             onRetry = { onAction(DetailAction.OnRetryDetailClick(pokemonId)) },

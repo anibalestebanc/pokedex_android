@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.github.pokemon.pokedex.theme.PokeAppTheme
 
 @Composable
-fun ErrorStateScreen(
+fun ErrorScreen(
     title: String,
     message: String? = null,
     modifier: Modifier = Modifier,
@@ -68,9 +68,9 @@ fun ErrorStateScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun ErrorStateScreenPreview(){
+fun ErrorScreenPreview(){
     PokeAppTheme {
-        ErrorStateScreen(
+        ErrorScreen(
             title = "Error",
             message = "No se pudo cargar la lista",
         )

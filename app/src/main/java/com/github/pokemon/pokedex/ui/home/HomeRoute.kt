@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -17,8 +19,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.ui.components.HomeOptionsComponent
-import com.github.pokemon.pokedex.ui.components.Title
-import com.github.pokemon.pokedex.ui.components.appbar.RoundedSearchBar
+import com.github.pokemon.pokedex.ui.components.appbar.FakeRoundedSearchInput
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -49,14 +50,18 @@ fun HomeScreen(onAction: (HomeAction) -> Unit) {
         contentPadding = PaddingValues(horizontal = 32.dp, vertical = 32.dp),
     ) {
         item {
-            Title(
+            Text(
                 text = stringResource(id = R.string.main_app_bar_title),
                 color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                ),
                 modifier = Modifier.padding(top = 48.dp, bottom = 24.dp),
             )
         }
         item {
-            RoundedSearchBar(
+            FakeRoundedSearchInput(
                 text = stringResource(id = R.string.search_bar_hint),
                 onSearchClick = { onAction(HomeAction.OnSearchClick) },
             )

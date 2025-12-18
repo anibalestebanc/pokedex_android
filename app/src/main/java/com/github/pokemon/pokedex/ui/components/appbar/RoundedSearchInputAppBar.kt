@@ -20,11 +20,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.theme.PokeAppTheme
-import com.github.pokemon.pokedex.ui.components.SearchInputPillCompact
+import com.github.pokemon.pokedex.ui.components.RoundedSearchInput
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchDialogTopBar(
+fun RoundedSearchInputTopBar(
     query: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
@@ -55,7 +55,7 @@ fun SearchDialogTopBar(
             Spacer(Modifier.width(4.dp))
         }
 
-        SearchInputPillCompact(
+        RoundedSearchInput(
             value = query,
             onValueChange = onValueChange,
             placeholder = placeholder,
@@ -67,9 +67,9 @@ fun SearchDialogTopBar(
 
 @Preview
 @Composable
-fun SearchFullscreenTopBarPreview() {
+fun RoundedSearchFullscreenTopBarPreview() {
     PokeAppTheme {
-        SearchDialogTopBar(
+        RoundedSearchInputTopBar(
             query = "",
             onValueChange = {},
             placeholder = stringResource(id = R.string.search_bar_hint),

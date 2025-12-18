@@ -9,20 +9,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.pokemon.pokedex.R
-import com.github.pokemon.pokedex.ui.components.PokemonSearchCard
-import com.github.pokemon.pokedex.ui.components.Title
-import com.github.pokemon.pokedex.ui.components.common.EmptyStateScreen
-import com.github.pokemon.pokedex.ui.components.common.ErrorStateScreen
+import com.github.pokemon.pokedex.ui.components.SearchListCard
+import com.github.pokemon.pokedex.ui.components.common.EmptyScreen
+import com.github.pokemon.pokedex.ui.components.common.ErrorScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -57,7 +58,7 @@ fun FavoriteScreen(
         }
 
         uiState.error?.let {
-            ErrorStateScreen(
+            ErrorScreen(
                 title = stringResource(id = it),
                 message = null,
             )
@@ -71,9 +72,13 @@ fun FavoriteScreen(
             ) {
 
                 item(key = "header") {
-                    Title(
+                    Text(
                         text = stringResource(id = R.string.favorite_title),
                         color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        ),
                         modifier = Modifier.padding(
                             top = 36.dp,
                             bottom = 16.dp,
@@ -88,7 +93,7 @@ fun FavoriteScreen(
                     key = { index -> uiState.favorites[index].id },
                 ) { index ->
                     val pokemon = uiState.favorites[index]
-                    PokemonSearchCard(
+                    SearchListCard(
                         index = index + 1,
                         number = pokemon.id,
                         name = pokemon.name,
@@ -102,7 +107,7 @@ fun FavoriteScreen(
                 }
             }
         } else if (!uiState.isLoading && uiState.error == null) {
-            EmptyStateScreen(
+            EmptyScreen(
                 title = stringResource(id = R.string.favorite_no_favorites_yet),
                 message = null,
             )

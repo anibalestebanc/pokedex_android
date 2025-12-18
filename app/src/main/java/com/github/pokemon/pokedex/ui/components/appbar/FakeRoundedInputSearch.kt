@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.github.pokemon.pokedex.R
 
 @Composable
-fun RoundedSearchBar(
+fun FakeRoundedSearchInput(
     text: String,
     onSearchClick: () -> Unit,
 ) {
@@ -71,6 +71,6 @@ fun RoundedSearchBar(
 
 @Preview
 @Composable
-fun RoundedSearchBarPreview() {
-    RoundedSearchBar(stringResource(id = R.string.search_bar_hint),{})
+fun FakeRoundedSearchInputPreview() {
+    FakeRoundedSearchInput(stringResource(id = R.string.search_bar_hint),{})
 }

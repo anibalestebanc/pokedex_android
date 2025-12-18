@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FavoriteToggleButton(
+fun FavoriteButton(
     isFavorite: Boolean,
     onToggle: () -> Unit,
     modifier: Modifier = Modifier,
@@ -44,8 +44,8 @@ fun FavoriteToggleButton(
 
 @Preview
 @Composable
-fun FavoriteToggleButtonPreview(){
-    FavoriteToggleButton(
+fun FavoriteButtonPreview(){
+    FavoriteButton(
         isFavorite = false,
         onToggle = {},
         modifier = Modifier

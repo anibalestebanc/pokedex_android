@@ -8,8 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CloudOff
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.outlined.Inbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,11 +23,9 @@ import androidx.compose.ui.unit.dp
 import com.github.pokemon.pokedex.theme.PokeAppTheme
 
 @Composable
-fun ErrorWithRetryScreen(
+fun EmptyScreen(
     title: String,
     message: String? = null,
-    retryText: String?,
-    onRetry: (() -> Unit)?,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(24.dp),
 ) {
@@ -45,9 +42,8 @@ fun ErrorWithRetryScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Icon(
-                imageVector = Icons.Outlined.CloudOff,
+                imageVector = Icons.Outlined.Inbox,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(64.dp)
@@ -66,11 +62,6 @@ fun ErrorWithRetryScreen(
                     textAlign = TextAlign.Center
                 )
             }
-            if (retryText != null && onRetry != null) {
-                Button(onClick = onRetry) {
-                    Text(retryText)
-                }
-            }
         }
     }
 }
@@ -78,13 +69,11 @@ fun ErrorWithRetryScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun ErrorWithRetryScreenPreview(){
+fun EmptyScreenPreview(){
     PokeAppTheme {
-        ErrorWithRetryScreen(
+        EmptyScreen(
             title = "Error",
             message = "No se pudo cargar la lista",
-            retryText = "Reintentar",
-            onRetry = {}
         )
     }
 }

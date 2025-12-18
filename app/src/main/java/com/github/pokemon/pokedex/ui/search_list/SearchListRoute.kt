@@ -26,12 +26,12 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.domain.model.PokemonCatalog
 import com.github.pokemon.pokedex.ui.AppState
-import com.github.pokemon.pokedex.ui.components.PokemonSearchCard
-import com.github.pokemon.pokedex.ui.components.appbar.RoundedSearchBar
-import com.github.pokemon.pokedex.ui.components.common.EmptyStateScreen
-import com.github.pokemon.pokedex.ui.components.common.ErrorWithRetryScreen
+import com.github.pokemon.pokedex.ui.components.SearchListCard
+import com.github.pokemon.pokedex.ui.components.appbar.FakeRoundedSearchInput
+import com.github.pokemon.pokedex.ui.components.common.EmptyScreen
+import com.github.pokemon.pokedex.ui.components.common.RetryErrorScreen
 import com.github.pokemon.pokedex.ui.components.common.LoadingScreen
-import com.github.pokemon.pokedex.ui.components.common.SimpleLoadingMore
+import com.github.pokemon.pokedex.ui.components.common.LoadingMore
 import com.github.pokemon.pokedex.ui.search_list.navigation.SEARCH_LIST_KEY
 import com.github.pokemon.pokedex.utils.getAndConsume
 import kotlinx.coroutines.flow.Flow
@@ -86,7 +86,7 @@ fun SearchListScreen(
     Column(modifier.fillMaxSize()) {
 
         Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-            RoundedSearchBar(
+            FakeRoundedSearchInput(
                 text = uiState.query.ifBlank { stringResource(id = R.string.search_bar_hint) },
                 onSearchClick = { onSearchClick(uiState.query) },
             )
@@ -105,7 +105,7 @@ fun SearchListScreen(
                 }
 
                 is LoadState.Error -> {
-                    ErrorWithRetryScreen(
+                    RetryErrorScreen(
                         title = stringResource(R.string.error_generic_message),
                         retryText = stringResource(R.string.retry),
                         onRetry = { pagingItems.retry() },
@@ -113,7 +113,7 @@ fun SearchListScreen(
                 }
 
                 is LoadState.NotLoading -> {
-                    EmptyStateScreen(title = stringResource(id = R.string.search_result_empty, uiState.query))
+                    EmptyScreen(title = stringResource(id = R.string.search_result_empty, uiState.query))
                 }
             }
         }
@@ -131,7 +131,7 @@ fun SearchListScreen(
                     val detailUiState by remember(p.id) { observeDetail(p.id) }.collectAsStateWithLifecycle(
                         initialValue = SearchListUiState(isLoading = true),
                     )
-                    PokemonSearchCard(
+                    SearchListCard(
                         index = index + 1,
                         number = detailUiState.detail?.id,
                         name = p.displayName,
@@ -146,9 +146,9 @@ fun SearchListScreen(
             }
 
             when (loadState.append) {
-                is LoadState.Loading -> item(key = "append-loading") { SimpleLoadingMore() }
+                is LoadState.Loading -> item(key = "append-loading") { LoadingMore() }
                 is LoadState.Error -> item(key = "append-error") {
-                    ErrorWithRetryScreen(
+                    RetryErrorScreen(
                         title = stringResource(id = R.string.search_result_load_more_error),
                         retryText = stringResource(id = R.string.retry),
                         onRetry = { pagingItems.retry() },

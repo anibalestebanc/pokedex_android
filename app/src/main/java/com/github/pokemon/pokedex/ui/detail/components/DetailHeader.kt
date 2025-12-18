@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.theme.PokeAppTheme
-import com.github.pokemon.pokedex.ui.components.FavoriteToggleButton
+import com.github.pokemon.pokedex.ui.components.FavoriteButton
 import com.github.pokemon.pokedex.ui.components.utils.PokeBackgroundUtil.primaryTypeColorRes
 
 @Composable
@@ -73,7 +73,7 @@ fun DetailHeader(
                 Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
             }
 
-            FavoriteToggleButton(
+            FavoriteButton(
                 isFavorite = isFavorite,
                 onToggle = onToggleFavorite,
                 modifier = Modifier

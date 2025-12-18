@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import com.github.pokemon.pokedex.theme.PokeAppTheme
 
 @Composable
-fun SearchInputPillCompact(
+fun RoundedSearchInput(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
@@ -149,9 +149,9 @@ fun SearchInputPillCompact(
 
 @Preview
 @Composable
-fun SearchInputPillCompactPreview() {
+fun RoundedSearchInputPreview() {
     PokeAppTheme {
-        SearchInputPillCompact(
+        RoundedSearchInput(
             value = "",
             onValueChange = {},
             placeholder = "Search Pokemon",
