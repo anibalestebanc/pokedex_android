@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.search_list
+package com.github.pokemon.pokedex.ui.searchlist
 
 sealed interface SearchListAction {
     data class SetInitialQuery(val text: String) : SearchListAction

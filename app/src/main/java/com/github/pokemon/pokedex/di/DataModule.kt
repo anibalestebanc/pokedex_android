@@ -21,7 +21,7 @@ import com.github.pokemon.pokedex.data.datasource.remote.PokemonSpeciesRemoteDat
 import com.github.pokemon.pokedex.data.datasource.remote.RetrofitCatalogRemoteDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.RetrofitPokemonDetailRemoteDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.RetrofitPokemonSpeciesRemoteDataSource
-import com.github.pokemon.pokedex.data.datasource.remote.api.PokemonApiV2
+import com.github.pokemon.pokedex.data.datasource.remote.api.PokemonApi
 import com.github.pokemon.pokedex.data.repository.DefaultPokemonCatalogRepository
 import com.github.pokemon.pokedex.data.repository.OfflineFirstPokemonDetailRepository
 import com.github.pokemon.pokedex.data.repository.OfflineFirstPokemonSpeciesRepository
@@ -54,10 +54,10 @@ val dataModule = module {
     single { get<PokemonDatabase>().pokemonSpeciesDao() }
 
     //Api
-    factory<PokemonApiV2> {
+    factory<PokemonApi> {
         RetrofitFactory.createService(
             baseUrl = get(qualifier = named("default_base_url")),
-            klass = PokemonApiV2::class.java,
+            klass = PokemonApi::class.java,
         )
     }
     //CacheDatasource

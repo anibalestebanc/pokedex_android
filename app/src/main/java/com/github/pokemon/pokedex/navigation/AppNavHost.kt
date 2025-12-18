@@ -18,10 +18,10 @@ import com.github.pokemon.pokedex.ui.home.navigation.HomeRoute
 import com.github.pokemon.pokedex.ui.detail.DetailRoute
 import com.github.pokemon.pokedex.ui.detail.navigation.DetailRoute
 import com.github.pokemon.pokedex.ui.detail.navigation.navigateToDetail
-import com.github.pokemon.pokedex.ui.search_list.SearchListRoute
-import com.github.pokemon.pokedex.ui.search_list.navigation.SEARCH_LIST_KEY
-import com.github.pokemon.pokedex.ui.search_list.navigation.SearchRoute
-import com.github.pokemon.pokedex.ui.search_list.navigation.navigateToSearchList
+import com.github.pokemon.pokedex.ui.searchlist.SearchListRoute
+import com.github.pokemon.pokedex.ui.searchlist.navigation.SEARCH_LIST_KEY
+import com.github.pokemon.pokedex.ui.searchlist.navigation.SearchRoute
+import com.github.pokemon.pokedex.ui.searchlist.navigation.navigateToSearchList
 
 @Composable
 fun AppNavHost(

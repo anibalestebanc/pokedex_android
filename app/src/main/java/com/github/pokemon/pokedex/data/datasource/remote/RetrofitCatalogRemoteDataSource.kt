@@ -1,11 +1,11 @@
 package com.github.pokemon.pokedex.data.datasource.remote
 
 import com.github.pokemon.pokedex.core.network.safeApiCall
-import com.github.pokemon.pokedex.data.datasource.remote.api.PokemonApiV2
+import com.github.pokemon.pokedex.data.datasource.remote.api.PokemonApi
 import com.github.pokemon.pokedex.data.datasource.remote.dto.PokemonCatalogDto
 
 class RetrofitCatalogRemoteDataSource(
-    private val pokemonApiV2: PokemonApiV2
+    private val pokemonApiV2: PokemonApi
 ) : PokemonCatalogRemoteDataSource {
 
     override suspend fun fetchFullCatalog(): List<PokemonCatalogDto> =

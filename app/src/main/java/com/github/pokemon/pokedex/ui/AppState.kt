@@ -15,7 +15,7 @@ import com.github.pokemon.pokedex.ui.components.bottombar.BottomBarItem
 import com.github.pokemon.pokedex.ui.components.bottombar.TopBottomBarDestinations
 import com.github.pokemon.pokedex.ui.favorite.navigation.FavoriteRoute
 import com.github.pokemon.pokedex.ui.home.navigation.HomeRoute
-import com.github.pokemon.pokedex.ui.search_list.navigation.SearchRoute
+import com.github.pokemon.pokedex.ui.searchlist.navigation.SearchRoute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map

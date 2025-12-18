@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.search_list
+package com.github.pokemon.pokedex.ui.searchlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

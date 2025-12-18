@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface PokemonApiV2 {
+interface PokemonApi {
     @GET("pokemon")
     suspend fun getPokemonCatalog(
         @Query("limit") limit: Int,

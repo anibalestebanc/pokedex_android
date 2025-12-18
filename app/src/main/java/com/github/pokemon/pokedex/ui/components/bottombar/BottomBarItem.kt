@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.ui.favorite.navigation.FavoriteRoute
 import com.github.pokemon.pokedex.ui.home.navigation.HomeRoute
-import com.github.pokemon.pokedex.ui.search_list.navigation.SearchRoute
+import com.github.pokemon.pokedex.ui.searchlist.navigation.SearchRoute
 
 data class BottomBarItem(
     val id: String,

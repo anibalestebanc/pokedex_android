@@ -170,8 +170,15 @@ ktlint {
 }
 
 detekt {
+    config.setFrom("$rootDir/config/detekt/detekt.yml")
+    baseline = file("$rootDir/config/detekt/baseline.xml")
     buildUponDefaultConfig = true
     allRules = false
-    config.setFrom("$projectDir/config/detekt/detekt.yml")
-    baseline = file("$projectDir/config/detekt/baseline.xml")
+
+    source.setFrom(
+        files(
+            "src/main/java",
+            "src/main/kotlin",
+        )
+    )
 }

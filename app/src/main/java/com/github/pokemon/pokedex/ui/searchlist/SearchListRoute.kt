@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.search_list
+package com.github.pokemon.pokedex.ui.searchlist
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,7 +32,7 @@ import com.github.pokemon.pokedex.ui.components.common.EmptyScreen
 import com.github.pokemon.pokedex.ui.components.common.RetryErrorScreen
 import com.github.pokemon.pokedex.ui.components.common.LoadingScreen
 import com.github.pokemon.pokedex.ui.components.common.LoadingMore
-import com.github.pokemon.pokedex.ui.search_list.navigation.SEARCH_LIST_KEY
+import com.github.pokemon.pokedex.ui.searchlist.navigation.SEARCH_LIST_KEY
 import com.github.pokemon.pokedex.utils.getAndConsume
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
