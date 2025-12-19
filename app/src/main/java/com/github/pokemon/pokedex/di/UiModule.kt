@@ -8,7 +8,7 @@ import com.github.pokemon.pokedex.ui.searchlist.SearchListViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
-val presentationModule = module {
+val uiModule = module {
     //View models
     viewModelOf(::HomeViewModel)
     viewModelOf(::DetailViewModel)

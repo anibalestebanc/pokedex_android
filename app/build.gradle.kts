@@ -132,7 +132,7 @@ dependencies {
     implementation(libs.coil)
 
     // Leak Canary
-    implementation(libs.leakcanary.android)
+    debugImplementation(libs.leakcanary.android)
 
     // Testing - JUnit 5
     testImplementation(libs.junit5.api)

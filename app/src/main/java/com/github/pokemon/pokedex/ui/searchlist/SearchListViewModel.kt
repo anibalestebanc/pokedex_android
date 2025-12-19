@@ -31,11 +31,11 @@ class SearchListViewModel(
     private val stringProvider: StringProvider,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SearchResultUiState())
-    val uiState: StateFlow<SearchResultUiState> = _uiState
+    private val _uiState = MutableStateFlow(SearchListUiState())
+    val uiState: StateFlow<SearchListUiState> = _uiState
 
     private val queryFlow = MutableStateFlow("")
-    private val detailFlows = mutableMapOf<Int, StateFlow<SearchListUiState>>()
+    private val detailFlows = mutableMapOf<Int, StateFlow<DetailItemUiState>>()
 
     val pagingFlow: Flow<PagingData<PokemonCatalog>> =
         queryFlow
@@ -45,19 +45,19 @@ class SearchListViewModel(
                 searchPokemonUseCase(q.ifBlank { null })
             }.cachedIn(viewModelScope)
 
-    fun observeDetail(id: Int): StateFlow<SearchListUiState> = detailFlows.getOrPut(id) {
+    fun observeDetail(id: Int): StateFlow<DetailItemUiState> = detailFlows.getOrPut(id) {
         pokemonDetailRepository.observePokemonDetail(id)
             .map { detail ->
-                SearchListUiState(detail = detail, isLoading = false, error = null)
+                DetailItemUiState(detail = detail, isLoading = false, error = null)
             }.onStart {
-                emit(SearchListUiState(isLoading = true))
+                emit(DetailItemUiState(isLoading = true))
             }.catch { e ->
-                emit(SearchListUiState(isLoading = false, error = stringProvider(R.string.error_generic_message)))
+                emit(DetailItemUiState(isLoading = false, error = stringProvider(R.string.error_generic_message)))
             }
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5_000),
-                initialValue = SearchListUiState(isLoading = true),
+                initialValue = DetailItemUiState(isLoading = true),
             )
     }
 

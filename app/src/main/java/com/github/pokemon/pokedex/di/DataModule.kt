@@ -1,8 +1,5 @@
 package com.github.pokemon.pokedex.di
 
-import androidx.room.Room
-import com.github.pokemon.pokedex.core.database.PokemonDatabase
-import com.github.pokemon.pokedex.core.network.RetrofitFactory
 import com.github.pokemon.pokedex.data.datasource.cache.DetailCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.cache.HistorySearchCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.cache.PokemonCatalogCacheDataSource
@@ -21,7 +18,6 @@ import com.github.pokemon.pokedex.data.datasource.remote.PokemonSpeciesRemoteDat
 import com.github.pokemon.pokedex.data.datasource.remote.RetrofitCatalogRemoteDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.RetrofitPokemonDetailRemoteDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.RetrofitPokemonSpeciesRemoteDataSource
-import com.github.pokemon.pokedex.data.datasource.remote.api.PokemonApi
 import com.github.pokemon.pokedex.data.repository.DefaultPokemonCatalogRepository
 import com.github.pokemon.pokedex.data.repository.OfflineFirstPokemonDetailRepository
 import com.github.pokemon.pokedex.data.repository.OfflineFirstPokemonSpeciesRepository
@@ -34,32 +30,10 @@ import com.github.pokemon.pokedex.domain.repository.PokemonSpeciesRepository
 import com.github.pokemon.pokedex.domain.repository.SearchPokemonRepository
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val dataModule = module {
-    //Database
-    single {
-        Room.databaseBuilder(
-            context = get(),
-            klass = PokemonDatabase::class.java,
-            name = "pokedex.db",
-        ).build()
-    }
 
-    //Dao
-    single { get<PokemonDatabase>().pokemonCatalogDao() }
-    single { get<PokemonDatabase>().historySearchDao() }
-    single { get<PokemonDatabase>().pokemonDetailDao() }
-    single { get<PokemonDatabase>().pokemonSpeciesDao() }
-
-    //Api
-    factory<PokemonApi> {
-        RetrofitFactory.createService(
-            baseUrl = get(qualifier = named("default_base_url")),
-            klass = PokemonApi::class.java,
-        )
-    }
     //CacheDatasource
     singleOf(::RoomCatalogCacheDataSource) { bind<PokemonCatalogCacheDataSource>() }
     singleOf(::RoomHistorySearchCacheDataSource) { bind<HistorySearchCacheDataSource>() }

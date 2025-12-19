@@ -1,10 +1,13 @@
 package com.github.pokemon.pokedex
 
 import android.app.Application
+import android.os.StrictMode
+import com.github.pokemon.pokedex.core.di.databaseModule
+import com.github.pokemon.pokedex.core.di.networkModule
 import com.github.pokemon.pokedex.di.appModule
 import com.github.pokemon.pokedex.di.dataModule
 import com.github.pokemon.pokedex.di.domainModule
-import com.github.pokemon.pokedex.di.presentationModule
+import com.github.pokemon.pokedex.di.uiModule
 import com.github.pokemon.pokedex.domain.usecase.EnqueueDailySyncCatalogUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,18 +28,42 @@ class PokeApplication : Application(), KoinComponent {
     override fun onCreate() {
         super.onCreate()
 
-        LeakCanary.config = LeakCanary.config.copy(
-            retainedVisibleThreshold = 3
-        )
+        configLeakCanary()
+        configStrictMode()
 
         startKoin {
             androidLogger(Level.ERROR)
             androidContext(this@PokeApplication)
-            modules(appModule, dataModule, domainModule, presentationModule)
+            modules(appModule, databaseModule, networkModule, dataModule, domainModule, uiModule)
         }
 
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
             enqueueSyncCatalogUseCase()
+        }
+    }
+
+    private fun configLeakCanary() {
+        if (BuildConfig.DEBUG) {
+            LeakCanary.config = LeakCanary.config.copy(
+                retainedVisibleThreshold = 3,
+            )
+        }
+    }
+
+    private fun configStrictMode() {
+        if (BuildConfig.DEBUG) {
+            StrictMode.setThreadPolicy(
+                StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build(),
+            )
+            StrictMode.setVmPolicy(
+                StrictMode.VmPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build(),
+            )
         }
     }
 }

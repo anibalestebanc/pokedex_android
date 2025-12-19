@@ -76,11 +76,11 @@ fun SearchListRoute(
 
 @Composable
 fun SearchListScreen(
-    uiState: SearchResultUiState,
+    uiState: SearchListUiState,
     onSearchClick: (String) -> Unit,
     onDetailClick: (String) -> Unit,
     pagingItems: LazyPagingItems<PokemonCatalog>? = null,
-    observeDetail: (Int) -> Flow<SearchListUiState>,
+    observeDetail: (Int) -> Flow<DetailItemUiState>,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier.fillMaxSize()) {
@@ -129,7 +129,7 @@ fun SearchListScreen(
             ) { index ->
                 pagingItems[index]?.let { p ->
                     val detailUiState by remember(p.id) { observeDetail(p.id) }.collectAsStateWithLifecycle(
-                        initialValue = SearchListUiState(isLoading = true),
+                        initialValue = DetailItemUiState(isLoading = true),
                     )
                     SearchListCard(
                         index = index + 1,
@@ -166,9 +166,9 @@ fun SearchListScreenPreview() {
     SearchListScreen(
         onDetailClick = {},
         onSearchClick = {},
-        uiState = SearchResultUiState(),
+        uiState = SearchListUiState(),
         pagingItems = null,
-        observeDetail = { flowOf(SearchListUiState()) }
+        observeDetail = { flowOf(DetailItemUiState()) }
     )
 }
 
