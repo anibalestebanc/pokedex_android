@@ -1,7 +1,7 @@
 package com.github.pokemon.pokedex.ui.components.bottombar
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -20,7 +20,7 @@ fun PokeBottomBar(
     onSelect: (String) -> Unit,
 ) {
     Column {
-        Divider(
+        HorizontalDivider(
             color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f),
             thickness = 1.dp,
         )

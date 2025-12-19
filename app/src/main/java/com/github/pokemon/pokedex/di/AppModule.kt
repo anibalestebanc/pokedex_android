@@ -10,7 +10,9 @@ import com.github.pokemon.pokedex.core.work.SyncPokemonCatalogWorkScheduler
 import com.github.pokemon.pokedex.utils.PokeTimeUtil
 import com.github.pokemon.pokedex.utils.DefaultPokeTimeUtil
 import com.github.pokemon.pokedex.utils.DefaultRefreshDueUtil
+import com.github.pokemon.pokedex.utils.DefaultStringProvider
 import com.github.pokemon.pokedex.utils.RefreshDueUtil
+import com.github.pokemon.pokedex.utils.StringProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
@@ -35,6 +37,9 @@ val appModule = module {
             context = get<Application>(),
         )
     }
+
+    single<StringProvider> { DefaultStringProvider(androidContext()) }
+
     single<LoggerError> { DefaultLoggerError() }
 
     single<PokeTimeUtil> { DefaultPokeTimeUtil() }

@@ -89,8 +89,8 @@ fun DetailScreen(
 ) {
     when {
         uiState.isLoading -> LoadingScreen(message = stringResource(R.string.loading))
-        uiState.error != null -> RetryErrorScreen(
-            title = stringResource(uiState.error),
+        uiState.errorMessage != null -> RetryErrorScreen(
+            title = uiState.errorMessage,
             retryText = stringResource(R.string.retry),
             onRetry = { onAction(DetailAction.OnRetryDetailClick(pokemonId)) },
         )

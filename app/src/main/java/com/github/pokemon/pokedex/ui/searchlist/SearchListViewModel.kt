@@ -4,9 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.domain.model.PokemonCatalog
 import com.github.pokemon.pokedex.domain.repository.PokemonDetailRepository
 import com.github.pokemon.pokedex.domain.usecase.SearchPokemonUseCase
+import com.github.pokemon.pokedex.utils.StringProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -25,7 +27,8 @@ import kotlinx.coroutines.flow.update
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class SearchListViewModel(
     private val searchPokemonUseCase: SearchPokemonUseCase,
-    private val pokemonDetailRepository: PokemonDetailRepository
+    private val pokemonDetailRepository: PokemonDetailRepository,
+    private val stringProvider: StringProvider,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SearchResultUiState())
@@ -49,7 +52,7 @@ class SearchListViewModel(
             }.onStart {
                 emit(SearchListUiState(isLoading = true))
             }.catch { e ->
-                emit(SearchListUiState(isLoading = false, error = e.message))
+                emit(SearchListUiState(isLoading = false, error = stringProvider(R.string.error_generic_message)))
             }
             .stateIn(
                 viewModelScope,

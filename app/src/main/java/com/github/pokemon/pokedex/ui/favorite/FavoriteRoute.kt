@@ -57,9 +57,9 @@ fun FavoriteScreen(
             }
         }
 
-        uiState.error?.let {
+        uiState.errorMessage?.let { message ->
             ErrorScreen(
-                title = stringResource(id = it),
+                title = message,
                 message = null,
             )
         }
@@ -106,7 +106,7 @@ fun FavoriteScreen(
                     )
                 }
             }
-        } else if (!uiState.isLoading && uiState.error == null) {
+        } else if (!uiState.isLoading && uiState.errorMessage == null) {
             EmptyScreen(
                 title = stringResource(id = R.string.favorite_no_favorites_yet),
                 message = null,

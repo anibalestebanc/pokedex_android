@@ -1,6 +1,5 @@
 package com.github.pokemon.pokedex.ui.components.bottombar
 
-import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
@@ -13,7 +12,7 @@ import com.github.pokemon.pokedex.navigation.ScreenRoute.SearchListScreenRoute
 
 data class BottomBarItem(
     val id: String,
-    @StringRes val label: Int,
+    val label: Int,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
     val qualifiedName: String,

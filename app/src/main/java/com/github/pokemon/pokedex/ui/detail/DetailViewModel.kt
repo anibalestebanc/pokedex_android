@@ -7,6 +7,7 @@ import com.github.pokemon.pokedex.core.common.error.NotFoundException
 import com.github.pokemon.pokedex.domain.usecase.GetPokemonFullDetailUseCase
 import com.github.pokemon.pokedex.domain.usecase.ObserveIsFavoriteUseCase
 import com.github.pokemon.pokedex.domain.usecase.ToggleFavoriteUseCase
+import com.github.pokemon.pokedex.utils.StringProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +18,8 @@ import kotlinx.coroutines.launch
 class DetailViewModel(
     private val getFullDetailUseCase: GetPokemonFullDetailUseCase,
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
-    private val observeIsFavoriteUseCase: ObserveIsFavoriteUseCase
+    private val observeIsFavoriteUseCase: ObserveIsFavoriteUseCase,
+    private val stringProvider: StringProvider,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DetailUiState())
@@ -37,10 +39,11 @@ class DetailViewModel(
             is DetailAction.OnSharePokemon -> _uiEffect.emit(DetailUiEffect.ShareUrl(action.imageUrl))
         }
     }
+
     private fun getPokemonDetail(idOrName: String) = viewModelScope.launch {
         val id = idOrName.toIntOrNull()
         if (id == null) {
-            _uiState.value = DetailUiState(error = R.string.error_generic_message)
+            _uiState.value = DetailUiState(errorMessage = stringProvider(R.string.error_generic_message))
             return@launch
         }
         _uiState.value = DetailUiState(isLoading = true)
@@ -49,10 +52,10 @@ class DetailViewModel(
                 _uiState.value = DetailUiState(data = detail)
             }.onFailure { e ->
                 if (e is NotFoundException) {
-                    _uiState.value = DetailUiState(error = R.string.error_not_found_message)
+                    _uiState.value = DetailUiState(errorMessage = stringProvider(R.string.error_not_found_message))
                     return@launch
                 }
-                _uiState.value = DetailUiState(error = R.string.error_generic_message)
+                _uiState.value = DetailUiState(errorMessage = stringProvider(R.string.error_generic_message))
             }
     }
 
