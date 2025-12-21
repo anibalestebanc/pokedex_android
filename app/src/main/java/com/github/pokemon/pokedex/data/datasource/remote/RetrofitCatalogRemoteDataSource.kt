@@ -5,7 +5,7 @@ import com.github.pokemon.pokedex.data.datasource.remote.api.PokemonApi
 import com.github.pokemon.pokedex.data.datasource.remote.dto.PokemonCatalogDto
 
 class RetrofitCatalogRemoteDataSource(
-    private val pokemonApiV2: PokemonApi
+    private val pokemonApi: PokemonApi
 ) : PokemonCatalogRemoteDataSource {
 
     override suspend fun fetchFullCatalog(): List<PokemonCatalogDto> =
@@ -15,7 +15,7 @@ class RetrofitCatalogRemoteDataSource(
             var offset = 0
             var total = Int.MAX_VALUE
             while (offset < total) {
-                val page = pokemonApiV2.getPokemonCatalog(limit = pageSize, offset = offset)
+                val page = pokemonApi.getPokemonCatalog(limit = pageSize, offset = offset)
                 total = page.count
                 val mapped = page.results
                 all += mapped

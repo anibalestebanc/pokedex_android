@@ -2,7 +2,6 @@ package com.github.pokemon.pokedex.di
 
 import com.github.pokemon.pokedex.utils.DefaultLoggerError
 import com.github.pokemon.pokedex.utils.LoggerError
-import com.github.pokemon.pokedex.core.work.SyncPokemonCatalogWorkScheduler
 import com.github.pokemon.pokedex.utils.DefaultErrorMapper
 import com.github.pokemon.pokedex.utils.DefaultPokeTimeUtil
 import com.github.pokemon.pokedex.utils.DefaultRefreshDueUtil
@@ -15,8 +14,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val appModule = module {
-
-    single { SyncPokemonCatalogWorkScheduler(androidContext()) }
 
     single<StringProvider> { DefaultStringProvider(androidContext()) }
 

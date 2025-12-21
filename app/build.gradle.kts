@@ -94,6 +94,7 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.core)
     implementation(libs.koin.compose)
+    implementation(libs.koin.workmanager)
     testImplementation(libs.koin.test)
     testImplementation(libs.koin.test.junit5)
 

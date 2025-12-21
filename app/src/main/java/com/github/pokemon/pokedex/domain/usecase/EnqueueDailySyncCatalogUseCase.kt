@@ -1,13 +1,13 @@
 package com.github.pokemon.pokedex.domain.usecase
 
-import com.github.pokemon.pokedex.core.work.SyncPokemonCatalogWorkScheduler
+import com.github.pokemon.pokedex.core.work.SyncCatalogWorkScheduler
 import com.github.pokemon.pokedex.domain.repository.SyncCatalogRepository
 import com.github.pokemon.pokedex.utils.PokeTimeUtil
 import java.util.concurrent.TimeUnit
 
 class EnqueueDailySyncCatalogUseCase(
     private val repository: SyncCatalogRepository,
-    private val scheduler: SyncPokemonCatalogWorkScheduler,
+    private val scheduler: SyncCatalogWorkScheduler,
     private val pokeTimeUtil: PokeTimeUtil
 ) {
     suspend operator fun invoke(minInterval: Long = ONE_DAY_MILLIS) {

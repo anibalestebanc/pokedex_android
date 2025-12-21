@@ -5,7 +5,6 @@ import com.github.pokemon.pokedex.core.database.PokemonDatabase
 import org.koin.dsl.module
 
 val databaseModule = module {
-
     //Database
     single {
         Room.databaseBuilder(

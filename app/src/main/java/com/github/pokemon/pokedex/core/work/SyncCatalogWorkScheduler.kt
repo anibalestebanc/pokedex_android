@@ -11,20 +11,23 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
 
-class SyncPokemonCatalogWorkScheduler(private val context: Context) {
+class SyncCatalogWorkScheduler(private val context: Context) {
+
+    private val constraints = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.CONNECTED)
+        .setRequiresBatteryNotLow(true)
+        .build()
+
+    private val workManager: WorkManager
+        get() = WorkManager.getInstance(context)
 
     fun enqueueImmediateSync() {
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresBatteryNotLow(true)
-            .build()
-
-        val request = OneTimeWorkRequestBuilder<SyncPokemonCatalogWorker>()
+        val request = OneTimeWorkRequestBuilder<SyncCatalogWorker>()
             .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
             .setConstraints(constraints)
             .build()
 
-        WorkManager.getInstance(context).enqueueUniqueWork(
+        workManager.enqueueUniqueWork(
             UNIQUE_IMMEDIATE_SYNC,
             ExistingWorkPolicy.REPLACE,
             request,
@@ -32,27 +35,20 @@ class SyncPokemonCatalogWorkScheduler(private val context: Context) {
     }
 
     fun enqueueDailySync() {
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresBatteryNotLow(true)
-            .build()
-
-        val request = PeriodicWorkRequestBuilder<SyncPokemonCatalogWorker>(
-            24, TimeUnit.HOURS,
-        )
+        val request = PeriodicWorkRequestBuilder<SyncCatalogWorker>(24, TimeUnit.HOURS)
             .setConstraints(constraints)
             .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
             .addTag(UNIQUE_DAILY_SYNC)
             .build()
 
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+        workManager.enqueueUniquePeriodicWork(
             UNIQUE_DAILY_SYNC,
             ExistingPeriodicWorkPolicy.UPDATE,
             request,
         )
     }
 
-    companion object {
+    private companion object Companion {
         const val UNIQUE_IMMEDIATE_SYNC = "catalog_sync_immediate"
         const val UNIQUE_DAILY_SYNC = "catalog_sync_daily"
     }
