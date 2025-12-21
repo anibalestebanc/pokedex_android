@@ -5,8 +5,8 @@ import app.cash.turbine.test
 import com.github.pokemon.pokedex.BulbasaurCatalog
 import com.github.pokemon.pokedex.PikachuCatalog
 import com.github.pokemon.pokedex.SquirtleCatalog
-import com.github.pokemon.pokedex.core.common.error.DatabaseOperationException
 import com.github.pokemon.pokedex.data.datasource.cache.SearchCacheDatasource
+import com.github.pokemon.pokedex.domain.exception.PokeException.DatabaseException
 import com.github.pokemon.pokedex.domain.model.PokemonCatalog
 import com.github.pokemon.pokedex.toListUsingDiffer
 import io.mockk.MockKAnnotations
@@ -110,7 +110,7 @@ class RoomPokemonSearchRepositoryTest {
     fun `should propagate errors from cache`() = runTest(testDispatcher) {
         // given
         val query = "char"
-        val expected = DatabaseOperationException("Error to get catalog")
+        val expected = DatabaseException("Error to get catalog")
         every { cacheDatasource.searchPaged(query) } returns flow { throw expected }
 
         // when

@@ -1,10 +1,10 @@
 package com.github.pokemon.pokedex.data.repository
 
 import app.cash.turbine.test
-import com.github.pokemon.pokedex.core.common.error.DatabaseOperationException
-import com.github.pokemon.pokedex.core.common.loggin.LoggerError
+import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.core.database.entity.HistorySearchEntity
 import com.github.pokemon.pokedex.data.datasource.cache.HistorySearchCacheDataSource
+import com.github.pokemon.pokedex.domain.exception.PokeException.DatabaseException
 import com.github.pokemon.pokedex.utils.PokeTimeUtil
 import io.mockk.MockKAnnotations
 import io.mockk.Runs
@@ -141,7 +141,7 @@ class RoomHistorySearchRepositoryTest {
         // given
         val query = "Charmander"
         every { pokeTimeUtil.now() } returns 1L
-        val expected = DatabaseOperationException("Error to insert query")
+        val expected = DatabaseException("Error to insert query")
         coEvery { cacheDataSource.insertHistorySearch(any()) } throws expected
         every { logger.logError(any<Exception>()) } just Runs
 
@@ -150,7 +150,7 @@ class RoomHistorySearchRepositoryTest {
 
         // then
         verify(exactly = 1) {
-            logger.logError(match<DatabaseOperationException> {
+            logger.logError(match<DatabaseException> {
                 it.message?.contains("Error saving search query: $query") == true &&
                     it.cause === expected
             })

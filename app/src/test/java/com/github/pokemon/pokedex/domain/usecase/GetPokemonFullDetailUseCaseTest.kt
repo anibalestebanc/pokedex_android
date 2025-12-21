@@ -4,11 +4,11 @@ import com.github.pokemon.pokedex.Charmander
 import com.github.pokemon.pokedex.CharmanderSpecies
 import com.github.pokemon.pokedex.Pikachu
 import com.github.pokemon.pokedex.PikachuSpecies
-import com.github.pokemon.pokedex.core.common.error.NetworkException
-import com.github.pokemon.pokedex.core.common.error.NotFoundException
-import com.github.pokemon.pokedex.core.common.error.ServerException
-import com.github.pokemon.pokedex.core.common.error.UnknownException
 import com.github.pokemon.pokedex.data.mapper.combineWith
+import com.github.pokemon.pokedex.domain.exception.PokeException.NetworkException
+import com.github.pokemon.pokedex.domain.exception.PokeException.NotFoundException
+import com.github.pokemon.pokedex.domain.exception.PokeException.ServerException
+import com.github.pokemon.pokedex.domain.exception.PokeException.UnknownException
 import com.github.pokemon.pokedex.domain.repository.PokemonDetailRepository
 import com.github.pokemon.pokedex.domain.repository.PokemonSpeciesRepository
 import io.mockk.MockKAnnotations

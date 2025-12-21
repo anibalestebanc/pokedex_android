@@ -5,7 +5,7 @@ import app.cash.turbine.test
 import com.github.pokemon.pokedex.BulbasaurCatalog
 import com.github.pokemon.pokedex.PikachuCatalog
 import com.github.pokemon.pokedex.SquirtleCatalog
-import com.github.pokemon.pokedex.core.common.error.DatabaseOperationException
+import com.github.pokemon.pokedex.domain.exception.PokeException.DatabaseException
 import com.github.pokemon.pokedex.domain.model.PokemonCatalog
 import com.github.pokemon.pokedex.domain.repository.SearchPokemonRepository
 import com.github.pokemon.pokedex.toListUsingDiffer
@@ -92,7 +92,7 @@ class SearchPokemonUseCaseTest {
     fun `should propagate error when repository throws`() = runTest(testDispatcher) {
         // given
         val query = "char"
-        val expected = DatabaseOperationException("Error to search pokemon")
+        val expected = DatabaseException("Error to search pokemon")
         every { repository.searchPaged(query) } returns flow {
             throw expected
         }

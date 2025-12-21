@@ -3,9 +3,7 @@ package com.github.pokemon.pokedex.data.repository
 import com.github.pokemon.pokedex.BulbasaurDto
 import com.github.pokemon.pokedex.PikachuDto
 import com.github.pokemon.pokedex.SquirtleDto
-import com.github.pokemon.pokedex.core.common.error.DatabaseOperationException
-import com.github.pokemon.pokedex.core.common.error.NetworkException
-import com.github.pokemon.pokedex.core.common.loggin.LoggerError
+import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.data.datasource.cache.PokemonCatalogCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.local.PokemonCatalogLocalDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.PokemonCatalogRemoteDataSource
@@ -26,6 +24,8 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import com.github.pokemon.pokedex.data.mapper.toEntity
+import com.github.pokemon.pokedex.domain.exception.PokeException.DatabaseException
+import com.github.pokemon.pokedex.domain.exception.PokeException.NetworkException
 
 class DefaultPokemonCatalogRepositoryTest {
     @MockK
@@ -92,7 +92,7 @@ class DefaultPokemonCatalogRepositoryTest {
     @Test
     fun `should return failure when cache write fails`() = runTest(testDispatcher) {
         coEvery { remoteDataSource.fetchFullCatalog() } returns listOf(PikachuDto)
-        val expected = DatabaseOperationException("Error to insert catalog")
+        val expected = DatabaseException("Error to insert catalog")
         coEvery { cacheDataSource.clearAndInsertAllCatalog(any()) } throws expected
 
         val result = repository.syncPokemonCatalog()

@@ -1,7 +1,7 @@
 package com.github.pokemon.pokedex.domain.usecase
 
-import com.github.pokemon.pokedex.core.common.error.UnknownException
 import com.github.pokemon.pokedex.data.mapper.combineWith
+import com.github.pokemon.pokedex.domain.exception.PokeException.UnknownException
 import com.github.pokemon.pokedex.domain.model.PokemonFullDetail
 import com.github.pokemon.pokedex.domain.repository.PokemonDetailRepository
 import com.github.pokemon.pokedex.domain.repository.PokemonSpeciesRepository

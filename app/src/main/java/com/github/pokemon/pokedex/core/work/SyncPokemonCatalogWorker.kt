@@ -5,8 +5,8 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.github.pokemon.pokedex.core.common.error.WorkerException
-import com.github.pokemon.pokedex.core.common.loggin.DefaultLoggerError
+import com.github.pokemon.pokedex.utils.DefaultLoggerError
+import com.github.pokemon.pokedex.domain.exception.PokeException.WorkException
 import com.github.pokemon.pokedex.domain.repository.PokemonCatalogRepository
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -29,7 +29,7 @@ class SyncPokemonCatalogWorker(appContext: Context, params: WorkerParameters) :
             onFailure = { error ->
                 DefaultLoggerError().logError(
                     message = "Error sync pokemon catalog",
-                    error = WorkerException(cause = error.cause),
+                    error = WorkException(cause = error.cause),
                 )
                 val isTransient = error is IOException || error is HttpException
                 if (isTransient) Result.retry() else Result.failure()

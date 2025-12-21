@@ -5,13 +5,13 @@ import com.github.pokemon.pokedex.BulbasaurDetailDto
 import com.github.pokemon.pokedex.CharmanderDetailEntity
 import com.github.pokemon.pokedex.PikachuDetailDto
 import com.github.pokemon.pokedex.PikachuDetailEntity
-import com.github.pokemon.pokedex.core.common.error.DatabaseOperationException
-import com.github.pokemon.pokedex.core.common.error.NetworkException
-import com.github.pokemon.pokedex.core.common.loggin.LoggerError
+import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.data.datasource.cache.DetailCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.PokemonDetailRemoteDataSource
 import com.github.pokemon.pokedex.data.mapper.toDomain
 import com.github.pokemon.pokedex.data.mapper.toEntity
+import com.github.pokemon.pokedex.domain.exception.PokeException.DatabaseException
+import com.github.pokemon.pokedex.domain.exception.PokeException.NetworkException
 import com.github.pokemon.pokedex.domain.model.PokemonDetail
 import com.github.pokemon.pokedex.utils.PokeTimeUtil
 import com.github.pokemon.pokedex.utils.RefreshDueUtil
@@ -179,7 +179,7 @@ class OfflineFirstPokemonDetailRepositoryTest {
     fun `should log and return failure when cache get throws on getPokemonDetail`() = runTest(testDispatcher) {
         // given
         val id = 1
-        val expected = DatabaseOperationException("Error to get detail")
+        val expected = DatabaseException("Error to get detail")
         coEvery { cacheDataSource.getDetail(id) } throws expected
         every { loggerError.logError(any(), any()) } just Runs
 
@@ -266,7 +266,7 @@ class OfflineFirstPokemonDetailRepositoryTest {
     fun `should log and return failure when set favorite throws`() = runTest(testDispatcher) {
         // given
         val id = 1
-        val expected = DatabaseOperationException("Error to set favorite")
+        val expected = DatabaseException("Error to set favorite")
         coEvery { cacheDataSource.setFavorite(id, false) } throws expected
         every { loggerError.logError(any(), any()) } just Runs
 

@@ -3,11 +3,12 @@ package com.github.pokemon.pokedex.ui.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.pokemon.pokedex.R
-import com.github.pokemon.pokedex.core.common.error.NotFoundException
+import com.github.pokemon.pokedex.domain.exception.PokeException.NotFoundException
 import com.github.pokemon.pokedex.domain.usecase.GetPokemonFullDetailUseCase
 import com.github.pokemon.pokedex.domain.usecase.ObserveIsFavoriteUseCase
 import com.github.pokemon.pokedex.domain.usecase.ToggleFavoriteUseCase
 import com.github.pokemon.pokedex.utils.StringProvider
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +26,9 @@ class DetailViewModel(
     private val _uiState = MutableStateFlow(DetailUiState())
     val uiState: StateFlow<DetailUiState> = _uiState
 
-    private val _uiEffect = MutableSharedFlow<DetailUiEffect>()
+    private val _uiEffect = MutableSharedFlow<DetailUiEffect>(
+        replay = 0, extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    )
     val uiEffect: SharedFlow<DetailUiEffect> = _uiEffect
 
 

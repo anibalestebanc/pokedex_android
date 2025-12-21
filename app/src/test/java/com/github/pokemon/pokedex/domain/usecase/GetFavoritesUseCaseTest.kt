@@ -5,7 +5,7 @@ import com.github.pokemon.pokedex.Bulbasaur
 import com.github.pokemon.pokedex.Charmander
 import com.github.pokemon.pokedex.Pikachu
 import com.github.pokemon.pokedex.Squirtle
-import com.github.pokemon.pokedex.core.common.error.DatabaseOperationException
+import com.github.pokemon.pokedex.domain.exception.PokeException.DatabaseException
 import com.github.pokemon.pokedex.domain.model.PokemonDetail
 import com.github.pokemon.pokedex.domain.repository.PokemonDetailRepository
 import io.mockk.MockKAnnotations
@@ -103,7 +103,7 @@ class GetFavoritesUseCaseTest {
     @Test
     fun `should propagate error when repository throws`() = runTest {
         // given
-        val expected = DatabaseOperationException("Error to get favorites")
+        val expected = DatabaseException("Error to get favorites")
         every { repository.observeFavorites() } returns flow { throw expected }
 
         // when

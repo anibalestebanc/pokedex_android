@@ -152,11 +152,6 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
 
-    // Other (to be removed in future phases)
-    implementation(libs.tensorflow.lite)
-    implementation(libs.tensorflow.lite.support)
-    implementation(libs.rxjava)
-    implementation(libs.rxandroid)
 }
 
 ktlint {

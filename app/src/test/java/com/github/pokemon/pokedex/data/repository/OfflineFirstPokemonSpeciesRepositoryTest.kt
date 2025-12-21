@@ -4,13 +4,13 @@ import com.github.pokemon.pokedex.CharmanderSpeciesDto
 import com.github.pokemon.pokedex.CharmanderSpeciesEntity
 import com.github.pokemon.pokedex.PikachuSpeciesDto
 import com.github.pokemon.pokedex.PikachuSpeciesEntity
-import com.github.pokemon.pokedex.core.common.error.DatabaseOperationException
-import com.github.pokemon.pokedex.core.common.error.NetworkException
-import com.github.pokemon.pokedex.core.common.loggin.LoggerError
+import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.data.datasource.cache.SpeciesCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.PokemonSpeciesRemoteDataSource
 import com.github.pokemon.pokedex.data.mapper.toDomain
 import com.github.pokemon.pokedex.data.mapper.toEntity
+import com.github.pokemon.pokedex.domain.exception.PokeException.DatabaseException
+import com.github.pokemon.pokedex.domain.exception.PokeException.NetworkException
 import com.github.pokemon.pokedex.utils.PokeTimeUtil
 import com.github.pokemon.pokedex.utils.RefreshDueUtil
 import io.mockk.MockKAnnotations
@@ -135,7 +135,7 @@ class OfflineFirstPokemonSpeciesRepositoryTest {
     fun `should log and return failure when cache get throws`() = runTest(testDispatcher) {
         // given
         val id = 1
-        val expected = DatabaseOperationException("Error to get species")
+        val expected = DatabaseException("Error to get species")
         coEvery { cacheDataSource.getSpecieById(id) } throws expected
         every { loggerError.logError(any(), any()) } just Runs
 

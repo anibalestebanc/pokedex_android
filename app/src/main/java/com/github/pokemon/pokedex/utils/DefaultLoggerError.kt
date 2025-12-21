@@ -1,7 +1,6 @@
-package com.github.pokemon.pokedex.core.common.loggin
+package com.github.pokemon.pokedex.utils
 
 import android.util.Log
-
 
 interface LoggerError {
     fun logError(error: Exception)
@@ -9,7 +8,6 @@ interface LoggerError {
     fun logError(message: String, error: Exception, params: Map<String, Any>)
 }
 
-//TODO implement any System Error
 class DefaultLoggerError : LoggerError {
 
     override fun logError(error: Exception) {

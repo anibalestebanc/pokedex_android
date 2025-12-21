@@ -1,7 +1,7 @@
 package com.github.pokemon.pokedex.di
 
-import com.github.pokemon.pokedex.core.common.loggin.DefaultLoggerError
-import com.github.pokemon.pokedex.core.common.loggin.LoggerError
+import com.github.pokemon.pokedex.utils.DefaultLoggerError
+import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.core.work.SyncPokemonCatalogWorkScheduler
 import com.github.pokemon.pokedex.utils.DefaultPokeTimeUtil
 import com.github.pokemon.pokedex.utils.DefaultRefreshDueUtil

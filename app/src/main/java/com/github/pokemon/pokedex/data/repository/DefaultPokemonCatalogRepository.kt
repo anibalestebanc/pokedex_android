@@ -1,6 +1,6 @@
 package com.github.pokemon.pokedex.data.repository
 
-import com.github.pokemon.pokedex.core.common.loggin.LoggerError
+import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.data.datasource.cache.PokemonCatalogCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.local.PokemonCatalogLocalDataSource
 import com.github.pokemon.pokedex.data.mapper.toEntity

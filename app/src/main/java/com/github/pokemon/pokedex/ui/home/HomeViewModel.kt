@@ -2,12 +2,17 @@ package com.github.pokemon.pokedex.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
-    private val _uiEffect = MutableSharedFlow<HomeEffect>()
+    private val _uiEffect = MutableSharedFlow<HomeEffect>(
+        replay = 0,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
     val uiEffect: SharedFlow<HomeEffect> = _uiEffect
 
     fun onAction(action: HomeAction) = viewModelScope.launch {

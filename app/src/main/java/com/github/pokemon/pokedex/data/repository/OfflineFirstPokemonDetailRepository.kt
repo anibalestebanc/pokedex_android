@@ -1,11 +1,11 @@
 package com.github.pokemon.pokedex.data.repository
 
-import com.github.pokemon.pokedex.core.common.error.NotFoundException
-import com.github.pokemon.pokedex.core.common.loggin.LoggerError
+import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.data.datasource.cache.DetailCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.PokemonDetailRemoteDataSource
 import com.github.pokemon.pokedex.data.mapper.toDomain
 import com.github.pokemon.pokedex.data.mapper.toEntity
+import com.github.pokemon.pokedex.domain.exception.PokeException.NotFoundException
 import com.github.pokemon.pokedex.domain.model.PokemonDetail
 import com.github.pokemon.pokedex.domain.repository.PokemonDetailRepository
 import com.github.pokemon.pokedex.utils.PokeTimeUtil
@@ -70,10 +70,7 @@ class OfflineFirstPokemonDetailRepository(
 
     override suspend fun toggleFavorite(id: Int): Result<Boolean> = withContext(coroutineDispatcher) {
         return@withContext try {
-            val entity = cacheDataSource.getDetail(id)
-            if (entity == null) {
-                throw NotFoundException("Pokemon not found id : $id")
-            }
+            val entity = cacheDataSource.getDetail(id) ?: throw NotFoundException("Pokemon not found id : $id")
             val newValue = !entity.isFavorite
             cacheDataSource.setFavorite(id, newValue)
             Result.success(newValue)
