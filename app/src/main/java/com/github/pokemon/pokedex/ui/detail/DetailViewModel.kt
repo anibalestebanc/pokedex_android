@@ -3,10 +3,10 @@ package com.github.pokemon.pokedex.ui.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.pokemon.pokedex.R
-import com.github.pokemon.pokedex.domain.exception.PokeException.NotFoundException
 import com.github.pokemon.pokedex.domain.usecase.GetPokemonFullDetailUseCase
 import com.github.pokemon.pokedex.domain.usecase.ObserveIsFavoriteUseCase
 import com.github.pokemon.pokedex.domain.usecase.ToggleFavoriteUseCase
+import com.github.pokemon.pokedex.utils.ErrorMapper
 import com.github.pokemon.pokedex.utils.StringProvider
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +20,7 @@ class DetailViewModel(
     private val getFullDetailUseCase: GetPokemonFullDetailUseCase,
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
     private val observeIsFavoriteUseCase: ObserveIsFavoriteUseCase,
+    private val errorMapper: ErrorMapper,
     private val stringProvider: StringProvider,
 ) : ViewModel() {
 
@@ -44,6 +45,7 @@ class DetailViewModel(
     }
 
     private fun getPokemonDetail(idOrName: String) = viewModelScope.launch {
+        //TODO use INT for pokemon ID
         val id = idOrName.toIntOrNull()
         if (id == null) {
             _uiState.value = DetailUiState(errorMessage = stringProvider(R.string.error_generic_message))
@@ -53,12 +55,8 @@ class DetailViewModel(
         getFullDetailUseCase(idOrName.toInt())
             .onSuccess { detail ->
                 _uiState.value = DetailUiState(data = detail)
-            }.onFailure { e ->
-                if (e is NotFoundException) {
-                    _uiState.value = DetailUiState(errorMessage = stringProvider(R.string.error_not_found_message))
-                    return@launch
-                }
-                _uiState.value = DetailUiState(errorMessage = stringProvider(R.string.error_generic_message))
+            }.onFailure { error ->
+                _uiState.value = DetailUiState(errorMessage = errorMapper.toMessage(error))
             }
     }
 

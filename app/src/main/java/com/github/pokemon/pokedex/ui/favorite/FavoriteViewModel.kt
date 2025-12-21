@@ -2,9 +2,8 @@ package com.github.pokemon.pokedex.ui.favorite
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.domain.usecase.GetFavoritesUseCase
-import com.github.pokemon.pokedex.utils.StringProvider
+import com.github.pokemon.pokedex.utils.ErrorMapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -14,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class FavoriteViewModel(
     private val getFavoritesUseCase: GetFavoritesUseCase,
-    private val stringProvider: StringProvider,
+    private val errorMapper: ErrorMapper,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FavoriteUiState())
@@ -32,12 +31,7 @@ class FavoriteViewModel(
                 _uiState.update { it.copy(isLoading = true, errorMessage = null) }
             }
             .catch { error ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = stringProvider(R.string.favorite_error_loading),
-                    )
-                }
+                _uiState.update { it.copy(isLoading = false, errorMessage = errorMapper.toMessage(error)) }
             }
             .collect { favorites ->
                 _uiState.update { it.copy(isLoading = false, favorites = favorites) }
