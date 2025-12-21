@@ -8,6 +8,7 @@ import com.github.pokemon.pokedex.domain.model.PokemonCatalog
 import com.github.pokemon.pokedex.domain.repository.PokemonDetailRepository
 import com.github.pokemon.pokedex.domain.usecase.SearchPokemonUseCase
 import com.github.pokemon.pokedex.utils.ErrorMapper
+import com.github.pokemon.pokedex.utils.LoggerError
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.update
 class SearchListViewModel(
     private val searchPokemonUseCase: SearchPokemonUseCase,
     private val pokemonDetailRepository: PokemonDetailRepository,
+    private val loggerError: LoggerError,
     private val errorMapper: ErrorMapper
 ) : ViewModel() {
 
@@ -51,6 +53,7 @@ class SearchListViewModel(
             }.onStart {
                 emit(DetailItemUiState(isLoading = true))
             }.catch { error ->
+                loggerError.logError("Error to get pokemon detail with id $id", Exception(error))
                 emit(DetailItemUiState(isLoading = false, error = errorMapper.toMessage(error)))
             }
             .stateIn(

@@ -1,11 +1,11 @@
 package com.github.pokemon.pokedex.ui.home.navigation
 
 import androidx.navigation.NavController
-import com.github.pokemon.pokedex.navigation.ScreenRoute.HomeScreenRoute
+import com.github.pokemon.pokedex.navigation.Screen.HomeScreen
 
 
 fun NavController.navigateToHome(popUpToStart: Boolean = false) {
-    navigate(route = HomeScreenRoute) {
+    navigate(route = HomeScreen) {
         launchSingleTop = true
         restoreState = true
         if (popUpToStart) {

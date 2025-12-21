@@ -24,7 +24,9 @@ class GetPokemonFullDetailUseCase(
             val species = speciesResult.getOrThrow()
             Result.success(detail.combineWith(species))
         } else {
-            val error = detailResult.exceptionOrNull() ?: speciesResult.exceptionOrNull() ?: UnknownException()
+            val error = detailResult.exceptionOrNull()
+                ?: speciesResult.exceptionOrNull()
+                ?: UnknownException()
             Result.failure(error)
         }
     }

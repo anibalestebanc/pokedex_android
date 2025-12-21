@@ -7,11 +7,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.toRoute
-import com.github.pokemon.pokedex.navigation.ScreenRoute.DetailScreenRoute
-import com.github.pokemon.pokedex.navigation.ScreenRoute.FavoriteScreenRoute
-import com.github.pokemon.pokedex.navigation.ScreenRoute.HomeScreenRoute
-import com.github.pokemon.pokedex.navigation.ScreenRoute.SearchListScreenRoute
-import com.github.pokemon.pokedex.navigation.ScreenRoute.SearchScreenRoute
+import com.github.pokemon.pokedex.navigation.Screen.DetailScreen
+import com.github.pokemon.pokedex.navigation.Screen.FavoriteScreen
+import com.github.pokemon.pokedex.navigation.Screen.HomeScreen
+import com.github.pokemon.pokedex.navigation.Screen.SearchListScreen
+import com.github.pokemon.pokedex.navigation.Screen.SearchScreen
 import com.github.pokemon.pokedex.ui.AppState
 import com.github.pokemon.pokedex.ui.detail.DetailRoute
 import com.github.pokemon.pokedex.ui.detail.navigation.navigateToDetail
@@ -32,11 +32,11 @@ fun AppNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = HomeScreenRoute,
+        startDestination = HomeScreen,
         modifier = modifier,
     ) {
 
-        composable<HomeScreenRoute> {
+        composable<HomeScreen> {
             HomeRoute(
                 onSearchClick = {
                     navController.navigateToSearchDialog(navigateToSearch = true)
@@ -44,16 +44,16 @@ fun AppNavHost(
             )
         }
 
-        composable<DetailScreenRoute> { backStackEntry ->
-            val detailRoute: DetailScreenRoute = backStackEntry.toRoute()
+        composable<DetailScreen> { backStackEntry ->
+            val detailRoute: DetailScreen = backStackEntry.toRoute()
             DetailRoute(
                 onBackClick = navController::popBackStack,
                 pokemonId = detailRoute.pokemonId,
             )
         }
 
-        composable<SearchListScreenRoute>{ backStackEntry ->
-            val searchRoute: SearchListScreenRoute = backStackEntry.toRoute()
+        composable<SearchListScreen>{ backStackEntry ->
+            val searchRoute: SearchListScreen = backStackEntry.toRoute()
             SearchListRoute(
                 appState = appState,
                 initialQuery = searchRoute.query,
@@ -66,14 +66,14 @@ fun AppNavHost(
             )
         }
 
-        dialog<SearchScreenRoute>(
+        dialog<SearchScreen>(
             dialogProperties = DialogProperties(
                 usePlatformDefaultWidth = false,
                 dismissOnBackPress = true,
                 dismissOnClickOutside = false,
             ),
         ) { backStackEntry ->
-            val searchRoute: SearchScreenRoute = backStackEntry.toRoute()
+            val searchRoute: SearchScreen = backStackEntry.toRoute()
             SearchDialogRoute(
                 navigateToResult = searchRoute.navigateToSearch,
                 initialQuery = searchRoute.query,
@@ -88,7 +88,7 @@ fun AppNavHost(
             )
         }
 
-        composable<FavoriteScreenRoute> {
+        composable<FavoriteScreen> {
             FavoriteRoute(
                 onBackClick = navController::popBackStack,
                 onDetailClick = { pokemonId ->

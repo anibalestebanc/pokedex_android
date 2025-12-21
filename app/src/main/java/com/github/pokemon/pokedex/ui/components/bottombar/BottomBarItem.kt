@@ -6,9 +6,9 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.github.pokemon.pokedex.R
-import com.github.pokemon.pokedex.navigation.ScreenRoute.FavoriteScreenRoute
-import com.github.pokemon.pokedex.navigation.ScreenRoute.HomeScreenRoute
-import com.github.pokemon.pokedex.navigation.ScreenRoute.SearchListScreenRoute
+import com.github.pokemon.pokedex.navigation.Screen.FavoriteScreen
+import com.github.pokemon.pokedex.navigation.Screen.HomeScreen
+import com.github.pokemon.pokedex.navigation.Screen.SearchListScreen
 
 data class BottomBarItem(
     val id: String,
@@ -24,20 +24,20 @@ val TopBottomBarDestinations = listOf(
         label = R.string.bottom_bar_home,
         selectedIcon = Icons.Outlined.Home,
         unselectedIcon = Icons.Outlined.Home,
-        qualifiedName = HomeScreenRoute::class.qualifiedName!!,
+        qualifiedName = HomeScreen::class.qualifiedName!!,
     ),
     BottomBarItem(
         id = "search",
         label = R.string.bottom_bar_search,
         selectedIcon = Icons.Outlined.Search,
         unselectedIcon = Icons.Outlined.Search,
-        qualifiedName = SearchListScreenRoute::class.qualifiedName!!,
+        qualifiedName = SearchListScreen::class.qualifiedName!!,
     ),
     BottomBarItem(
         id = "favorite",
         label = R.string.bottom_bar_favorite,
         selectedIcon = Icons.Outlined.FavoriteBorder,
         unselectedIcon = Icons.Outlined.FavoriteBorder,
-        qualifiedName = FavoriteScreenRoute::class.qualifiedName!!,
+        qualifiedName = FavoriteScreen::class.qualifiedName!!,
     ),
 )

@@ -7,6 +7,7 @@ import com.github.pokemon.pokedex.domain.usecase.GetPokemonFullDetailUseCase
 import com.github.pokemon.pokedex.domain.usecase.ObserveIsFavoriteUseCase
 import com.github.pokemon.pokedex.domain.usecase.ToggleFavoriteUseCase
 import com.github.pokemon.pokedex.utils.ErrorMapper
+import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.utils.StringProvider
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
@@ -14,12 +15,14 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class DetailViewModel(
     private val getFullDetailUseCase: GetPokemonFullDetailUseCase,
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
     private val observeIsFavoriteUseCase: ObserveIsFavoriteUseCase,
+    private val loggerError: LoggerError,
     private val errorMapper: ErrorMapper,
     private val stringProvider: StringProvider,
 ) : ViewModel() {
@@ -34,6 +37,9 @@ class DetailViewModel(
 
 
     fun observeIsFavorite(id: String): Flow<Boolean> = observeIsFavoriteUseCase(id.toInt())
+        .catch { error ->
+            loggerError.logError("Error to get observe is favorite with id: $id", Exception(error))
+        }
 
     fun onAction(action: DetailAction) = viewModelScope.launch {
         when (action) {
@@ -56,14 +62,17 @@ class DetailViewModel(
             .onSuccess { detail ->
                 _uiState.value = DetailUiState(data = detail)
             }.onFailure { error ->
+                loggerError.logError("Error to get pokemon detail with id $idOrName", Exception(error))
                 _uiState.value = DetailUiState(errorMessage = errorMapper.toMessage(error))
             }
     }
 
     private fun onToggleFavorite(pokemonId: String) = viewModelScope.launch {
-        pokemonId.toIntOrNull()?.let { id ->
-            toggleFavoriteUseCase(id)
-        }
+        val id = pokemonId.toIntOrNull() ?: return@launch
+        toggleFavoriteUseCase(id)
+            .onFailure { error ->
+                loggerError.logError("Error to toggle favorite with id $pokemonId", Exception(error))
+            }
     }
 
     private fun retryDetail(idOrName: String) = getPokemonDetail(idOrName)

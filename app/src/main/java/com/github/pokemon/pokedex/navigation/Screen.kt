@@ -3,27 +3,27 @@ package com.github.pokemon.pokedex.navigation
 import com.github.pokemon.pokedex.utils.emptyString
 import kotlinx.serialization.Serializable
 
-sealed interface ScreenRoute {
+sealed interface Screen {
 
     @Serializable
-    data object HomeScreenRoute : ScreenRoute
+    data object HomeScreen : Screen
 
     @Serializable
-    data class DetailScreenRoute(
+    data class DetailScreen(
         val pokemonId: String,
-    ) : ScreenRoute
+    ) : Screen
 
     @Serializable
-    data class SearchListScreenRoute(
+    data class SearchListScreen(
         val query: String = emptyString(),
-    ) : ScreenRoute
+    ) : Screen
 
     @Serializable
-    data class SearchScreenRoute(
+    data class SearchScreen(
         val navigateToSearch: Boolean = false,
         val query: String = emptyString(),
-    ) : ScreenRoute
+    ) : Screen
 
     @Serializable
-    object FavoriteScreenRoute : ScreenRoute
+    object FavoriteScreen : Screen
 }
