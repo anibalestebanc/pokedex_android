@@ -1,36 +1,26 @@
 package com.github.pokemon.pokedex.data.repository
 
-import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.data.datasource.cache.PokemonCatalogCacheDataSource
-import com.github.pokemon.pokedex.data.datasource.local.PokemonCatalogLocalDataSource
 import com.github.pokemon.pokedex.data.mapper.toEntity
 import com.github.pokemon.pokedex.data.datasource.remote.PokemonCatalogRemoteDataSource
-import com.github.pokemon.pokedex.domain.repository.PokemonCatalogRepository
+import com.github.pokemon.pokedex.domain.repository.CatalogRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class DefaultPokemonCatalogRepository(
+class DefaultCatalogRepository(
     private val remoteDataSource: PokemonCatalogRemoteDataSource,
-    private val localDataSource: PokemonCatalogLocalDataSource,
     private val cacheDataSource: PokemonCatalogCacheDataSource,
-    private val loggerError: LoggerError,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-) : PokemonCatalogRepository {
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+) : CatalogRepository {
 
-    override suspend fun syncPokemonCatalog(): Result<Int> = withContext(dispatcher) {
+    override suspend fun syncCatalog(): Result<Int> = withContext(ioDispatcher) {
         return@withContext try {
             val items = remoteDataSource.fetchFullCatalog().map { it.toEntity() }
             cacheDataSource.clearAndInsertAllCatalog(items)
             Result.success(items.size)
         } catch (e: Exception) {
-            loggerError.logError("Error sync pokemon catalog", error = e)
             Result.failure(e)
         }
     }
-
-    override suspend fun getLastSyncAt(): Long = localDataSource.getLastSyncAt()
-
-
-    override suspend fun setLastSyncAt(lastSyncTime: Long) = localDataSource.setLastSyncAt(lastSyncTime)
 }

@@ -1,7 +1,7 @@
 package com.github.pokemon.pokedex.domain.usecase
 
 import com.github.pokemon.pokedex.core.work.SyncPokemonCatalogWorkScheduler
-import com.github.pokemon.pokedex.domain.repository.PokemonCatalogRepository
+import com.github.pokemon.pokedex.domain.repository.SyncCatalogRepository
 import com.github.pokemon.pokedex.utils.PokeTimeUtil
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
@@ -22,7 +22,7 @@ class EnqueueDailySyncCatalogUseCaseTest {
     @MockK
     lateinit var pokeTimeUtil: PokeTimeUtil
     @MockK
-    lateinit var repository: PokemonCatalogRepository
+    lateinit var repository: SyncCatalogRepository
 
     @MockK(relaxed = true)
     lateinit var scheduler: SyncPokemonCatalogWorkScheduler

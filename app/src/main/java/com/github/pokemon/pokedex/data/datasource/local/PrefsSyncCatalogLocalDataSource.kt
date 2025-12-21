@@ -7,7 +7,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-class PrefsPokemonCatalogLocalDataSource(private val context: Context) : PokemonCatalogLocalDataSource {
+class PrefsSyncCatalogLocalDataSource(private val context: Context) : SyncCatalogLocalDataSource {
 
     private val Context.syncDataStore by preferencesDataStore(name = "sync_pokemon_catalog_prefs")
 

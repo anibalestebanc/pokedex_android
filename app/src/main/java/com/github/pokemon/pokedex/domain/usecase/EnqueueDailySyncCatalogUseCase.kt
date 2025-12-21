@@ -1,14 +1,12 @@
 package com.github.pokemon.pokedex.domain.usecase
 
 import com.github.pokemon.pokedex.core.work.SyncPokemonCatalogWorkScheduler
-import com.github.pokemon.pokedex.domain.repository.PokemonCatalogRepository
+import com.github.pokemon.pokedex.domain.repository.SyncCatalogRepository
 import com.github.pokemon.pokedex.utils.PokeTimeUtil
 import java.util.concurrent.TimeUnit
 
-val ONE_DAY_MILLIS: Long = TimeUnit.DAYS.toMillis(1)
-
 class EnqueueDailySyncCatalogUseCase(
-    private val repository: PokemonCatalogRepository,
+    private val repository: SyncCatalogRepository,
     private val scheduler: SyncPokemonCatalogWorkScheduler,
     private val pokeTimeUtil: PokeTimeUtil
 ) {
@@ -20,5 +18,9 @@ class EnqueueDailySyncCatalogUseCase(
             now - lastSync >= minInterval -> scheduler.enqueueDailySync()
             else -> Unit
         }
+    }
+
+    private companion object {
+        val ONE_DAY_MILLIS: Long = TimeUnit.DAYS.toMillis(1)
     }
 }

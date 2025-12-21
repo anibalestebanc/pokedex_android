@@ -1,6 +1,6 @@
 package com.github.pokemon.pokedex.data.datasource.local
 
-interface PokemonCatalogLocalDataSource {
+interface SyncCatalogLocalDataSource {
     suspend fun getLastSyncAt(): Long
     suspend fun setLastSyncAt(value: Long)
 }

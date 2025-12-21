@@ -5,7 +5,6 @@ import com.github.pokemon.pokedex.PikachuDto
 import com.github.pokemon.pokedex.SquirtleDto
 import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.data.datasource.cache.PokemonCatalogCacheDataSource
-import com.github.pokemon.pokedex.data.datasource.local.PokemonCatalogLocalDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.PokemonCatalogRemoteDataSource
 import io.mockk.MockKAnnotations
 import io.mockk.Runs
@@ -33,22 +32,17 @@ class DefaultPokemonCatalogRepositoryTest {
     @MockK
     lateinit var cacheDataSource: PokemonCatalogCacheDataSource
     @MockK
-    lateinit var localDataSource: PokemonCatalogLocalDataSource
-    @MockK
     lateinit var loggerError: LoggerError
-
     private val testDispatcher = StandardTestDispatcher()
-    private lateinit var repository: DefaultPokemonCatalogRepository
+    private lateinit var repository: DefaultCatalogRepository
 
     @BeforeEach
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
-        repository = DefaultPokemonCatalogRepository(
+        repository = DefaultCatalogRepository(
             remoteDataSource = remoteDataSource,
-            localDataSource = localDataSource,
             cacheDataSource = cacheDataSource,
-            loggerError = loggerError,
-            dispatcher = testDispatcher
+            ioDispatcher = testDispatcher
         )
     }
 
@@ -66,7 +60,7 @@ class DefaultPokemonCatalogRepositoryTest {
         coEvery { cacheDataSource.clearAndInsertAllCatalog(any()) } returns Unit
         every { loggerError.logError(any(), any()) } just Runs
         // when
-        val result = repository.syncPokemonCatalog()
+        val result = repository.syncCatalog()
 
         // then
         assertTrue(result.isSuccess)
@@ -81,7 +75,7 @@ class DefaultPokemonCatalogRepositoryTest {
         val expected = NetworkException("Error to get catalog")
         coEvery { remoteDataSource.fetchFullCatalog() } throws expected
 
-        val result = repository.syncPokemonCatalog()
+        val result = repository.syncCatalog()
 
         assertTrue(result.isFailure)
         assertEquals(expected.message, result.exceptionOrNull()?.message)
@@ -95,25 +89,11 @@ class DefaultPokemonCatalogRepositoryTest {
         val expected = DatabaseException("Error to insert catalog")
         coEvery { cacheDataSource.clearAndInsertAllCatalog(any()) } throws expected
 
-        val result = repository.syncPokemonCatalog()
+        val result = repository.syncCatalog()
 
         assertTrue(result.isFailure)
         assertEquals(expected.message, result.exceptionOrNull()?.message)
         coVerify(exactly = 1) { remoteDataSource.fetchFullCatalog() }
         coVerify(exactly = 1) { cacheDataSource.clearAndInsertAllCatalog(any()) }
-    }
-
-    @Test
-    fun `should delegate getLastSyncAt to local`() = runTest(testDispatcher) {
-        coEvery { localDataSource.getLastSyncAt() } returns 123L
-        assertEquals(123L, repository.getLastSyncAt())
-        coVerify { localDataSource.getLastSyncAt() }
-    }
-
-    @Test
-    fun `should delegate setLastSyncAt to local`() = runTest(testDispatcher) {
-        coEvery { localDataSource.setLastSyncAt(456L) } returns Unit
-        repository.setLastSyncAt(456L)
-        coVerify { localDataSource.setLastSyncAt(456L) }
     }
 }

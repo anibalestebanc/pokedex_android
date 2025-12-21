@@ -10,24 +10,26 @@ import com.github.pokemon.pokedex.data.datasource.cache.RoomSearchCacheDatasourc
 import com.github.pokemon.pokedex.data.datasource.cache.RoomSpeciesCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.cache.SearchCacheDatasource
 import com.github.pokemon.pokedex.data.datasource.cache.SpeciesCacheDataSource
-import com.github.pokemon.pokedex.data.datasource.local.PokemonCatalogLocalDataSource
-import com.github.pokemon.pokedex.data.datasource.local.PrefsPokemonCatalogLocalDataSource
+import com.github.pokemon.pokedex.data.datasource.local.SyncCatalogLocalDataSource
+import com.github.pokemon.pokedex.data.datasource.local.PrefsSyncCatalogLocalDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.PokemonCatalogRemoteDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.PokemonDetailRemoteDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.PokemonSpeciesRemoteDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.RetrofitCatalogRemoteDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.RetrofitPokemonDetailRemoteDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.RetrofitPokemonSpeciesRemoteDataSource
-import com.github.pokemon.pokedex.data.repository.DefaultPokemonCatalogRepository
+import com.github.pokemon.pokedex.data.repository.DefaultCatalogRepository
+import com.github.pokemon.pokedex.data.repository.LocalSyncCatalogRepository
 import com.github.pokemon.pokedex.data.repository.OfflineFirstPokemonDetailRepository
 import com.github.pokemon.pokedex.data.repository.OfflineFirstPokemonSpeciesRepository
 import com.github.pokemon.pokedex.data.repository.RoomPokemonSearchRepository
 import com.github.pokemon.pokedex.data.repository.RoomHistorySearchRepository
 import com.github.pokemon.pokedex.domain.repository.HistorySearchRepository
-import com.github.pokemon.pokedex.domain.repository.PokemonCatalogRepository
+import com.github.pokemon.pokedex.domain.repository.CatalogRepository
 import com.github.pokemon.pokedex.domain.repository.PokemonDetailRepository
 import com.github.pokemon.pokedex.domain.repository.PokemonSpeciesRepository
 import com.github.pokemon.pokedex.domain.repository.SearchPokemonRepository
+import com.github.pokemon.pokedex.domain.repository.SyncCatalogRepository
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -42,7 +44,7 @@ val dataModule = module {
     singleOf(::RoomDetailCacheDataSource) { bind<DetailCacheDataSource>() }
 
     //LocalDataSource
-    singleOf(::PrefsPokemonCatalogLocalDataSource) { bind<PokemonCatalogLocalDataSource>() }
+    singleOf(::PrefsSyncCatalogLocalDataSource) { bind<SyncCatalogLocalDataSource>() }
 
     //RemoteDataSource
     singleOf(::RetrofitCatalogRemoteDataSource) { bind<PokemonCatalogRemoteDataSource>() }
@@ -50,7 +52,8 @@ val dataModule = module {
     singleOf(::RetrofitPokemonSpeciesRemoteDataSource) { bind<PokemonSpeciesRemoteDataSource>() }
 
     //Repository
-    singleOf(::DefaultPokemonCatalogRepository) { bind<PokemonCatalogRepository>() }
+    singleOf(::LocalSyncCatalogRepository){ bind<SyncCatalogRepository>()}
+    singleOf(::DefaultCatalogRepository) { bind<CatalogRepository>() }
     singleOf(::RoomPokemonSearchRepository) { bind<SearchPokemonRepository>() }
     singleOf(::RoomHistorySearchRepository) { bind<HistorySearchRepository>() }
     singleOf(::OfflineFirstPokemonDetailRepository) { bind<PokemonDetailRepository>() }
