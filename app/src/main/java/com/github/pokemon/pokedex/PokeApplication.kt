@@ -1,7 +1,6 @@
 package com.github.pokemon.pokedex
 
 import android.app.Application
-import android.os.StrictMode
 import androidx.work.Configuration
 import com.github.pokemon.pokedex.core.di.databaseModule
 import com.github.pokemon.pokedex.core.di.networkModule
@@ -9,9 +8,12 @@ import com.github.pokemon.pokedex.core.di.workerModule
 import com.github.pokemon.pokedex.di.appModule
 import com.github.pokemon.pokedex.di.dataModule
 import com.github.pokemon.pokedex.di.domainModule
+import com.github.pokemon.pokedex.di.startupModule
 import com.github.pokemon.pokedex.di.syncCatalogModule
 import com.github.pokemon.pokedex.di.uiModule
-import com.github.pokemon.pokedex.domain.usecase.EnqueueDailySyncCatalogUseCase
+import com.github.pokemon.pokedex.startup.AppInitializer
+import com.github.pokemon.pokedex.startup.LeakCanaryInitializer
+import com.github.pokemon.pokedex.startup.StrictModeInitializer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -20,19 +22,21 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
-import leakcanary.LeakCanary
 import org.koin.android.ext.android.getKoin
 import org.koin.androidx.workmanager.factory.KoinWorkerFactory
 import org.koin.androidx.workmanager.koin.workManagerFactory
+import kotlin.collections.List
 
-class PokeApplication : Application(), Configuration.Provider {
+class PokeApplication : Application(), Configuration.Provider  {
 
     override fun onCreate() {
         super.onCreate()
 
-        configLeakCanary()
-
-        configStrictMode()
+        val initializers: List<AppInitializer> = listOf(
+            LeakCanaryInitializer(),
+            StrictModeInitializer(),
+        )
+        initializers.forEach { initializer -> initializer() }
 
         startKoin {
             androidContext(this@PokeApplication)
@@ -44,17 +48,18 @@ class PokeApplication : Application(), Configuration.Provider {
                 networkModule,
                 syncCatalogModule,
                 workerModule,
+                startupModule,
                 dataModule,
                 domainModule,
                 uiModule,
             )
         }
 
-        val enqueueSyncCatalogUseCase: EnqueueDailySyncCatalogUseCase =
-            getKoin().get()
-
+        val asyncInitializers : List<AppInitializer> = getKoin().getAll()
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
-            enqueueSyncCatalogUseCase()
+            asyncInitializers.forEach { initializer ->
+                initializer()
+            }
         }
     }
 
@@ -63,28 +68,4 @@ class PokeApplication : Application(), Configuration.Provider {
             .setWorkerFactory(KoinWorkerFactory())
             .build()
 
-    private fun configLeakCanary() {
-        if (BuildConfig.DEBUG) {
-            LeakCanary.config = LeakCanary.config.copy(
-                retainedVisibleThreshold = 3,
-            )
-        }
-    }
-
-    private fun configStrictMode() {
-        if (BuildConfig.DEBUG) {
-            StrictMode.setThreadPolicy(
-                StrictMode.ThreadPolicy.Builder()
-                    .detectAll()
-                    .penaltyLog()
-                    .build(),
-            )
-            StrictMode.setVmPolicy(
-                StrictMode.VmPolicy.Builder()
-                    .detectAll()
-                    .penaltyLog()
-                    .build(),
-            )
-        }
-    }
 }
