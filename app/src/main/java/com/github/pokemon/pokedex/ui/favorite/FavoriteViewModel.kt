@@ -7,6 +7,7 @@ import com.github.pokemon.pokedex.utils.ErrorMapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -27,11 +28,12 @@ class FavoriteViewModel(
 
     private fun getFavorites() = viewModelScope.launch {
         getFavoritesUseCase()
+            .distinctUntilChanged()
             .onStart {
                 _uiState.update { it.copy(isLoading = true, errorMessage = null) }
             }
             .catch { error ->
-                _uiState.update { it.copy(isLoading = false, errorMessage = errorMapper.toMessage(error)) }
+                _uiState.update { it.copy(isLoading = false, errorMessage = errorMapper(error)) }
             }
             .collect { favorites ->
                 _uiState.update { it.copy(isLoading = false, favorites = favorites) }

@@ -6,7 +6,7 @@ import com.github.pokemon.pokedex.PikachuSpeciesDto
 import com.github.pokemon.pokedex.PikachuSpeciesEntity
 import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.data.datasource.cache.SpeciesCacheDataSource
-import com.github.pokemon.pokedex.data.datasource.remote.PokemonSpeciesRemoteDataSource
+import com.github.pokemon.pokedex.data.datasource.remote.SpeciesRemoteDataSource
 import com.github.pokemon.pokedex.data.mapper.toDomain
 import com.github.pokemon.pokedex.data.mapper.toEntity
 import com.github.pokemon.pokedex.domain.exception.PokeException.DatabaseException
@@ -34,26 +34,23 @@ import org.junit.jupiter.api.Test
 class OfflineFirstPokemonSpeciesRepositoryTest {
 
     @MockK
-    lateinit var remoteDataSource: PokemonSpeciesRemoteDataSource
+    lateinit var remoteDataSource: SpeciesRemoteDataSource
     @MockK
     lateinit var cacheDataSource: SpeciesCacheDataSource
-    @MockK(relaxed = true)
-    lateinit var loggerError: LoggerError
     @MockK
     lateinit var pokeTimeUtil: PokeTimeUtil
     @MockK
     lateinit var refreshDue: RefreshDueUtil
 
     private val testDispatcher = StandardTestDispatcher()
-    private lateinit var repository: OfflineFirstPokemonSpeciesRepository
+    private lateinit var repository: OfflineFirstSpeciesRepository
 
     @BeforeEach
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
-        repository = OfflineFirstPokemonSpeciesRepository(
+        repository = OfflineFirstSpeciesRepository(
             remoteDataSource = remoteDataSource,
-            speciesCacheDataSource = cacheDataSource,
-            loggerError = loggerError,
+            cacheDataSource = cacheDataSource,
             pokeTimeUtil = pokeTimeUtil,
             refreshDueUtil = refreshDue,
             coroutineDispatcher = testDispatcher
@@ -137,14 +134,12 @@ class OfflineFirstPokemonSpeciesRepositoryTest {
         val id = 1
         val expected = DatabaseException("Error to get species")
         coEvery { cacheDataSource.getSpecieById(id) } throws expected
-        every { loggerError.logError(any(), any()) } just Runs
 
         // when
         val result = repository.getPokemonSpecies(id)
 
         // then
         assertTrue(result.isFailure)
-        verify { loggerError.logError("Error getting pokemon species with id: $id", expected) }
         coVerify(exactly = 0) { remoteDataSource.getSpecies(any()) }
         coVerify(exactly = 0) { cacheDataSource.insertSpecie(any()) }
     }
@@ -158,14 +153,12 @@ class OfflineFirstPokemonSpeciesRepositoryTest {
         every { refreshDue.isRefreshDue(pikachuEntity.lastUpdated) } returns true
         val expected = NetworkException("Error to get species")
         coEvery { remoteDataSource.getSpecies(id.toString()) } throws expected
-        every { loggerError.logError(any(), any()) } just Runs
 
         // when
         val result = repository.getPokemonSpecies(id)
 
         // then
         assertTrue(result.isFailure)
-        verify { loggerError.logError("Error getting pokemon species with id: $id", expected) }
         coVerify(exactly = 0) { cacheDataSource.insertSpecie(any()) }
     }
 }

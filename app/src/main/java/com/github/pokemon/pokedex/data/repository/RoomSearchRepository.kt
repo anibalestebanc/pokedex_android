@@ -6,7 +6,7 @@ import com.github.pokemon.pokedex.domain.model.PokemonCatalog
 import com.github.pokemon.pokedex.domain.repository.SearchPokemonRepository
 import kotlinx.coroutines.flow.Flow
 
-class RoomPokemonSearchRepository(
+class RoomSearchRepository(
     private val searchCacheDatasource: SearchCacheDatasource,
 ) : SearchPokemonRepository {
 

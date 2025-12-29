@@ -5,9 +5,8 @@ import com.github.pokemon.pokedex.BulbasaurDetailDto
 import com.github.pokemon.pokedex.CharmanderDetailEntity
 import com.github.pokemon.pokedex.PikachuDetailDto
 import com.github.pokemon.pokedex.PikachuDetailEntity
-import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.data.datasource.cache.DetailCacheDataSource
-import com.github.pokemon.pokedex.data.datasource.remote.PokemonDetailRemoteDataSource
+import com.github.pokemon.pokedex.data.datasource.remote.DetailRemoteDataSource
 import com.github.pokemon.pokedex.data.mapper.toDomain
 import com.github.pokemon.pokedex.data.mapper.toEntity
 import com.github.pokemon.pokedex.domain.exception.PokeException.DatabaseException
@@ -16,13 +15,11 @@ import com.github.pokemon.pokedex.domain.model.PokemonDetail
 import com.github.pokemon.pokedex.utils.PokeTimeUtil
 import com.github.pokemon.pokedex.utils.RefreshDueUtil
 import io.mockk.MockKAnnotations
-import io.mockk.Runs
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.just
 import io.mockk.verify
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -39,23 +36,20 @@ import org.junit.jupiter.api.Test
 class OfflineFirstPokemonDetailRepositoryTest {
 
     @MockK
-    lateinit var remoteDataSource: PokemonDetailRemoteDataSource
+    lateinit var remoteDataSource: DetailRemoteDataSource
     @MockK lateinit var cacheDataSource: DetailCacheDataSource
-    @MockK(relaxed = true)
-    lateinit var loggerError: LoggerError
     @MockK lateinit var pokeTimeUtil: PokeTimeUtil
     @MockK lateinit var refreshDue: RefreshDueUtil
 
     private val testDispatcher = StandardTestDispatcher()
-    private lateinit var repository: OfflineFirstPokemonDetailRepository
+    private lateinit var repository: OfflineFirstDetailRepository
 
     @BeforeEach
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
-        repository = OfflineFirstPokemonDetailRepository(
+        repository = OfflineFirstDetailRepository(
             remoteDataSource = remoteDataSource,
             cacheDataSource = cacheDataSource,
-            loggerError = loggerError,
             pokeTimeUtil = pokeTimeUtil,
             refreshDueUtil = refreshDue,
             coroutineDispatcher = testDispatcher
@@ -85,7 +79,7 @@ class OfflineFirstPokemonDetailRepositoryTest {
             awaitComplete()
         }
         coVerify(exactly = 1) { cacheDataSource.getDetail(id) }
-        coVerify(exactly = 0) { remoteDataSource.getPokemon(any()) }
+        coVerify(exactly = 0) { remoteDataSource.getDetail(any()) }
     }
 
     @Test
@@ -97,7 +91,7 @@ class OfflineFirstPokemonDetailRepositoryTest {
         every { pokeTimeUtil.now() } returns 1L
         val remoteDto = BulbasaurDetailDto
         val entity = remoteDto.toDomain(pokeTimeUtil).toEntity()
-        coEvery { remoteDataSource.getPokemon(id.toString()) } returns remoteDto
+        coEvery { remoteDataSource.getDetail(id.toString()) } returns remoteDto
         coEvery { cacheDataSource.insertDetail(any()) } returns Unit
 
         // when
@@ -109,7 +103,7 @@ class OfflineFirstPokemonDetailRepositoryTest {
             cancelAndIgnoreRemainingEvents()
         }
         coVerify(exactly = 2) { cacheDataSource.getDetail(id) }
-        coVerify(exactly = 1) { remoteDataSource.getPokemon(id.toString()) }
+        coVerify(exactly = 1) { remoteDataSource.getDetail(id.toString()) }
         coVerify(exactly = 1) { cacheDataSource.insertDetail(entity) }
     }
 
@@ -127,7 +121,7 @@ class OfflineFirstPokemonDetailRepositoryTest {
         // then
         assertTrue(result.isSuccess)
         assertEquals(cached.toDomain(), result.getOrThrow())
-        coVerify(exactly = 0) { remoteDataSource.getPokemon(any()) }
+        coVerify(exactly = 0) { remoteDataSource.getDetail(any()) }
         coVerify(exactly = 0) { cacheDataSource.insertDetail(any()) }
     }
 
@@ -138,7 +132,7 @@ class OfflineFirstPokemonDetailRepositoryTest {
         coEvery { cacheDataSource.getDetail(id) } returns null
         every { pokeTimeUtil.now() } returns 1234L
         val remoteDto = BulbasaurDetailDto
-        coEvery { remoteDataSource.getPokemon(id.toString()) } returns remoteDto
+        coEvery { remoteDataSource.getDetail(id.toString()) } returns remoteDto
         coEvery { cacheDataSource.insertDetail(any()) } returns Unit
 
         // when
@@ -148,7 +142,7 @@ class OfflineFirstPokemonDetailRepositoryTest {
         assertTrue(result.isSuccess)
         val expected = remoteDto.toDomain(pokeTimeUtil)
         assertEquals(expected, result.getOrThrow())
-        coVerify(exactly = 1) { remoteDataSource.getPokemon(id.toString()) }
+        coVerify(exactly = 1) { remoteDataSource.getDetail(id.toString()) }
         coVerify(exactly = 1) { cacheDataSource.insertDetail(expected.toEntity()) }
     }
 
@@ -161,7 +155,7 @@ class OfflineFirstPokemonDetailRepositoryTest {
         every { refreshDue.isRefreshDue(cached.lastUpdated) } returns true
         every { pokeTimeUtil.now() } returns 5678L
         val remoteDto = PikachuDetailDto
-        coEvery { remoteDataSource.getPokemon(id.toString()) } returns remoteDto
+        coEvery { remoteDataSource.getDetail(id.toString()) } returns remoteDto
         coEvery { cacheDataSource.insertDetail(any()) } returns Unit
 
         // when
@@ -171,7 +165,7 @@ class OfflineFirstPokemonDetailRepositoryTest {
         assertTrue(res.isSuccess)
         val expected = remoteDto.toDomain(pokeTimeUtil)
         assertEquals(expected, res.getOrThrow())
-        coVerify(exactly = 1) { remoteDataSource.getPokemon(id.toString()) }
+        coVerify(exactly = 1) { remoteDataSource.getDetail(id.toString()) }
         coVerify(exactly = 1) { cacheDataSource.insertDetail(expected.toEntity()) }
     }
 
@@ -181,15 +175,13 @@ class OfflineFirstPokemonDetailRepositoryTest {
         val id = 1
         val expected = DatabaseException("Error to get detail")
         coEvery { cacheDataSource.getDetail(id) } throws expected
-        every { loggerError.logError(any(), any()) } just Runs
 
         // when
         val res = repository.getPokemonDetail(id)
 
         // then
         assertTrue(res.isFailure)
-        verify { loggerError.logError("Error getting pokemon detail with id: $id", expected) }
-        coVerify(exactly = 0) { remoteDataSource.getPokemon(any()) }
+        coVerify(exactly = 0) { remoteDataSource.getDetail(any()) }
         coVerify(exactly = 0) { cacheDataSource.insertDetail(any()) }
     }
 
@@ -201,15 +193,13 @@ class OfflineFirstPokemonDetailRepositoryTest {
         coEvery { cacheDataSource.getDetail(id) } returns cached
         every { refreshDue.isRefreshDue(cached.lastUpdated) } returns true
         val expected = NetworkException("Error to get detail")
-        coEvery { remoteDataSource.getPokemon(id.toString()) } throws expected
-        every { loggerError.logError(any(), any()) } just Runs
+        coEvery { remoteDataSource.getDetail(id.toString()) } throws expected
 
         // when
         val res = repository.getPokemonDetail(id)
 
         // then
         assertTrue(res.isFailure)
-        verify { loggerError.logError("Error getting pokemon detail with id: $id", expected) }
         coVerify(exactly = 0) { cacheDataSource.insertDetail(any()) }
     }
 
@@ -268,14 +258,12 @@ class OfflineFirstPokemonDetailRepositoryTest {
         val id = 1
         val expected = DatabaseException("Error to set favorite")
         coEvery { cacheDataSource.setFavorite(id, false) } throws expected
-        every { loggerError.logError(any(), any()) } just Runs
 
         // when
         val res = repository.setFavorite(id, false)
 
         // then
         assertTrue(res.isFailure)
-        verify { loggerError.logError("Error setting favorite with id: $id", expected) }
     }
 
     @Test
@@ -300,16 +288,12 @@ class OfflineFirstPokemonDetailRepositoryTest {
         // given
         val id = 1
         coEvery { cacheDataSource.getDetail(id) } returns null
-        every { loggerError.logError(any(), any()) } just Runs
 
         // when
         val res = repository.toggleFavorite(id)
 
         // then
         assertTrue(res.isFailure)
-        verify {
-            loggerError.logError("Error toggling favorite with id: $id", any())
-        }
         coVerify(exactly = 0) { cacheDataSource.setFavorite(any(), any()) }
     }
 }

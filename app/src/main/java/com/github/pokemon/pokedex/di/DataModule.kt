@@ -8,14 +8,14 @@ import com.github.pokemon.pokedex.data.datasource.cache.RoomSearchCacheDatasourc
 import com.github.pokemon.pokedex.data.datasource.cache.RoomSpeciesCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.cache.SearchCacheDatasource
 import com.github.pokemon.pokedex.data.datasource.cache.SpeciesCacheDataSource
-import com.github.pokemon.pokedex.data.datasource.remote.PokemonDetailRemoteDataSource
-import com.github.pokemon.pokedex.data.datasource.remote.PokemonSpeciesRemoteDataSource
-import com.github.pokemon.pokedex.data.datasource.remote.RetrofitPokemonDetailRemoteDataSource
-import com.github.pokemon.pokedex.data.datasource.remote.RetrofitPokemonSpeciesRemoteDataSource
-import com.github.pokemon.pokedex.data.repository.OfflineFirstPokemonDetailRepository
-import com.github.pokemon.pokedex.data.repository.OfflineFirstPokemonSpeciesRepository
+import com.github.pokemon.pokedex.data.datasource.remote.DetailRemoteDataSource
+import com.github.pokemon.pokedex.data.datasource.remote.SpeciesRemoteDataSource
+import com.github.pokemon.pokedex.data.datasource.remote.RetrofitDetailRemoteDataSource
+import com.github.pokemon.pokedex.data.datasource.remote.RetrofitSpeciesRemoteDataSource
+import com.github.pokemon.pokedex.data.repository.OfflineFirstDetailRepository
+import com.github.pokemon.pokedex.data.repository.OfflineFirstSpeciesRepository
 import com.github.pokemon.pokedex.data.repository.RoomHistorySearchRepository
-import com.github.pokemon.pokedex.data.repository.RoomPokemonSearchRepository
+import com.github.pokemon.pokedex.data.repository.RoomSearchRepository
 import com.github.pokemon.pokedex.domain.repository.HistorySearchRepository
 import com.github.pokemon.pokedex.domain.repository.PokemonDetailRepository
 import com.github.pokemon.pokedex.domain.repository.PokemonSpeciesRepository
@@ -32,12 +32,12 @@ val dataModule = module {
     singleOf(::RoomDetailCacheDataSource) { bind<DetailCacheDataSource>() }
 
     //RemoteDataSource
-    singleOf(::RetrofitPokemonDetailRemoteDataSource) { bind<PokemonDetailRemoteDataSource>() }
-    singleOf(::RetrofitPokemonSpeciesRemoteDataSource) { bind<PokemonSpeciesRemoteDataSource>() }
+    singleOf(::RetrofitDetailRemoteDataSource) { bind<DetailRemoteDataSource>() }
+    singleOf(::RetrofitSpeciesRemoteDataSource) { bind<SpeciesRemoteDataSource>() }
 
     //Repository
-    singleOf(::RoomPokemonSearchRepository) { bind<SearchPokemonRepository>() }
+    singleOf(::RoomSearchRepository) { bind<SearchPokemonRepository>() }
     singleOf(::RoomHistorySearchRepository) { bind<HistorySearchRepository>() }
-    singleOf(::OfflineFirstPokemonDetailRepository) { bind<PokemonDetailRepository>() }
-    singleOf(::OfflineFirstPokemonSpeciesRepository) { bind<PokemonSpeciesRepository>() }
+    singleOf(::OfflineFirstDetailRepository) { bind<PokemonDetailRepository>() }
+    singleOf(::OfflineFirstSpeciesRepository) { bind<PokemonSpeciesRepository>() }
 }

@@ -4,7 +4,7 @@ import androidx.room.withTransaction
 import com.github.pokemon.pokedex.core.database.PokemonDatabase
 import com.github.pokemon.pokedex.core.database.entity.PokemonCatalogEntity
 
-class RoomCatalogCacheDataSource(private val database: PokemonDatabase) : PokemonCatalogCacheDataSource {
+class RoomCatalogCacheDataSource(private val database: PokemonDatabase) : CatalogCacheDataSource {
     override suspend fun clearAndInsertAllCatalog(items: List<PokemonCatalogEntity>) {
         database.withTransaction {
             val dao = database.pokemonCatalogDao()

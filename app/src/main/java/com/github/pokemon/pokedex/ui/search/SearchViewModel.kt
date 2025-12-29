@@ -3,11 +3,11 @@ package com.github.pokemon.pokedex.ui.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.pokemon.pokedex.utils.LoggerError
-import com.github.pokemon.pokedex.domain.exception.PokeException
 import com.github.pokemon.pokedex.domain.repository.HistorySearchRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -35,14 +35,10 @@ class SearchViewModel(
     }
 
     private fun getSearchHistory() = viewModelScope.launch {
-        repository.getHistorySearch(10)
+        repository.getHistorySearch()
+            .distinctUntilChanged()
             .catch { error ->
-                loggerError.logError(
-                    PokeException.UnknownException(
-                        message = "Error getting search history",
-                        cause = error
-                    )
-                )
+                loggerError("Error getting search history", error)
                 _uiState.update { it.copy(searchHistory = emptyList()) }
             }
             .collect { history ->

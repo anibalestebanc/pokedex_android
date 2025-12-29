@@ -35,7 +35,7 @@ class RoomPokemonSearchRepositoryTest {
     @MockK
     lateinit var cacheDatasource: SearchCacheDatasource
 
-    private lateinit var repository: RoomPokemonSearchRepository
+    private lateinit var repository: RoomSearchRepository
 
     private val testDispatcher = StandardTestDispatcher()
 
@@ -43,7 +43,7 @@ class RoomPokemonSearchRepositoryTest {
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
         Dispatchers.setMain(testDispatcher)
-        repository = RoomPokemonSearchRepository(cacheDatasource)
+        repository = RoomSearchRepository(cacheDatasource)
     }
 
     @AfterEach

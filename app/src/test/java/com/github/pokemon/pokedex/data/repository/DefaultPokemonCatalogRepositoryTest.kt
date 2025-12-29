@@ -4,8 +4,8 @@ import com.github.pokemon.pokedex.BulbasaurDto
 import com.github.pokemon.pokedex.PikachuDto
 import com.github.pokemon.pokedex.SquirtleDto
 import com.github.pokemon.pokedex.utils.LoggerError
-import com.github.pokemon.pokedex.data.datasource.cache.PokemonCatalogCacheDataSource
-import com.github.pokemon.pokedex.data.datasource.remote.PokemonCatalogRemoteDataSource
+import com.github.pokemon.pokedex.data.datasource.cache.CatalogCacheDataSource
+import com.github.pokemon.pokedex.data.datasource.remote.CatalogRemoteDataSource
 import io.mockk.MockKAnnotations
 import io.mockk.Runs
 import io.mockk.clearAllMocks
@@ -28,9 +28,9 @@ import com.github.pokemon.pokedex.domain.exception.PokeException.NetworkExceptio
 
 class DefaultPokemonCatalogRepositoryTest {
     @MockK
-    lateinit var remoteDataSource: PokemonCatalogRemoteDataSource
+    lateinit var remoteDataSource: CatalogRemoteDataSource
     @MockK
-    lateinit var cacheDataSource: PokemonCatalogCacheDataSource
+    lateinit var cacheDataSource: CatalogCacheDataSource
     @MockK
     lateinit var loggerError: LoggerError
     private val testDispatcher = StandardTestDispatcher()
@@ -42,7 +42,7 @@ class DefaultPokemonCatalogRepositoryTest {
         repository = DefaultCatalogRepository(
             remoteDataSource = remoteDataSource,
             cacheDataSource = cacheDataSource,
-            ioDispatcher = testDispatcher
+            coroutineDispatcher = testDispatcher
         )
     }
 
@@ -58,7 +58,7 @@ class DefaultPokemonCatalogRepositoryTest {
         val expectedEntities = dtos.map { it.toEntity() }
         coEvery { remoteDataSource.fetchFullCatalog() } returns dtos
         coEvery { cacheDataSource.clearAndInsertAllCatalog(any()) } returns Unit
-        every { loggerError.logError(any(), any()) } just Runs
+        every { loggerError(any(), any()) } just Runs
         // when
         val result = repository.syncCatalog()
 

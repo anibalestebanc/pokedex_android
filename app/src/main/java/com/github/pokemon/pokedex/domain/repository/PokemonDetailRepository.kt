@@ -13,5 +13,5 @@ interface PokemonDetailRepository {
 
     suspend fun setFavorite(id: Int, favorite: Boolean) : Result<Unit>
 
-    suspend fun toggleFavorite(id: Int) : Result<Boolean>
+    suspend fun toggleFavorite(id: Int) : Result<Unit>
 }

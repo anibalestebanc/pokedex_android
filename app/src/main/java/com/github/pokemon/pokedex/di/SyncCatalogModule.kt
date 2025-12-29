@@ -1,11 +1,11 @@
 package com.github.pokemon.pokedex.di
 
 import com.github.pokemon.pokedex.core.work.SyncCatalogWorkScheduler
-import com.github.pokemon.pokedex.data.datasource.cache.PokemonCatalogCacheDataSource
+import com.github.pokemon.pokedex.data.datasource.cache.CatalogCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.cache.RoomCatalogCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.local.PrefsSyncCatalogLocalDataSource
 import com.github.pokemon.pokedex.data.datasource.local.SyncCatalogLocalDataSource
-import com.github.pokemon.pokedex.data.datasource.remote.PokemonCatalogRemoteDataSource
+import com.github.pokemon.pokedex.data.datasource.remote.CatalogRemoteDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.RetrofitCatalogRemoteDataSource
 import com.github.pokemon.pokedex.data.repository.DefaultCatalogRepository
 import com.github.pokemon.pokedex.data.repository.LocalSyncCatalogRepository
@@ -19,10 +19,10 @@ import org.koin.dsl.module
 
 val syncCatalogModule = module {
     //CacheDatasource
-    singleOf(::RoomCatalogCacheDataSource) { bind<PokemonCatalogCacheDataSource>() }
+    singleOf(::RoomCatalogCacheDataSource) { bind<CatalogCacheDataSource>() }
 
     //RemoteDataSource
-    singleOf(::RetrofitCatalogRemoteDataSource) { bind<PokemonCatalogRemoteDataSource>() }
+    singleOf(::RetrofitCatalogRemoteDataSource) { bind<CatalogRemoteDataSource>() }
 
     //LocalDataSource
     singleOf(::PrefsSyncCatalogLocalDataSource) { bind<SyncCatalogLocalDataSource>() }

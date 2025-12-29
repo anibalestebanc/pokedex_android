@@ -3,9 +3,7 @@ package com.github.pokemon.pokedex.ui.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.pokemon.pokedex.R
-import com.github.pokemon.pokedex.domain.usecase.GetPokemonFullDetailUseCase
-import com.github.pokemon.pokedex.domain.usecase.ObserveIsFavoriteUseCase
-import com.github.pokemon.pokedex.domain.usecase.ToggleFavoriteUseCase
+import com.github.pokemon.pokedex.domain.usecase.DetailUseCases
 import com.github.pokemon.pokedex.utils.ErrorMapper
 import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.utils.StringProvider
@@ -16,12 +14,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 class DetailViewModel(
-    private val getFullDetailUseCase: GetPokemonFullDetailUseCase,
-    private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
-    private val observeIsFavoriteUseCase: ObserveIsFavoriteUseCase,
+    private val detailUseCases: DetailUseCases,
     private val loggerError: LoggerError,
     private val errorMapper: ErrorMapper,
     private val stringProvider: StringProvider,
@@ -36,9 +33,10 @@ class DetailViewModel(
     val uiEffect: SharedFlow<DetailUiEffect> = _uiEffect
 
 
-    fun observeIsFavorite(id: String): Flow<Boolean> = observeIsFavoriteUseCase(id.toInt())
+    fun observeIsFavorite(id: String): Flow<Boolean> = detailUseCases.observeIsFavoriteUseCase(id.toInt())
+        .distinctUntilChanged()
         .catch { error ->
-            loggerError.logError("Error to get observe is favorite with id: $id", Exception(error))
+            loggerError("Error to get observe is favorite with id: $id", Exception(error))
         }
 
     fun onAction(action: DetailAction) = viewModelScope.launch {
@@ -58,20 +56,20 @@ class DetailViewModel(
             return@launch
         }
         _uiState.value = DetailUiState(isLoading = true)
-        getFullDetailUseCase(idOrName.toInt())
+        detailUseCases.getFullDetailUseCase(id)
             .onSuccess { detail ->
                 _uiState.value = DetailUiState(data = detail)
             }.onFailure { error ->
-                loggerError.logError("Error to get pokemon detail with id $idOrName", Exception(error))
-                _uiState.value = DetailUiState(errorMessage = errorMapper.toMessage(error))
+                loggerError("Error to get pokemon detail with id $idOrName", error)
+                _uiState.value = DetailUiState(errorMessage = errorMapper(error))
             }
     }
 
     private fun onToggleFavorite(pokemonId: String) = viewModelScope.launch {
         val id = pokemonId.toIntOrNull() ?: return@launch
-        toggleFavoriteUseCase(id)
+        detailUseCases.toggleFavoriteUseCase(id)
             .onFailure { error ->
-                loggerError.logError("Error to toggle favorite with id $pokemonId", Exception(error))
+                loggerError("Error to toggle favorite with id $pokemonId", error)
             }
     }
 

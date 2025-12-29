@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.github.pokemon.pokedex.domain.model.PokemonCatalog
-import com.github.pokemon.pokedex.domain.repository.PokemonDetailRepository
-import com.github.pokemon.pokedex.domain.usecase.SearchPokemonUseCase
+import com.github.pokemon.pokedex.domain.usecase.SearchListUseCases
 import com.github.pokemon.pokedex.utils.ErrorMapper
 import com.github.pokemon.pokedex.utils.LoggerError
+import com.github.pokemon.pokedex.utils.emptyString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -26,8 +26,7 @@ import kotlinx.coroutines.flow.update
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class SearchListViewModel(
-    private val searchPokemonUseCase: SearchPokemonUseCase,
-    private val pokemonDetailRepository: PokemonDetailRepository,
+    private val searchListUseCases: SearchListUseCases,
     private val loggerError: LoggerError,
     private val errorMapper: ErrorMapper
 ) : ViewModel() {
@@ -35,7 +34,7 @@ class SearchListViewModel(
     private val _uiState = MutableStateFlow(SearchListUiState())
     val uiState: StateFlow<SearchListUiState> = _uiState
 
-    private val queryFlow = MutableStateFlow("")
+    private val queryFlow = MutableStateFlow(emptyString())
     private val detailFlows = mutableMapOf<Int, StateFlow<DetailItemUiState>>()
 
     val pagingFlow: Flow<PagingData<PokemonCatalog>> =
@@ -43,18 +42,18 @@ class SearchListViewModel(
             .debounce(1_000)
             .distinctUntilChanged()
             .flatMapLatest { q ->
-                searchPokemonUseCase(q.ifBlank { null })
+                searchListUseCases.searchUseCase(q.ifBlank { null })
             }.cachedIn(viewModelScope)
 
     fun observeDetail(id: Int): StateFlow<DetailItemUiState> = detailFlows.getOrPut(id) {
-        pokemonDetailRepository.observePokemonDetail(id)
+        searchListUseCases.observeDetailUseCase(id)
             .map { detail ->
                 DetailItemUiState(detail = detail, isLoading = false, error = null)
             }.onStart {
                 emit(DetailItemUiState(isLoading = true))
             }.catch { error ->
-                loggerError.logError("Error to get pokemon detail with id $id", Exception(error))
-                emit(DetailItemUiState(isLoading = false, error = errorMapper.toMessage(error)))
+                loggerError("Error to get pokemon detail with id $id", error)
+                emit(DetailItemUiState(isLoading = false, error = errorMapper(error)))
             }
             .stateIn(
                 viewModelScope,

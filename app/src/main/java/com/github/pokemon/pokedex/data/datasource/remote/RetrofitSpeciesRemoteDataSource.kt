@@ -4,11 +4,9 @@ import com.github.pokemon.pokedex.core.network.safeApiCall
 import com.github.pokemon.pokedex.data.datasource.remote.api.PokemonApi
 import com.github.pokemon.pokedex.data.datasource.remote.dto.PokemonSpeciesDto
 
-class RetrofitPokemonSpeciesRemoteDataSource(
-    private val apiV2: PokemonApi
-) : PokemonSpeciesRemoteDataSource {
+class RetrofitSpeciesRemoteDataSource(private val pokeApi: PokemonApi) : SpeciesRemoteDataSource {
 
     override suspend fun getSpecies(idOrName: String): PokemonSpeciesDto =
-        safeApiCall { apiV2.getSpecies(idOrName) }
+        safeApiCall { pokeApi.getSpecies(idOrName) }
 
 }
