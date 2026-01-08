@@ -30,7 +30,7 @@ class SyncCatalogWorker(
                 return Result.success(workDataOf("synced" to true))
             },
             onFailure = { error ->
-                loggerError.logError(message = "Error sync pokemon catalog", error = WorkException(cause = error.cause))
+                loggerError(message = "Error sync pokemon catalog", error = WorkException(cause = error.cause))
                 val isTransient = error is IOException || error is HttpException
                 if (isTransient) Result.retry() else Result.failure()
             },

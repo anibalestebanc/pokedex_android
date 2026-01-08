@@ -40,7 +40,6 @@ class OfflineFirstPokemonDetailRepositoryTest {
     @MockK lateinit var cacheDataSource: DetailCacheDataSource
     @MockK lateinit var pokeTimeUtil: PokeTimeUtil
     @MockK lateinit var refreshDue: RefreshDueUtil
-
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var repository: OfflineFirstDetailRepository
 

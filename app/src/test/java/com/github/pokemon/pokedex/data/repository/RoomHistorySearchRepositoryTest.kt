@@ -1,20 +1,15 @@
 package com.github.pokemon.pokedex.data.repository
 
 import app.cash.turbine.test
-import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.core.database.entity.HistorySearchEntity
 import com.github.pokemon.pokedex.data.datasource.cache.HistorySearchCacheDataSource
-import com.github.pokemon.pokedex.domain.exception.PokeException.DatabaseException
 import com.github.pokemon.pokedex.utils.PokeTimeUtil
 import io.mockk.MockKAnnotations
-import io.mockk.Runs
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.just
-import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -34,8 +29,6 @@ class RoomHistorySearchRepositoryTest {
     @MockK
     lateinit var cacheDataSource: HistorySearchCacheDataSource
     @MockK lateinit var pokeTimeUtil: PokeTimeUtil
-    @MockK(relaxed = true)
-    lateinit var logger: LoggerError
     private lateinit var repository: RoomHistorySearchRepository
     private val testDispatcher = StandardTestDispatcher()
 
@@ -46,7 +39,6 @@ class RoomHistorySearchRepositoryTest {
         repository = RoomHistorySearchRepository(
             historySearchCacheDataSource = cacheDataSource,
             pokeTimeUtil = pokeTimeUtil,
-            loggerError = logger,
             coroutineDispatcher = testDispatcher
         )
     }
@@ -97,7 +89,6 @@ class RoomHistorySearchRepositoryTest {
             )
         }
         coVerify(exactly = 0) { cacheDataSource.updateLastTimeSearch(any(), any()) }
-        verify(exactly = 0) { logger.logError(any<Exception>()) }
     }
 
     @Test
@@ -117,7 +108,6 @@ class RoomHistorySearchRepositoryTest {
             cacheDataSource.insertHistorySearch(match { it.query == normalized && it.timestamp == nowTime })
         }
         coVerify(exactly = 1) { cacheDataSource.updateLastTimeSearch(normalized, nowTime) }
-        verify(exactly = 0) { logger.logError(any<Exception>()) }
     }
 
     @Test
@@ -132,29 +122,6 @@ class RoomHistorySearchRepositoryTest {
 
         // then
         coVerify(exactly = 0) { cacheDataSource.insertHistorySearch(any()) }
-        coVerify(exactly = 0) { cacheDataSource.updateLastTimeSearch(any(), any()) }
-        verify(exactly = 0) { logger.logError(any<Exception>()) }
-    }
-
-    @Test
-    fun `should log error when save throws`() = runTest(testDispatcher) {
-        // given
-        val query = "Charmander"
-        every { pokeTimeUtil.now() } returns 1L
-        val expected = DatabaseException("Error to insert query")
-        coEvery { cacheDataSource.insertHistorySearch(any()) } throws expected
-        every { logger.logError(any<Exception>()) } just Runs
-
-        // when
-        repository.save(query)
-
-        // then
-        verify(exactly = 1) {
-            logger.logError(match<DatabaseException> {
-                it.message?.contains("Error saving search query: $query") == true &&
-                    it.cause === expected
-            })
-        }
         coVerify(exactly = 0) { cacheDataSource.updateLastTimeSearch(any(), any()) }
     }
 

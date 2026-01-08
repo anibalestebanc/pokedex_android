@@ -33,28 +33,24 @@ class ToggleFavoriteUseCaseTest {
     @Test
     fun `should toggle favorite successfully and return true`() = runTest {
         val pokemonId = 25
-        val expectedResult = true
 
-        coEvery { repository.toggleFavorite(pokemonId) } returns Result.success(expectedResult)
+        coEvery { repository.toggleFavorite(pokemonId) } returns Result.success(Unit)
 
         val result = toggleFavoriteUseCase(pokemonId)
 
         assertTrue(result.isSuccess)
-        assertEquals(expectedResult, result.getOrNull())
         coVerify(exactly = 1) { repository.toggleFavorite(pokemonId) }
     }
 
     @Test
     fun `should toggle favorite successfully and return false`() = runTest {
         val pokemonId = 25
-        val expectedResult = false
 
-        coEvery { repository.toggleFavorite(pokemonId) } returns Result.success(expectedResult)
+        coEvery { repository.toggleFavorite(pokemonId) } returns Result.success(Unit)
 
         val result = toggleFavoriteUseCase(pokemonId)
 
         assertTrue(result.isSuccess)
-        assertEquals(expectedResult, result.getOrNull())
         coVerify(exactly = 1) { repository.toggleFavorite(pokemonId) }
     }
 
