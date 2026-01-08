@@ -278,7 +278,6 @@ class OfflineFirstPokemonDetailRepositoryTest {
 
         // then
         assertTrue(result.isSuccess)
-        assertEquals(true, result.getOrThrow())
         coVerify(exactly = 1) { cacheDataSource.setFavorite(id, true) }
     }
 

@@ -1,6 +1,6 @@
 package com.github.pokemon.pokedex.domain.usecase
 
 data class SearchListUseCases(
-    val searchUseCase: SearchPokemonUseCase,
+    val searchPokemonPagedUseCase: SearchPokemonPagedUseCase,
     val observeDetailUseCase: ObserveDetailUseCase
 )

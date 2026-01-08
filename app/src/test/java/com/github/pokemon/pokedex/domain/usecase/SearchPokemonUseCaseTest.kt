@@ -7,7 +7,7 @@ import com.github.pokemon.pokedex.PikachuCatalog
 import com.github.pokemon.pokedex.SquirtleCatalog
 import com.github.pokemon.pokedex.domain.exception.PokeException.DatabaseException
 import com.github.pokemon.pokedex.domain.model.PokemonCatalog
-import com.github.pokemon.pokedex.domain.repository.SearchPokemonRepository
+import com.github.pokemon.pokedex.domain.repository.CatalogRepository
 import com.github.pokemon.pokedex.toListUsingDiffer
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
@@ -33,9 +33,9 @@ import kotlin.test.assertTrue
 class SearchPokemonUseCaseTest {
 
     @MockK
-    lateinit var repository: SearchPokemonRepository
+    lateinit var repository: CatalogRepository
 
-    private lateinit var searchPokemonUseCase: SearchPokemonUseCase
+    private lateinit var searchPokemonPagedUseCase: SearchPokemonPagedUseCase
 
     private val testDispatcher = StandardTestDispatcher()
 
@@ -43,7 +43,7 @@ class SearchPokemonUseCaseTest {
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
         Dispatchers.setMain(testDispatcher)
-        searchPokemonUseCase = SearchPokemonUseCase(repository)
+        searchPokemonPagedUseCase = SearchPokemonPagedUseCase(repository)
     }
 
     @AfterEach
@@ -57,10 +57,10 @@ class SearchPokemonUseCaseTest {
         // given
         val query = "pika"
         val items = listOf(PikachuCatalog, SquirtleCatalog)
-        every { repository.searchPaged(query) } returns flowOf(PagingData.from(items))
+        every { repository.searchPokemonPaged(query) } returns flowOf(PagingData.from(items))
 
         // when
-        val flow: Flow<PagingData<PokemonCatalog>> = searchPokemonUseCase(query)
+        val flow: Flow<PagingData<PokemonCatalog>> = searchPokemonPagedUseCase(query)
 
         // then
         flow.test {
@@ -74,10 +74,10 @@ class SearchPokemonUseCaseTest {
     @Test
     fun `should emit empty paging data when repository returns empty`() = runTest(testDispatcher) {
         // given
-        every { repository.searchPaged(null) } returns flowOf(PagingData.from(emptyList()))
+        every { repository.searchPokemonPaged(null) } returns flowOf(PagingData.from(emptyList()))
 
         // when
-        val flow = searchPokemonUseCase(null)
+        val flow = searchPokemonPagedUseCase(null)
 
         // then
         flow.test {
@@ -93,12 +93,12 @@ class SearchPokemonUseCaseTest {
         // given
         val query = "char"
         val expected = DatabaseException("Error to search pokemon")
-        every { repository.searchPaged(query) } returns flow {
+        every { repository.searchPokemonPaged(query) } returns flow {
             throw expected
         }
 
         // when
-        val flow = searchPokemonUseCase(query)
+        val flow = searchPokemonPagedUseCase(query)
 
         // then
         flow.test {
@@ -110,12 +110,13 @@ class SearchPokemonUseCaseTest {
     @Test
     fun `should reflect paged updates when repository emits multiple paging snapshots`() = runTest(testDispatcher) {
         // given
+        val query = "char"
         val snapshot1 = PagingData.from(listOf(BulbasaurCatalog))
         val snapshot2 = PagingData.from(listOf(BulbasaurCatalog, PikachuCatalog))
-        every { repository.searchPaged("") } returns flowOf(snapshot1, snapshot2)
+        every { repository.searchPokemonPaged("query") } returns flowOf(snapshot1, snapshot2)
 
         // when
-        val flow = searchPokemonUseCase("")
+        val flow = searchPokemonPagedUseCase("query")
 
         // then
         flow.test {
@@ -135,10 +136,10 @@ class SearchPokemonUseCaseTest {
     fun `should call repository with the exact query`() = runTest(testDispatcher) {
         // given
         val query = "squirt"
-        every { repository.searchPaged(query) } returns flowOf(PagingData.from(emptyList()))
+        every { repository.searchPokemonPaged(query) } returns flowOf(PagingData.from(emptyList()))
 
         // when
-        val flow = searchPokemonUseCase(query)
+        val flow = searchPokemonPagedUseCase(query)
 
         // then
         flow.test {

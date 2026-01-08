@@ -41,8 +41,8 @@ class SearchListViewModel(
         queryFlow
             .debounce(1_000)
             .distinctUntilChanged()
-            .flatMapLatest { q ->
-                searchListUseCases.searchUseCase(q.ifBlank { null })
+            .flatMapLatest { query ->
+                searchListUseCases.searchPokemonPagedUseCase(query)
             }.cachedIn(viewModelScope)
 
     fun observeDetail(id: Int): StateFlow<DetailItemUiState> = detailFlows.getOrPut(id) {

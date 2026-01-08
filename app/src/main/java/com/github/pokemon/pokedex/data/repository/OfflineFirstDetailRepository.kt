@@ -12,6 +12,7 @@ import com.github.pokemon.pokedex.utils.RefreshDueUtil
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
@@ -31,11 +32,12 @@ class OfflineFirstDetailRepository(
                 if (cacheDataSource.getDetail(id) == null) {
                     getPokemonDetail(id)
                 }
-            }
+            }.flowOn(coroutineDispatcher)
 
     override fun observeFavorites(): Flow<List<PokemonDetail>> =
         cacheDataSource.observeFavorites()
             .map { entities -> entities.map { it.toDomain() } }
+            .flowOn(coroutineDispatcher)
 
     override fun observeIsFavorite(id: Int): Flow<Boolean> = cacheDataSource.observeIsFavorite(id)
 

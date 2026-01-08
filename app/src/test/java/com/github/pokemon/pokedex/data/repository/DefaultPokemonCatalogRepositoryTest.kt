@@ -3,18 +3,17 @@ package com.github.pokemon.pokedex.data.repository
 import com.github.pokemon.pokedex.BulbasaurDto
 import com.github.pokemon.pokedex.PikachuDto
 import com.github.pokemon.pokedex.SquirtleDto
-import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.data.datasource.cache.CatalogCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.CatalogRemoteDataSource
+import com.github.pokemon.pokedex.data.mapper.toEntity
+import com.github.pokemon.pokedex.domain.exception.PokeException.DatabaseException
+import com.github.pokemon.pokedex.domain.exception.PokeException.NetworkException
 import io.mockk.MockKAnnotations
-import io.mockk.Runs
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.confirmVerified
-import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.just
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
@@ -22,17 +21,12 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import com.github.pokemon.pokedex.data.mapper.toEntity
-import com.github.pokemon.pokedex.domain.exception.PokeException.DatabaseException
-import com.github.pokemon.pokedex.domain.exception.PokeException.NetworkException
 
 class DefaultPokemonCatalogRepositoryTest {
     @MockK
     lateinit var remoteDataSource: CatalogRemoteDataSource
     @MockK
     lateinit var cacheDataSource: CatalogCacheDataSource
-    @MockK
-    lateinit var loggerError: LoggerError
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var repository: DefaultCatalogRepository
 
@@ -58,7 +52,6 @@ class DefaultPokemonCatalogRepositoryTest {
         val expectedEntities = dtos.map { it.toEntity() }
         coEvery { remoteDataSource.fetchFullCatalog() } returns dtos
         coEvery { cacheDataSource.clearAndInsertAllCatalog(any()) } returns Unit
-        every { loggerError(any(), any()) } just Runs
         // when
         val result = repository.syncCatalog()
 
