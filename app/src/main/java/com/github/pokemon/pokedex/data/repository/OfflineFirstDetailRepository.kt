@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 
 class OfflineFirstDetailRepository(
@@ -26,7 +27,11 @@ class OfflineFirstDetailRepository(
     override fun observePokemonDetail(id: Int): Flow<PokemonDetail?> =
         cacheDataSource.observeDetail(id)
             .map { entity -> entity?.toDomain() }
-
+            .onStart {
+                if (cacheDataSource.getDetail(id) == null) {
+                    getPokemonDetail(id)
+                }
+            }
 
     override fun observeFavorites(): Flow<List<PokemonDetail>> =
         cacheDataSource.observeFavorites()

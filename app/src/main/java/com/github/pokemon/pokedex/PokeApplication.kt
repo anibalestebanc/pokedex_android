@@ -12,6 +12,7 @@ import com.github.pokemon.pokedex.di.startupModule
 import com.github.pokemon.pokedex.di.syncCatalogModule
 import com.github.pokemon.pokedex.di.uiModule
 import com.github.pokemon.pokedex.startup.AppInitializer
+import com.github.pokemon.pokedex.startup.AsyncAppInitializer
 import com.github.pokemon.pokedex.startup.StrictModeInitializer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -53,7 +54,7 @@ class PokeApplication : Application(), Configuration.Provider  {
             )
         }
 
-        val asyncInitializers : List<AppInitializer> = getKoin().getAll()
+        val asyncInitializers : List<AsyncAppInitializer> = getKoin().getAll()
         CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
             asyncInitializers.forEach { initializer ->
                 initializer()
