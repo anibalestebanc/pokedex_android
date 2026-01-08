@@ -5,6 +5,6 @@ import com.github.pokemon.pokedex.core.database.entity.PokemonCatalogEntity
 
 interface CatalogCacheDataSource {
     suspend fun clearAndInsertAllCatalog(items: List<PokemonCatalogEntity>)
-    fun searchPokemonPaged(): PagingSource<Int, PokemonCatalogEntity>
-    fun searchPokemonByNamePaged(query: String): PagingSource<Int, PokemonCatalogEntity>
+    fun searchAllPaged(): PagingSource<Int, PokemonCatalogEntity>
+    fun searchByNamePaged(query: String): PagingSource<Int, PokemonCatalogEntity>
 }

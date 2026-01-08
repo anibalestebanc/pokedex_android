@@ -16,10 +16,10 @@ class RoomCatalogCacheDataSource(private val database: PokemonDatabase) : Catalo
         }
     }
 
-    override fun searchPokemonPaged(): PagingSource<Int, PokemonCatalogEntity> =
+    override fun searchAllPaged(): PagingSource<Int, PokemonCatalogEntity> =
         catalogDao.pagingSourceAll()
 
-    override fun searchPokemonByNamePaged(query: String): PagingSource<Int, PokemonCatalogEntity> =
+    override fun searchByNamePaged(query: String): PagingSource<Int, PokemonCatalogEntity> =
         catalogDao.pagingSourceByQuery(query)
 
 }

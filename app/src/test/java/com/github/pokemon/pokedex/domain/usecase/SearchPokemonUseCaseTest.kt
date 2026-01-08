@@ -7,6 +7,7 @@ import com.github.pokemon.pokedex.PikachuCatalog
 import com.github.pokemon.pokedex.SquirtleCatalog
 import com.github.pokemon.pokedex.domain.exception.PokeException.DatabaseException
 import com.github.pokemon.pokedex.domain.model.PokemonCatalog
+import com.github.pokemon.pokedex.domain.model.SearchQuery
 import com.github.pokemon.pokedex.domain.repository.CatalogRepository
 import com.github.pokemon.pokedex.toListUsingDiffer
 import io.mockk.MockKAnnotations
@@ -56,8 +57,9 @@ class SearchPokemonUseCaseTest {
     fun `should delegate to repository and emit paging data when query is provided`() = runTest(testDispatcher) {
         // given
         val query = "pika"
+        val searchQuery = SearchQuery.ByName(query)
         val items = listOf(PikachuCatalog, SquirtleCatalog)
-        every { repository.searchPokemonPaged(query) } returns flowOf(PagingData.from(items))
+        every { repository.searchPokemonPaged(searchQuery) } returns flowOf(PagingData.from(items))
 
         // when
         val flow: Flow<PagingData<PokemonCatalog>> = searchPokemonPagedUseCase(query)
@@ -74,10 +76,12 @@ class SearchPokemonUseCaseTest {
     @Test
     fun `should emit empty paging data when repository returns empty`() = runTest(testDispatcher) {
         // given
-        every { repository.searchPokemonPaged(null) } returns flowOf(PagingData.from(emptyList()))
+        val query = " "
+        val searchQuery = SearchQuery.All
+        every { repository.searchPokemonPaged(searchQuery) } returns flowOf(PagingData.from(emptyList()))
 
         // when
-        val flow = searchPokemonPagedUseCase(null)
+        val flow = searchPokemonPagedUseCase(query)
 
         // then
         flow.test {
@@ -92,8 +96,9 @@ class SearchPokemonUseCaseTest {
     fun `should propagate error when repository throws`() = runTest(testDispatcher) {
         // given
         val query = "char"
+        val searchQuery = SearchQuery.ByName(query)
         val expected = DatabaseException("Error to search pokemon")
-        every { repository.searchPokemonPaged(query) } returns flow {
+        every { repository.searchPokemonPaged(searchQuery) } returns flow {
             throw expected
         }
 
@@ -111,12 +116,13 @@ class SearchPokemonUseCaseTest {
     fun `should reflect paged updates when repository emits multiple paging snapshots`() = runTest(testDispatcher) {
         // given
         val query = "char"
+        val searchQuery = SearchQuery.ByName(query)
         val snapshot1 = PagingData.from(listOf(BulbasaurCatalog))
         val snapshot2 = PagingData.from(listOf(BulbasaurCatalog, PikachuCatalog))
-        every { repository.searchPokemonPaged("query") } returns flowOf(snapshot1, snapshot2)
+        every { repository.searchPokemonPaged(searchQuery) } returns flowOf(snapshot1, snapshot2)
 
         // when
-        val flow = searchPokemonPagedUseCase("query")
+        val flow = searchPokemonPagedUseCase(query)
 
         // then
         flow.test {
@@ -136,7 +142,8 @@ class SearchPokemonUseCaseTest {
     fun `should call repository with the exact query`() = runTest(testDispatcher) {
         // given
         val query = "squirt"
-        every { repository.searchPokemonPaged(query) } returns flowOf(PagingData.from(emptyList()))
+        val searchQuery = SearchQuery.ByName(query)
+        every { repository.searchPokemonPaged(searchQuery) } returns flowOf(PagingData.from(emptyList()))
 
         // when
         val flow = searchPokemonPagedUseCase(query)

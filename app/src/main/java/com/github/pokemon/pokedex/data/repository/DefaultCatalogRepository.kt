@@ -9,6 +9,7 @@ import com.github.pokemon.pokedex.data.mapper.toEntity
 import com.github.pokemon.pokedex.data.datasource.remote.CatalogRemoteDataSource
 import com.github.pokemon.pokedex.data.mapper.toDomain
 import com.github.pokemon.pokedex.domain.model.PokemonCatalog
+import com.github.pokemon.pokedex.domain.model.SearchQuery
 import com.github.pokemon.pokedex.domain.repository.CatalogRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +34,7 @@ class DefaultCatalogRepository(
             }
         }
 
-    override fun searchPokemonPaged(query: String?): Flow<PagingData<PokemonCatalog>> {
+    override fun searchPokemonPaged(searchQuery: SearchQuery): Flow<PagingData<PokemonCatalog>> {
         return Pager(
             config = PagingConfig(
                 pageSize = DEFAULT_PAGE_SIZE,
@@ -41,8 +42,10 @@ class DefaultCatalogRepository(
                 enablePlaceholders = false,
             ),
             pagingSourceFactory = {
-                if (query == null) cacheDataSource.searchPokemonPaged()
-                else cacheDataSource.searchPokemonByNamePaged(query)
+                when (searchQuery) {
+                    SearchQuery.All -> cacheDataSource.searchAllPaged()
+                    is SearchQuery.ByName -> cacheDataSource.searchByNamePaged(searchQuery.query)
+                }
             },
         ).flow.map { pagingData ->
             pagingData.map { entity -> entity.toDomain() }
