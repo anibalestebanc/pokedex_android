@@ -34,9 +34,10 @@ class SearchListViewModel(
     private val _uiState = MutableStateFlow(SearchListUiState())
     val uiState: StateFlow<SearchListUiState> = _uiState
 
-    private val queryFlow = MutableStateFlow(emptyString())
+    private val queryFlow = MutableStateFlow(emptyString)
     private val detailFlows = mutableMapOf<Int, StateFlow<DetailItemUiState>>()
 
+    @Suppress("MagicNumber")
     val pagingFlow: Flow<PagingData<PokemonCatalog>> =
         queryFlow
             .debounce(1_000)
@@ -45,6 +46,7 @@ class SearchListViewModel(
                 searchListUseCases.searchPokemonPagedUseCase(query)
             }.cachedIn(viewModelScope)
 
+    @Suppress("MagicNumber")
     fun observeDetail(id: Int): StateFlow<DetailItemUiState> = detailFlows.getOrPut(id) {
         searchListUseCases.observeDetailUseCase(id)
             .map { detail ->

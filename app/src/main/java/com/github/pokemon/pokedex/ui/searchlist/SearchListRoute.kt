@@ -132,7 +132,6 @@ fun SearchListScreen(
                         initialValue = DetailItemUiState(isLoading = true),
                     )
                     SearchListCard(
-                        index = index + 1,
                         number = detailUiState.detail?.id,
                         name = p.displayName,
                         types = detailUiState.detail?.types ?: emptyList(),

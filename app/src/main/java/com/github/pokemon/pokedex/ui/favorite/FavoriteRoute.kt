@@ -28,7 +28,6 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FavoriteRoute(
-    onBackClick: () -> Unit,
     onDetailClick: (String) -> Unit,
     viewModel: FavoriteViewModel = koinViewModel(),
 ) {
@@ -94,7 +93,6 @@ fun FavoriteScreen(
                 ) { index ->
                     val pokemon = uiState.favorites[index]
                     SearchListCard(
-                        index = index + 1,
                         number = pokemon.id,
                         name = pokemon.name,
                         types = pokemon.types,

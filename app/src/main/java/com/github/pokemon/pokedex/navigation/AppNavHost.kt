@@ -90,7 +90,6 @@ fun AppNavHost(
 
         composable<FavoriteScreen> {
             FavoriteRoute(
-                onBackClick = navController::popBackStack,
                 onDetailClick = { pokemonId ->
                     navController.navigateToDetail(pokemonId)
                 },

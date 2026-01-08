@@ -58,7 +58,6 @@ import com.github.pokemon.pokedex.ui.components.utils.PokeBackgroundUtil.primary
 
 @Composable
 fun SearchListCard(
-    index: Int,
     number: Int?,
     name: String,
     types: List<String>,
@@ -254,7 +253,6 @@ fun Modifier.shimmer(): Modifier = composed {
 fun SearchListCardPreview() {
     PokeAppTheme {
         SearchListCard(
-            index = 1,
             number = 1,
             name = "Pikachu",
             types = listOf("Electric", "grass"),

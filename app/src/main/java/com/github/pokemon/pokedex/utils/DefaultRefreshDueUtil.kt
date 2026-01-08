@@ -2,6 +2,7 @@ package com.github.pokemon.pokedex.utils
 
 import java.util.concurrent.TimeUnit
 
+@Suppress("MagicNumber")
 val SEVEN_DAY_MILLIS: Long = TimeUnit.DAYS.toMillis(7)
 
 interface RefreshDueUtil {

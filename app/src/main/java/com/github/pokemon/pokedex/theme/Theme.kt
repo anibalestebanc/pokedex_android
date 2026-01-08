@@ -8,10 +8,10 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
+
+@Suppress ("UnusedPrivateProperty")
 val LightColorScheme = lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,
@@ -49,7 +49,7 @@ val LightColorScheme = lightColorScheme(
     surfaceContainerHigh = surfaceContainerHighLight,
     surfaceContainerHighest = surfaceContainerHighestLight,
 )
-
+@Suppress ("UnusedPrivateProperty")
 val DarkColorScheme = darkColorScheme(
     primary = primaryDark,
     onPrimary = onPrimaryDark,
@@ -87,7 +87,7 @@ val DarkColorScheme = darkColorScheme(
     surfaceContainerHigh = surfaceContainerHighDark,
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
-
+@Suppress ("UnusedPrivateProperty")
 private val mediumContrastLightColorScheme = lightColorScheme(
     primary = primaryLightMediumContrast,
     onPrimary = onPrimaryLightMediumContrast,
@@ -125,7 +125,7 @@ private val mediumContrastLightColorScheme = lightColorScheme(
     surfaceContainerHigh = surfaceContainerHighLightMediumContrast,
     surfaceContainerHighest = surfaceContainerHighestLightMediumContrast,
 )
-
+@Suppress ("UnusedPrivateProperty")
 val HighContrastLightColorScheme = lightColorScheme(
     primary = primaryLightHighContrast,
     onPrimary = onPrimaryLightHighContrast,
@@ -164,6 +164,7 @@ val HighContrastLightColorScheme = lightColorScheme(
     surfaceContainerHighest = surfaceContainerHighestLightHighContrast,
 )
 
+@Suppress ("UnusedPrivateProperty")
 private val mediumContrastDarkColorScheme = darkColorScheme(
     primary = primaryDarkMediumContrast,
     onPrimary = onPrimaryDarkMediumContrast,

@@ -15,13 +15,13 @@ sealed interface Screen {
 
     @Serializable
     data class SearchListScreen(
-        val query: String = emptyString(),
+        val query: String = emptyString,
     ) : Screen
 
     @Serializable
     data class SearchScreen(
         val navigateToSearch: Boolean = false,
-        val query: String = emptyString(),
+        val query: String = emptyString,
     ) : Screen
 
     @Serializable

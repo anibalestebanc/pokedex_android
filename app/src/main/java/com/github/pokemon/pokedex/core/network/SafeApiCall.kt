@@ -8,7 +8,7 @@ import kotlinx.coroutines.CancellationException
 import retrofit2.HttpException
 import java.io.IOException
 
-@Suppress("TooGenericExceptionCaught")
+@Suppress("TooGenericExceptionCaught", "MagicNumber", "ThrowsCount")
 suspend inline fun <T> safeApiCall(crossinline block: suspend () -> T): T {
     return try {
         block()

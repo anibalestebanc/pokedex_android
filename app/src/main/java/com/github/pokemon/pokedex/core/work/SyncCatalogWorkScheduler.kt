@@ -23,7 +23,7 @@ class SyncCatalogWorkScheduler(private val context: Context) {
 
     fun enqueueImmediateSync() {
         val request = OneTimeWorkRequestBuilder<SyncCatalogWorker>()
-            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, BACKOFF_DELAY, TimeUnit.SECONDS)
             .setConstraints(constraints)
             .build()
 
@@ -35,9 +35,9 @@ class SyncCatalogWorkScheduler(private val context: Context) {
     }
 
     fun enqueueDailySync() {
-        val request = PeriodicWorkRequestBuilder<SyncCatalogWorker>(24, TimeUnit.HOURS)
+        val request = PeriodicWorkRequestBuilder<SyncCatalogWorker>(INTERVAL, TimeUnit.HOURS)
             .setConstraints(constraints)
-            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, BACKOFF_DELAY, TimeUnit.SECONDS)
             .addTag(UNIQUE_DAILY_SYNC)
             .build()
 
@@ -49,6 +49,8 @@ class SyncCatalogWorkScheduler(private val context: Context) {
     }
 
     private companion object Companion {
+        const val BACKOFF_DELAY = 30L
+        const val INTERVAL = 24L
         const val UNIQUE_IMMEDIATE_SYNC = "catalog_sync_immediate"
         const val UNIQUE_DAILY_SYNC = "catalog_sync_daily"
     }

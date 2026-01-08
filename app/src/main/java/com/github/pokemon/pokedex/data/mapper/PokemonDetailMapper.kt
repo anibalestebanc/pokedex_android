@@ -9,12 +9,16 @@ import com.github.pokemon.pokedex.domain.model.PokemonSprites
 import com.github.pokemon.pokedex.domain.model.PokemonStat
 import com.github.pokemon.pokedex.utils.PokeTimeUtil
 
+private const val ZERO_VALUE = 0
+private const val MAX_PERCENTAGE = 10.0
+private const val HUNDRED_LENGTH = 3
+
 fun DetailDto.toDomain(pokeTimeUtil: PokeTimeUtil): PokemonDetail {
     val typesList = types.sortedBy { it.slot ?: Int.MAX_VALUE }.mapNotNull { it.type?.name }
     val abilitiesList = abilities.sortedBy { it.slot ?: Int.MAX_VALUE }.mapNotNull { it.ability?.name }
     val statsList = stats.mapNotNull { s ->
         val n = s.stat?.name ?: return@mapNotNull null
-        PokemonStat(name = n, value = s.baseStat ?: 0)
+        PokemonStat(name = n, value = s.baseStat ?: ZERO_VALUE)
     }
 
     val spritesDomain = PokemonSprites(
@@ -30,8 +34,8 @@ fun DetailDto.toDomain(pokeTimeUtil: PokeTimeUtil): PokemonDetail {
         imageUrl = spritesDomain.defaultImageUrl,
         sprites = spritesDomain,
         types = typesList,
-        height = height ?: 0,
-        weight = weight ?: 0,
+        height = height ?: ZERO_VALUE,
+        weight = weight ?: ZERO_VALUE,
         abilities = abilitiesList,
         stats = statsList,
         isFavorite = false,
@@ -69,9 +73,9 @@ fun PokemonDetailEntity.toDomain(): PokemonDetail = PokemonDetail(
 )
 
 fun PokemonDetail.combineWith(species: PokemonSpecies): PokemonFullDetail {
-    val number = "#${id.toString().padStart(3, '0')}"
-    val heightM = height / 10.0
-    val weightKg = weight / 10.0
+    val number = "#${id.toString().padStart(HUNDRED_LENGTH, '0')}"
+    val heightM = height / MAX_PERCENTAGE
+    val weightKg = weight / MAX_PERCENTAGE
 
     return PokemonFullDetail(
         id = id,

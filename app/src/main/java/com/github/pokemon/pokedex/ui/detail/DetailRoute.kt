@@ -52,7 +52,7 @@ fun DetailRoute(
         viewModel.onAction(DetailAction.OnStart(pokemonId))
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(viewModel) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.uiEffect.collect { effect ->
                 when (effect) {
@@ -98,7 +98,6 @@ fun DetailScreen(
         uiState.data != null -> PokemonDetailContent(
             data = uiState.data,
             isFavorite = isFavorite,
-            onRefresh = { onAction(DetailAction.OnRetryDetailClick(pokemonId)) },
             onBackClick = onBackClick,
             onToggleFavorite = { onAction(DetailAction.OnToggleFavorite(pokemonId)) },
             onShareClick = { onAction(DetailAction.OnSharePokemon(it)) }
@@ -110,7 +109,6 @@ fun DetailScreen(
 fun PokemonDetailContent(
     data: PokemonFullDetail,
     isFavorite: Boolean,
-    onRefresh: () -> Unit,
     onBackClick: () -> Unit,
     onToggleFavorite : () -> Unit,
     onShareClick : (String) -> Unit,

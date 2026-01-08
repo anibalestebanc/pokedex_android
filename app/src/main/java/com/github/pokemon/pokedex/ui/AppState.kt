@@ -38,6 +38,7 @@ class AppState(
 ){
     val topDestinations : List<BottomBarItem> = TopBottomBarDestinations
 
+    @Suppress("MagicNumber")
     val isOffline = networkMonitor.isOnline
         .map(Boolean::not)
         .stateIn(

@@ -20,11 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TopSnackbarBanner(
-    text: String,
-    showBanner: Boolean,
-    modifier: Modifier = Modifier
-) {
+fun TopSnackbarBanner(text: String, showBanner: Boolean) {
     AnimatedVisibility(visible = showBanner) {
         Surface(color = MaterialTheme.colorScheme.onBackground) {
             Row(

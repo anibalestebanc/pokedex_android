@@ -29,19 +29,23 @@ fun PokeApp(appState: AppState) {
     val colorScheme = if (darkTheme) HighContrastDarkColorScheme else HighContrastLightColorScheme
 
     val snackbarHostState = remember { SnackbarHostState() }
-    val isOffline by appState.isOffline.collectAsStateWithLifecycle()
 
-    val noConnectionMessage = stringResource(R.string.error_no_internet_title)
-    //TODO this need more testing to apply in production
-/*    LaunchedEffect(isOffline) {
-        if (isOffline) {
-            snackbarHostState.showSnackbar(
-                message = noConnectionMessage,
-                withDismissAction = true,
-                duration = SnackbarDuration.Short,
-            )
-        }
-    }*/
+    /*
+     //TODO this need more testing to apply in production
+     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+
+         val noConnectionMessage = stringResource(R.string.error_no_internet_title)
+
+         LaunchedEffect(isOffline) {
+             if (isOffline) {
+                 snackbarHostState.showSnackbar(
+                     message = noConnectionMessage,
+                     withDismissAction = true,
+                     duration = SnackbarDuration.Short,
+                 )
+             }
+         }
+         */
     MaterialTheme(colorScheme = colorScheme) {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.surface,
