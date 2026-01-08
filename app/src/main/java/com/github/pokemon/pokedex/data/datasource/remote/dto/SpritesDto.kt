@@ -4,23 +4,29 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 @Serializable
 data class SpritesDto(
-    val front_default: String? = null,
+    @SerialName("front_default")
+    val frontDefault: String? = null,
+    @SerialName("other")
     val other: OtherSpritesDto? = null
 )
 @Serializable
 data class OtherSpritesDto(
-    val dream_world: SimpleSpriteDto? = null,
+    @SerialName("dream_world")
+    val dreamWorld: SimpleSpriteDto? = null,
+    @SerialName("home")
     val home: HomeSpriteDto? = null,
     @SerialName("official-artwork")
-    val official_artwork: SimpleSpriteDto? = null
+    val officialArtwork: SimpleSpriteDto? = null
 )
 
 @Serializable
 data class SimpleSpriteDto(
-    val front_default: String? = null
+    @SerialName("front_default")
+    val frontDefault: String? = null
 )
 
 @Serializable
 data class HomeSpriteDto(
-    val front_default: String? = null
+    @SerialName("front_default")
+    val frontDefault: String? = null
 )

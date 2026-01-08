@@ -1,7 +1,7 @@
 package com.github.pokemon.pokedex
 
 import com.github.pokemon.pokedex.core.database.entity.PokemonDetailEntity
-import com.github.pokemon.pokedex.data.datasource.remote.dto.PokemonDetailDto
+import com.github.pokemon.pokedex.data.datasource.remote.dto.DetailDto
 import com.github.pokemon.pokedex.data.datasource.remote.dto.SpritesDto
 import com.github.pokemon.pokedex.domain.model.PokemonDetail
 import com.github.pokemon.pokedex.domain.model.PokemonSprites
@@ -120,7 +120,7 @@ val CharmanderDetailEntity = PokemonDetailEntity(
     lastUpdated = 0,
 )
 
-val PikachuDetailDto = PokemonDetailDto(
+val PikachuDetailDto = DetailDto(
     id = 1,
     name = "Pikachu",
     height = 10,
@@ -131,7 +131,7 @@ val PikachuDetailDto = PokemonDetailDto(
     sprites = SpritesDto()
 )
 
-val BulbasaurDetailDto = PokemonDetailDto(
+val BulbasaurDetailDto = DetailDto(
     id = 2,
     name = "Bulbasaur",
     height = 10,

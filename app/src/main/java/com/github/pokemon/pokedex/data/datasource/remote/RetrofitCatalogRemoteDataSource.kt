@@ -2,20 +2,20 @@ package com.github.pokemon.pokedex.data.datasource.remote
 
 import com.github.pokemon.pokedex.core.network.safeApiCall
 import com.github.pokemon.pokedex.data.datasource.remote.api.PokemonApi
-import com.github.pokemon.pokedex.data.datasource.remote.dto.PokemonCatalogDto
+import com.github.pokemon.pokedex.data.datasource.remote.dto.CatalogDto
 
 class RetrofitCatalogRemoteDataSource(
     private val pokeApi: PokemonApi,
 ) : CatalogRemoteDataSource {
 
-    override suspend fun fetchFullCatalog(): List<PokemonCatalogDto> =
+    override suspend fun fetchFullCatalog(): List<CatalogDto> =
         safeApiCall {
-            val all = mutableListOf<PokemonCatalogDto>()
+            val all = mutableListOf<CatalogDto>()
             val pageSize = PAGE_SIZE
             var offset = OFFSET
             var total = Int.MAX_VALUE
             while (offset < total) {
-                val page = pokeApi.getPokemonCatalog(limit = pageSize, offset = offset)
+                val page = pokeApi.getCatalog(limit = pageSize, offset = offset)
                 total = page.count
                 val mapped = page.results
                 all += mapped

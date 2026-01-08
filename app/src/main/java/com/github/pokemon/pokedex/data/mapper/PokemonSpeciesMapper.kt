@@ -1,32 +1,32 @@
 package com.github.pokemon.pokedex.data.mapper
 
 import com.github.pokemon.pokedex.core.database.entity.PokemonSpeciesEntity
-import com.github.pokemon.pokedex.data.datasource.remote.dto.PokemonSpeciesDto
+import com.github.pokemon.pokedex.data.datasource.remote.dto.SpeciesDto
 import com.github.pokemon.pokedex.domain.model.PokemonSpecies
 import com.github.pokemon.pokedex.utils.PokeTimeUtil
 
 private fun String.cleanFlavor(): String =
     this.replace("\n", " ").replace("\u000c", " ").replace("\\s+".toRegex(), " ").trim()
 
-fun PokemonSpeciesDto.toDomain(pokeTimeUtil: PokeTimeUtil, preferredLang: String = "en"): PokemonSpecies {
+fun SpeciesDto.toDomain(pokeTimeUtil: PokeTimeUtil, preferredLang: String = "en"): PokemonSpecies {
     val genus = genera.firstOrNull { it.language?.name == preferredLang }?.genus
         ?: genera.firstOrNull()?.genus
-    val flavor = flavor_text_entries.firstOrNull { it.language?.name == preferredLang }?.flavor_text
-        ?: flavor_text_entries.firstOrNull()?.flavor_text
+    val flavor = flavorTextEntries.firstOrNull { it.language?.name == preferredLang }?.flavorText
+        ?: flavorTextEntries.firstOrNull()?.flavorText
     return PokemonSpecies(
         id = id,
         name = name,
         genera = genus?.trim(),
         flavorText = flavor?.cleanFlavor(),
-        description = form_descriptions.firstOrNull()?.description?.cleanFlavor(),
+        description = formDescriptions.firstOrNull()?.description?.cleanFlavor(),
         color = color?.name,
         habitat = habitat?.name,
-        eggGroups = egg_groups.mapNotNull { it.name },
-        captureRate = capture_rate,
-        baseHappiness = base_happiness,
-        growthRate = growth_rate?.name,
-        isLegendary = is_legendary,
-        isMythical = is_mythical,
+        eggGroups = eggGroups.mapNotNull { it.name },
+        captureRate = captureRate,
+        baseHappiness = baseHappiness,
+        growthRate = growthRate?.name,
+        isLegendary = isLegendary,
+        isMythical = isMythical,
         lastUpdated = pokeTimeUtil.now()
     )
 }

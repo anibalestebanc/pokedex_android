@@ -1,6 +1,6 @@
 package com.github.pokemon.pokedex
 
-import com.github.pokemon.pokedex.data.datasource.remote.dto.PokemonCatalogDto
+import com.github.pokemon.pokedex.data.datasource.remote.dto.CatalogDto
 import com.github.pokemon.pokedex.domain.model.PokemonCatalog
 
 val PikachuCatalog = PokemonCatalog(
@@ -24,17 +24,17 @@ val SquirtleCatalog = PokemonCatalog(
     url = "url",
 )
 
-val PikachuDto = PokemonCatalogDto(
+val PikachuDto = CatalogDto(
     name = "Pikachu",
     url = "https://pokeapi.co/api/v2/pokemon/1/",
 )
 
-val BulbasaurDto = PokemonCatalogDto(
+val BulbasaurDto = CatalogDto(
     name = "Bulbasaur",
     url = "https://pokeapi.co/api/v2/pokemon/2/",
 )
 
-val SquirtleDto = PokemonCatalogDto(
+val SquirtleDto = CatalogDto(
     name = "Squirtle",
     url = "https://pokeapi.co/api/v2/pokemon/3/",
 )
