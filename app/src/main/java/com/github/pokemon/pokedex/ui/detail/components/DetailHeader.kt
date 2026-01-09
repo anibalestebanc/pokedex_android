@@ -182,7 +182,7 @@ fun DetailHeader(
                 .fillMaxWidth()
                 .height(16.dp)
                 .background(
-                    color = MaterialTheme.colorScheme.background,
+                    color = MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
                 ),
         )

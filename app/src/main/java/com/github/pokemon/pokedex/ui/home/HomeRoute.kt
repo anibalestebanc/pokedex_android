@@ -30,7 +30,7 @@ fun HomeRoute(
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(viewModel, onSearchClick) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.uiEffect.collect { effect ->
                 when (effect) {
