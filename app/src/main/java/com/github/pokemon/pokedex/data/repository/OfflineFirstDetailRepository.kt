@@ -13,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 
 class OfflineFirstDetailRepository(
@@ -27,11 +26,16 @@ class OfflineFirstDetailRepository(
     override fun observePokemonDetail(id: Int): Flow<PokemonDetail?> =
         cacheDataSource.observeDetail(id)
             .map { entity -> entity?.toDomain() }
-            .onStart {
-                if (cacheDataSource.getDetail(id) == null) {
-                    getPokemonDetail(id)
-                }
-            }.flowOn(ioDispatcher)
+            .flowOn(ioDispatcher)
+
+    override suspend fun refreshDetail(id: Int): Result<Unit> =
+        withContext(ioDispatcher) {
+            runCatching {
+                val remoteDetailDto = remoteDataSource.getDetail(id.toString())
+                val detail = remoteDetailDto.toDomain(pokeTimeUtil)
+                cacheDataSource.insertDetail(detail.toEntity())
+            }
+        }
 
     override suspend fun getPokemonDetail(id: Int): Result<PokemonDetail> =
         withContext(ioDispatcher) {
@@ -45,5 +49,14 @@ class OfflineFirstDetailRepository(
                 cacheDataSource.insertDetail(detail.toEntity())
                 detail
             }
+        }
+
+    /**
+     * This method provide SyncMetaStore by DetailItem
+     *
+     */
+    override suspend fun getLastUpdated(id: Int): Long =
+        withContext(ioDispatcher) {
+            cacheDataSource.getDetail(id)?.lastUpdated ?: 0L
         }
 }

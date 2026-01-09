@@ -50,7 +50,7 @@ class OfflineFirstSpeciesRepositoryTest {
             cacheDataSource = cacheDataSource,
             pokeTimeUtil = pokeTimeUtil,
             refreshDueUtil = refreshDue,
-            coroutineDispatcher = testDispatcher
+            ioDispatcher = testDispatcher
         )
     }
 
@@ -67,7 +67,7 @@ class OfflineFirstSpeciesRepositoryTest {
         every { refreshDue.isRefreshDue(pikachuEntity.lastUpdated) } returns false
 
         // when
-        val result = repository.getPokemonSpecies(id)
+        val result = repository.getSpecies(id)
 
         // then
         assertTrue(result.isSuccess)
@@ -90,7 +90,7 @@ class OfflineFirstSpeciesRepositoryTest {
         every { refreshDue.isRefreshDue(any()) } returns true
 
         // when
-        val result = repository.getPokemonSpecies(id)
+        val result = repository.getSpecies(id)
 
         // then
         val expected = pikachuDto.toDomain(pokeTimeUtil)
@@ -113,7 +113,7 @@ class OfflineFirstSpeciesRepositoryTest {
         coEvery { cacheDataSource.insertSpecie(any()) } returns Unit
 
         // when
-        val result = repository.getPokemonSpecies(id)
+        val result = repository.getSpecies(id)
 
         // then
         val expected = charmanderDto.toDomain(pokeTimeUtil)
@@ -133,7 +133,7 @@ class OfflineFirstSpeciesRepositoryTest {
         coEvery { cacheDataSource.getSpecieById(id) } throws expected
 
         // when
-        val result = repository.getPokemonSpecies(id)
+        val result = repository.getSpecies(id)
 
         // then
         assertTrue(result.isFailure)
@@ -152,7 +152,7 @@ class OfflineFirstSpeciesRepositoryTest {
         coEvery { remoteDataSource.getSpecies(id.toString()) } throws expected
 
         // when
-        val result = repository.getPokemonSpecies(id)
+        val result = repository.getSpecies(id)
 
         // then
         assertTrue(result.isFailure)

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.domain.repository.HistorySearchRepository
+import com.github.pokemon.pokedex.domain.usecase.SaveHistorySearchUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
+    private val saveHistorySearchUseCase: SaveHistorySearchUseCase,
     private val repository: HistorySearchRepository,
     private val loggerError: LoggerError,
 ) : ViewModel() {
@@ -35,7 +37,7 @@ class SearchViewModel(
     }
 
     private fun getSearchHistory() = viewModelScope.launch {
-        repository.getHistorySearch()
+        repository.observeHistorySearch()
             .distinctUntilChanged()
             .catch { error ->
                 loggerError("Error getting search history", error)
@@ -44,12 +46,6 @@ class SearchViewModel(
             .collect { history ->
                 _uiState.update { it.copy(searchHistory = history) }
             }
-    }
-
-    private fun saveSearchQuery(query: String) = viewModelScope.launch {
-        if (query.isNotBlank()) {
-            repository.save(query)
-        }
     }
 
     private fun onQueryChanged(query: String) {
@@ -66,7 +62,16 @@ class SearchViewModel(
         saveSearchQuery(query)
     }
 
+    private fun saveSearchQuery(query: String) = viewModelScope.launch {
+        saveHistorySearchUseCase(query)
+            .onFailure {
+                loggerError("Error saving search query", it)
+            }
+    }
+
     private fun deleteSearchHistory() = viewModelScope.launch {
-        repository.clearAll()
+        repository.clearAll().onFailure {
+            loggerError("Error deleting search history", it)
+        }
     }
 }

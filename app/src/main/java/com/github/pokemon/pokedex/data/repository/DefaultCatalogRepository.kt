@@ -21,11 +21,11 @@ import kotlinx.coroutines.withContext
 class DefaultCatalogRepository(
     private val remoteDataSource: CatalogRemoteDataSource,
     private val cacheDataSource: CatalogCacheDataSource,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : CatalogRepository {
 
     override suspend fun syncCatalog(): Result<Int> =
-        withContext(coroutineDispatcher) {
+        withContext(ioDispatcher) {
             runCatching {
                 val catalogListDto = remoteDataSource.fetchFullCatalog()
                 val catalog = catalogListDto.map { it.toEntity() }
@@ -49,7 +49,7 @@ class DefaultCatalogRepository(
             },
         ).flow.map { pagingData ->
             pagingData.map { entity -> entity.toDomain() }
-        }.flowOn(coroutineDispatcher)
+        }.flowOn(ioDispatcher)
     }
 
     private companion object {

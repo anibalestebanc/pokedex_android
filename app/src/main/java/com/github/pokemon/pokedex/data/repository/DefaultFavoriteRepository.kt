@@ -18,6 +18,7 @@ class DefaultFavoriteRepository(
 ) : FavoriteRepository {
     override fun observeIsFavorite(id: Int): Flow<Boolean> =
         cacheDataSource.observeIsFavorite(id)
+            .flowOn(ioDispatcher)
 
     override fun observeFavorites(): Flow<List<PokemonDetail>> =
         cacheDataSource.observeFavorites()

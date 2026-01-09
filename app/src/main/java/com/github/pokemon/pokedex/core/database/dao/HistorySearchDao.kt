@@ -19,6 +19,9 @@ interface HistorySearchDao {
     @Query("UPDATE history_search SET timestamp = :newTs WHERE query = :query")
     suspend fun updateTimestamp(query: String, newTs: Long)
 
+    @Query("SELECT * FROM history_search  WHERE query = :query LIMIT 1")
+    suspend fun getQuery(query: String): HistorySearchEntity?
+
     @Query("DELETE FROM history_search WHERE query = :query")
     suspend fun deleteByQuery(query: String)
 

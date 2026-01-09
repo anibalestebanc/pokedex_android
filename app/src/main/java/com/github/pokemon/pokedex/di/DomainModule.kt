@@ -3,8 +3,9 @@ package com.github.pokemon.pokedex.di
 import com.github.pokemon.pokedex.domain.usecase.DetailUseCases
 import com.github.pokemon.pokedex.domain.usecase.GetFavoritesUseCase
 import com.github.pokemon.pokedex.domain.usecase.GetPokemonFullDetailUseCase
-import com.github.pokemon.pokedex.domain.usecase.ObserveDetailUseCase
+import com.github.pokemon.pokedex.domain.usecase.ObserveAndRefreshDetailUseCase
 import com.github.pokemon.pokedex.domain.usecase.ObserveIsFavoriteUseCase
+import com.github.pokemon.pokedex.domain.usecase.SaveHistorySearchUseCase
 import com.github.pokemon.pokedex.domain.usecase.SearchListUseCases
 import com.github.pokemon.pokedex.domain.usecase.SearchPokemonPagedUseCase
 import com.github.pokemon.pokedex.domain.usecase.ToggleFavoriteUseCase
@@ -18,7 +19,10 @@ val domainModule = module {
     factoryOf(::GetFavoritesUseCase)
     factoryOf(::ObserveIsFavoriteUseCase)
     factoryOf(::ToggleFavoriteUseCase)
-    factoryOf(::ObserveDetailUseCase)
+    factoryOf(::ObserveAndRefreshDetailUseCase)
+    factoryOf(::SaveHistorySearchUseCase)
+
+    //Data class UseCases
     factoryOf(::DetailUseCases)
     factoryOf(::SearchListUseCases)
 }

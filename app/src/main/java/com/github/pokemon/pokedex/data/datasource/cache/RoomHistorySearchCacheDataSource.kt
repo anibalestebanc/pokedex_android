@@ -7,17 +7,19 @@ import kotlinx.coroutines.flow.Flow
 class RoomHistorySearchCacheDataSource(
     private val historySearchDao: HistorySearchDao,
 ) : HistorySearchCacheDataSource {
-    override fun getLastTimeSearch(limit: Int): Flow<List<HistorySearchEntity>> =
+    override fun observeHistorySearch(limit: Int): Flow<List<HistorySearchEntity>> =
         historySearchDao.getLastSearch(limit)
 
-    override suspend fun insertHistorySearch(entity: HistorySearchEntity): Long =
+    override suspend fun insertQuery(entity: HistorySearchEntity): Long =
         historySearchDao.insertIgnore(entity)
 
-    override suspend fun updateLastTimeSearch(query: String, newTs: Long) =
+    override suspend fun updateLastTimeQuery(query: String, newTs: Long) =
         historySearchDao.updateTimestamp(query, newTs)
 
+    override suspend fun getQuery(query: String): HistorySearchEntity? =
+        historySearchDao.getQuery(query)
 
-    override suspend fun deleteByQuery(query: String) =
+    override suspend fun deleteQuery(query: String) =
         historySearchDao.deleteByQuery(query)
 
     override suspend fun clearAll() = historySearchDao.clearAll()

@@ -4,9 +4,10 @@ import com.github.pokemon.pokedex.core.database.entity.HistorySearchEntity
 import kotlinx.coroutines.flow.Flow
 
 interface HistorySearchCacheDataSource {
-    fun getLastTimeSearch(limit: Int): Flow<List<HistorySearchEntity>>
-    suspend fun insertHistorySearch(entity: HistorySearchEntity): Long
-    suspend fun updateLastTimeSearch(query: String, newTs: Long)
-    suspend fun deleteByQuery(query: String)
+    fun observeHistorySearch(limit: Int): Flow<List<HistorySearchEntity>>
+    suspend fun insertQuery(entity: HistorySearchEntity): Long
+    suspend fun updateLastTimeQuery(query: String, newTs: Long)
+    suspend fun getQuery(query: String): HistorySearchEntity?
+    suspend fun deleteQuery(query: String)
     suspend fun clearAll()
 }

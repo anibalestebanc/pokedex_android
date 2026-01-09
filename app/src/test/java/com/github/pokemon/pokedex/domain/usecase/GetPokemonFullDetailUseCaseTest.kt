@@ -10,7 +10,7 @@ import com.github.pokemon.pokedex.domain.exception.PokeException.NotFoundExcepti
 import com.github.pokemon.pokedex.domain.exception.PokeException.ServerException
 import com.github.pokemon.pokedex.domain.exception.PokeException.UnknownException
 import com.github.pokemon.pokedex.domain.repository.PokemonDetailRepository
-import com.github.pokemon.pokedex.domain.repository.PokemonSpeciesRepository
+import com.github.pokemon.pokedex.domain.repository.SpeciesRepository
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -30,7 +30,7 @@ class GetPokemonFullDetailUseCaseTest {
     lateinit var detailRepository: PokemonDetailRepository
 
     @MockK
-    lateinit var speciesRepository: PokemonSpeciesRepository
+    lateinit var speciesRepository: SpeciesRepository
 
     private lateinit var getPokemonFullDetailUseCase: GetPokemonFullDetailUseCase
 
@@ -56,7 +56,7 @@ class GetPokemonFullDetailUseCaseTest {
         val species = PikachuSpecies
         val fullDetail = Pikachu.combineWith(PikachuSpecies)
         coEvery { detailRepository.getPokemonDetail(id) } returns Result.success(detail)
-        coEvery { speciesRepository.getPokemonSpecies(id) } returns Result.success(species)
+        coEvery { speciesRepository.getSpecies(id) } returns Result.success(species)
 
         // when
         val result = getPokemonFullDetailUseCase(id)
@@ -65,7 +65,7 @@ class GetPokemonFullDetailUseCaseTest {
         assertTrue(result.isSuccess)
         assertEquals(fullDetail, result.getOrThrow())
         coVerify(exactly = 1) { detailRepository.getPokemonDetail(id) }
-        coVerify(exactly = 1) { speciesRepository.getPokemonSpecies(id) }
+        coVerify(exactly = 1) { speciesRepository.getSpecies(id) }
     }
 
     @Test
@@ -74,7 +74,7 @@ class GetPokemonFullDetailUseCaseTest {
         val id = 1
         val expected = NetworkException("Error to get pokemon detail")
         coEvery { detailRepository.getPokemonDetail(id) } returns Result.failure(expected)
-        coEvery { speciesRepository.getPokemonSpecies(id) } returns Result.success(CharmanderSpecies)
+        coEvery { speciesRepository.getSpecies(id) } returns Result.success(CharmanderSpecies)
 
         // when
         val result = getPokemonFullDetailUseCase(id)
@@ -83,7 +83,7 @@ class GetPokemonFullDetailUseCaseTest {
         assertTrue(result.isFailure)
         assertEquals(expected.message, result.exceptionOrNull()?.message)
         coVerify(exactly = 1) { detailRepository.getPokemonDetail(id) }
-        coVerify(exactly = 1) { speciesRepository.getPokemonSpecies(id) }
+        coVerify(exactly = 1) { speciesRepository.getSpecies(id) }
     }
 
     @Test
@@ -92,7 +92,7 @@ class GetPokemonFullDetailUseCaseTest {
         val id = 4
         val expected = NotFoundException("Pokemon not found")
         coEvery { detailRepository.getPokemonDetail(id) } returns Result.success(Charmander)
-        coEvery { speciesRepository.getPokemonSpecies(id) } returns Result.failure(expected)
+        coEvery { speciesRepository.getSpecies(id) } returns Result.failure(expected)
 
         // when
         val result = getPokemonFullDetailUseCase(id)
@@ -101,7 +101,7 @@ class GetPokemonFullDetailUseCaseTest {
         assertTrue(result.isFailure)
         assertEquals(expected.message, result.exceptionOrNull()?.message)
         coVerify(exactly = 1) { detailRepository.getPokemonDetail(id) }
-        coVerify(exactly = 1) { speciesRepository.getPokemonSpecies(id) }
+        coVerify(exactly = 1) { speciesRepository.getSpecies(id) }
     }
 
     @Test
@@ -111,7 +111,7 @@ class GetPokemonFullDetailUseCaseTest {
         val detailErr = UnknownException("Unknown error")
         val speciesErr = ServerException("Internal server error")
         coEvery { detailRepository.getPokemonDetail(id) } returns Result.failure(detailErr)
-        coEvery { speciesRepository.getPokemonSpecies(id) } returns Result.failure(speciesErr)
+        coEvery { speciesRepository.getSpecies(id) } returns Result.failure(speciesErr)
 
         // when
         val result = getPokemonFullDetailUseCase(id)
@@ -120,7 +120,7 @@ class GetPokemonFullDetailUseCaseTest {
         assertTrue(result.isFailure)
         assertEquals(detailErr.message, result.exceptionOrNull()?.message)
         coVerify(exactly = 1) { detailRepository.getPokemonDetail(id) }
-        coVerify(exactly = 1) { speciesRepository.getPokemonSpecies(id) }
+        coVerify(exactly = 1) { speciesRepository.getSpecies(id) }
     }
 
     @Test
@@ -129,7 +129,7 @@ class GetPokemonFullDetailUseCaseTest {
         val id = 10
 
         coEvery { detailRepository.getPokemonDetail(id) } returns Result.failure(UnknownException())
-        coEvery { speciesRepository.getPokemonSpecies(id) } returns Result.failure(UnknownException())
+        coEvery { speciesRepository.getSpecies(id) } returns Result.failure(UnknownException())
 
         // when
         val result = getPokemonFullDetailUseCase(id)

@@ -17,7 +17,7 @@ import com.github.pokemon.pokedex.data.repository.RoomHistorySearchRepository
 import com.github.pokemon.pokedex.domain.repository.FavoriteRepository
 import com.github.pokemon.pokedex.domain.repository.HistorySearchRepository
 import com.github.pokemon.pokedex.domain.repository.PokemonDetailRepository
-import com.github.pokemon.pokedex.domain.repository.PokemonSpeciesRepository
+import com.github.pokemon.pokedex.domain.repository.SpeciesRepository
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -35,6 +35,6 @@ val dataModule = module {
     //Repository
     singleOf(::RoomHistorySearchRepository) { bind<HistorySearchRepository>() }
     singleOf(::OfflineFirstDetailRepository) { bind<PokemonDetailRepository>() }
-    singleOf(::OfflineFirstSpeciesRepository) { bind<PokemonSpeciesRepository>() }
+    singleOf(::OfflineFirstSpeciesRepository) { bind<SpeciesRepository>() }
     singleOf(::DefaultFavoriteRepository) { bind<FavoriteRepository>() }
 }

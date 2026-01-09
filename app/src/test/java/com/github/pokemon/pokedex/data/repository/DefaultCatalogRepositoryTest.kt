@@ -36,7 +36,7 @@ class DefaultCatalogRepositoryTest {
         repository = DefaultCatalogRepository(
             remoteDataSource = remoteDataSource,
             cacheDataSource = cacheDataSource,
-            coroutineDispatcher = testDispatcher
+            ioDispatcher = testDispatcher
         )
     }
 

@@ -48,7 +48,7 @@ class SearchListViewModel(
 
     @Suppress("MagicNumber")
     fun observeDetail(id: Int): StateFlow<DetailItemUiState> = detailFlows.getOrPut(id) {
-        searchListUseCases.observeDetailUseCase(id)
+        searchListUseCases.observeAndRefreshDetailUseCase(id)
             .map { detail ->
                 DetailItemUiState(detail = detail, isLoading = false, error = null)
             }.onStart {

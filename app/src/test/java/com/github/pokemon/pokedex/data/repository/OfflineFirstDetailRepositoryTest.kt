@@ -1,6 +1,5 @@
 package com.github.pokemon.pokedex.data.repository
 
-import app.cash.turbine.test
 import com.github.pokemon.pokedex.BulbasaurDetailDto
 import com.github.pokemon.pokedex.CharmanderDetailEntity
 import com.github.pokemon.pokedex.PikachuDetailDto
@@ -11,7 +10,6 @@ import com.github.pokemon.pokedex.data.mapper.toDomain
 import com.github.pokemon.pokedex.data.mapper.toEntity
 import com.github.pokemon.pokedex.domain.exception.PokeException.DatabaseException
 import com.github.pokemon.pokedex.domain.exception.PokeException.NetworkException
-import com.github.pokemon.pokedex.domain.model.PokemonDetail
 import com.github.pokemon.pokedex.utils.PokeTimeUtil
 import com.github.pokemon.pokedex.utils.RefreshDueUtil
 import io.mockk.MockKAnnotations
@@ -20,9 +18,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
@@ -57,53 +52,6 @@ class OfflineFirstDetailRepositoryTest {
     @AfterEach
     fun tearDown() = clearAllMocks()
 
-
-    @Test
-    fun `should emit cached detail on observe when cache exists and is fresh`() = runTest(testDispatcher) {
-        // given
-        val id = 1
-        val pikachuEntity = PikachuDetailEntity
-        every { cacheDataSource.observeDetail(id) } returns flowOf(pikachuEntity)
-        coEvery { cacheDataSource.getDetail(id) } returns pikachuEntity
-        every { refreshDue.isRefreshDue(pikachuEntity.lastUpdated) } returns false
-
-        // when
-        val flow: Flow<PokemonDetail?> = repository.observePokemonDetail(id)
-
-        // then
-        flow.test {
-            val first = awaitItem()
-            assertEquals(pikachuEntity.toDomain(), first)
-            awaitComplete()
-        }
-        coVerify(exactly = 1) { cacheDataSource.getDetail(id) }
-        coVerify(exactly = 0) { remoteDataSource.getDetail(any()) }
-    }
-
-    @Test
-    fun `should trigger remote load on observe start when cache is missing`() = runTest(testDispatcher) {
-        // given
-        val id = 1
-        every { cacheDataSource.observeDetail(id) } returns flow { emit(null) }
-        coEvery { cacheDataSource.getDetail(id) } returns null
-        every { pokeTimeUtil.now() } returns 1L
-        val remoteDto = BulbasaurDetailDto
-        val entity = remoteDto.toDomain(pokeTimeUtil).toEntity()
-        coEvery { remoteDataSource.getDetail(id.toString()) } returns remoteDto
-        coEvery { cacheDataSource.insertDetail(any()) } returns Unit
-
-        // when
-        val flow = repository.observePokemonDetail(id)
-
-        // then
-        flow.test {
-            assertEquals(null, awaitItem())
-            cancelAndIgnoreRemainingEvents()
-        }
-        coVerify(exactly = 2) { cacheDataSource.getDetail(id) }
-        coVerify(exactly = 1) { remoteDataSource.getDetail(id.toString()) }
-        coVerify(exactly = 1) { cacheDataSource.insertDetail(entity) }
-    }
 
     @Test
     fun `should return cached detail when cache exists and is fresh on getPokemonDetail`() = runTest(testDispatcher) {

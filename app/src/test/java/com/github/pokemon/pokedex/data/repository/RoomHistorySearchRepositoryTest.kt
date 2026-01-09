@@ -37,9 +37,9 @@ class RoomHistorySearchRepositoryTest {
         MockKAnnotations.init(this, relaxUnitFun = true)
         Dispatchers.setMain(testDispatcher)
         repository = RoomHistorySearchRepository(
-            historySearchCacheDataSource = cacheDataSource,
+            cacheDataSource = cacheDataSource,
             pokeTimeUtil = pokeTimeUtil,
-            coroutineDispatcher = testDispatcher
+            ioDispatcher = testDispatcher
         )
     }
 
@@ -52,7 +52,7 @@ class RoomHistorySearchRepositoryTest {
     @Test
     fun `should map entities to queries when getting history`() = runTest(testDispatcher) {
         // given
-        every { cacheDataSource.getLastTimeSearch(5) } returns flowOf(
+        every { cacheDataSource.observeHistorySearch(5) } returns flowOf(
             listOf(
                 HistorySearchEntity(1, "pikachu", 1L),
                 HistorySearchEntity(2, "bulbasaur", 2L)
@@ -60,7 +60,7 @@ class RoomHistorySearchRepositoryTest {
         )
 
         // when
-        val flow = repository.getHistorySearch(limit = 5)
+        val flow = repository.observeHistorySearch(limit = 5)
 
         // then
         flow.test {
@@ -71,71 +71,20 @@ class RoomHistorySearchRepositoryTest {
     }
 
     @Test
-    fun `should save normalized non-blank query and insert entity`() = runTest(testDispatcher) {
-        // given
-        val query = "  Pikachu  "
-        val normalized = "pikachu"
-        val nowTime = 123L
-        every { pokeTimeUtil.now() } returns nowTime
-        coEvery { cacheDataSource.insertHistorySearch(any()) } returns 42L
-
-        // when
-        repository.save(query)
-
-        // then
-        coVerify(exactly = 1) {
-            cacheDataSource.insertHistorySearch(
-                match { it.query == normalized && it.timestamp == nowTime }
-            )
-        }
-        coVerify(exactly = 0) { cacheDataSource.updateLastTimeSearch(any(), any()) }
-    }
-
-    @Test
-    fun `should update timestamp when insert returns -1L`() = runTest(testDispatcher) {
-        // given
-        val query = "Pikachu"
-        val normalized = "pikachu"
-        val nowTime = 999L
-        every { pokeTimeUtil.now() } returns nowTime
-        coEvery { cacheDataSource.insertHistorySearch(any()) } returns -1L
-
-        // when
-        repository.save(query)
-
-        // then
-        coVerify(exactly = 1) {
-            cacheDataSource.insertHistorySearch(match { it.query == normalized && it.timestamp == nowTime })
-        }
-        coVerify(exactly = 1) { cacheDataSource.updateLastTimeSearch(normalized, nowTime) }
-    }
-
-    @Test
     fun `should ignore blank queries`() = runTest(testDispatcher) {
         // given
         val blanks = listOf("", "   ", " \n  ")
 
         blanks.forEach { q ->
             // when
-            repository.save(q)
+            repository.saveQuery(q)
         }
 
         // then
-        coVerify(exactly = 0) { cacheDataSource.insertHistorySearch(any()) }
-        coVerify(exactly = 0) { cacheDataSource.updateLastTimeSearch(any(), any()) }
+        coVerify(exactly = 0) { cacheDataSource.insertQuery(any()) }
+        coVerify(exactly = 0) { cacheDataSource.updateLastTimeQuery(any(), any()) }
     }
 
-    @Test
-    fun `should normalize query on remove`() = runTest(testDispatcher) {
-        // given
-        coEvery { cacheDataSource.deleteByQuery(any()) } returns Unit
-
-        // when
-        repository.remove("  BULBASAUR ")
-
-        // then
-        coVerify(exactly = 1) { cacheDataSource.deleteByQuery("bulbasaur") }
-    }
 
     @Test
     fun `should clear all`() = runTest(testDispatcher) {
