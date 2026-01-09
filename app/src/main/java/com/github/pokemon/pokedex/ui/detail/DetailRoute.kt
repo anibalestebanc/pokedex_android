@@ -39,7 +39,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DetailRoute(
-    onBackClick: () -> Unit,
+    onBack: () -> Unit,
     pokemonId: String,
     viewModel: DetailViewModel = koinViewModel(),
 ) {
@@ -75,7 +75,7 @@ fun DetailRoute(
         isFavorite = isFavorite,
         uiState = uiState,
         onAction = viewModel::onAction,
-        onBackClick = onBackClick,
+        onBackClick = onBack,
     )
 }
 

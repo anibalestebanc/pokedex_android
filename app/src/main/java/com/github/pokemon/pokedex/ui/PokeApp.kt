@@ -1,5 +1,6 @@
 package com.github.pokemon.pokedex.ui
 
+import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,13 +12,13 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.pokemon.pokedex.R
-import com.github.pokemon.pokedex.navigation.AppNavHost
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.rememberNavBackStack
+import com.github.pokemon.pokedex.navigation.NavigationHost
+import com.github.pokemon.pokedex.navigation.NavigationRoute
+import com.github.pokemon.pokedex.navigation.rememberNavigationActions
 import com.github.pokemon.pokedex.theme.HighContrastDarkColorScheme
 import com.github.pokemon.pokedex.theme.HighContrastLightColorScheme
 import com.github.pokemon.pokedex.ui.components.bottombar.PokeBottomBar
@@ -30,44 +31,44 @@ fun PokeApp(appState: AppState) {
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    /*
-     //TODO this need more testing to apply in production
-     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+    val backStack = rememberNavBackStack(NavigationRoute.Home)
 
-         val noConnectionMessage = stringResource(R.string.error_no_internet_title)
+    val navigationActions = rememberNavigationActions(backStack)
 
-         LaunchedEffect(isOffline) {
-             if (isOffline) {
-                 snackbarHostState.showSnackbar(
-                     message = noConnectionMessage,
-                     withDismissAction = true,
-                     duration = SnackbarDuration.Short,
-                 )
-             }
-         }
-         */
     MaterialTheme(colorScheme = colorScheme) {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.surface,
             snackbarHost = { SnackbarHost(snackbarHostState) },
             bottomBar = {
-                if (appState.shouldShowBottomBar()) {
-                    PokeBottomBar(
-                        destinations = appState.topDestinations,
-                        selectedId = appState.currentTopLevelDestinationId(),
-                        onSelect = { id -> appState.navigateToTopLevelDestination(id) }
-                    )
-                }
+                if (shouldShowBottomBar(current = backStack.lastOrNull()))
+               PokeBottomBar(
+                    current = backStack.lastOrNull(),
+                    onClick = { destination ->
+                        navigationActions.onTopLevelSelected(destination)
+                    },
+                )
             },
-            contentWindowInsets = WindowInsets.systemBars
+            contentWindowInsets = WindowInsets.systemBars,
         ) { innerPadding ->
             Surface(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
             ) {
-                AppNavHost(appState)
+                NavigationHost(
+                    appState = appState,
+                    backStack = backStack,
+                    onNavigate = navigationActions,
+                )
             }
         }
+    }
+}
+
+private fun shouldShowBottomBar(current: NavKey?): Boolean {
+    Log.d("Navigation3", "shouldShowBottomBar()-> current: ${current?.javaClass?.simpleName}")
+    return when (current) {
+        is NavigationRoute.Home, is NavigationRoute.SearchList, is NavigationRoute.Favorite -> true
+        else -> false
     }
 }

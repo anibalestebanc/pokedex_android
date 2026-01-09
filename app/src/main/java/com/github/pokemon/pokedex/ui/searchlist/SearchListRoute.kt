@@ -19,7 +19,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -32,8 +31,6 @@ import com.github.pokemon.pokedex.ui.components.common.EmptyScreen
 import com.github.pokemon.pokedex.ui.components.common.RetryErrorScreen
 import com.github.pokemon.pokedex.ui.components.common.LoadingScreen
 import com.github.pokemon.pokedex.ui.components.common.LoadingMore
-import com.github.pokemon.pokedex.ui.searchlist.navigation.SEARCH_LIST_KEY
-import com.github.pokemon.pokedex.utils.getAndConsume
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
@@ -42,21 +39,21 @@ import org.koin.androidx.compose.koinViewModel
 fun SearchListRoute(
     appState: AppState,
     initialQuery: String,
-    onSearchClick: (String) -> Unit,
-    onDetailClick: (String) -> Unit,
+    onSearch: (String) -> Unit,
+    onDetail: (String) -> Unit,
     viewModel: SearchListViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val pagingItems = viewModel.pagingFlow.collectAsLazyPagingItems()
     var seeded by rememberSaveable { mutableStateOf(false) }
 
-    val backStackEntry by appState.navController.currentBackStackEntryAsState()
-    LaunchedEffect(backStackEntry) {
+   // val backStackEntry by appState.navController.currentBackStackEntryAsState()
+ /*   LaunchedEffect(backStackEntry) {
         backStackEntry?.savedStateHandle?.getAndConsume<String>(SEARCH_LIST_KEY)?.let { q ->
             viewModel.onAction(SearchListAction.QueryChanged(q))
             viewModel.onAction(SearchListAction.SubmitSearch)
         }
-    }
+    }*/
 
     LaunchedEffect(initialQuery, seeded) {
         if (!seeded) {
@@ -67,8 +64,8 @@ fun SearchListRoute(
 
     SearchListScreen(
         uiState = uiState,
-        onSearchClick = onSearchClick,
-        onDetailClick = onDetailClick,
+        onSearchClick = onSearch,
+        onDetailClick = onDetail,
         pagingItems = pagingItems,
         observeDetail = viewModel::observeDetail,
     )

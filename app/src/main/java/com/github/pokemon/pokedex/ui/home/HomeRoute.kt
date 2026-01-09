@@ -25,18 +25,17 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeRoute(
-    onSearchClick: () -> Unit,
+    onSearch: () -> Unit,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(viewModel, onSearch) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.uiEffect.collect { effect ->
                 when (effect) {
-                    //Todo Add pokedex feature
                     is HomeEffect.NavigateToPokedex -> {}
-                    is HomeEffect.NavigateToSearch -> onSearchClick()
+                    is HomeEffect.NavigateToSearch -> onSearch()
                 }
             }
         }
