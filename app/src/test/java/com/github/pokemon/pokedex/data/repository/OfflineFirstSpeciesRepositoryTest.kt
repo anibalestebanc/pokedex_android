@@ -4,7 +4,6 @@ import com.github.pokemon.pokedex.CharmanderSpeciesDto
 import com.github.pokemon.pokedex.CharmanderSpeciesEntity
 import com.github.pokemon.pokedex.PikachuSpeciesDto
 import com.github.pokemon.pokedex.PikachuSpeciesEntity
-import com.github.pokemon.pokedex.utils.LoggerError
 import com.github.pokemon.pokedex.data.datasource.cache.SpeciesCacheDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.SpeciesRemoteDataSource
 import com.github.pokemon.pokedex.data.mapper.toDomain
@@ -14,13 +13,11 @@ import com.github.pokemon.pokedex.domain.exception.PokeException.NetworkExceptio
 import com.github.pokemon.pokedex.utils.PokeTimeUtil
 import com.github.pokemon.pokedex.utils.RefreshDueUtil
 import io.mockk.MockKAnnotations
-import io.mockk.Runs
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.just
 import io.mockk.verify
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -31,7 +28,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 
-class OfflineFirstPokemonSpeciesRepositoryTest {
+class OfflineFirstSpeciesRepositoryTest {
 
     @MockK
     lateinit var remoteDataSource: SpeciesRemoteDataSource

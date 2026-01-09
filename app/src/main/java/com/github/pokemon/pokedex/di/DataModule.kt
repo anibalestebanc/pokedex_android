@@ -10,9 +10,11 @@ import com.github.pokemon.pokedex.data.datasource.remote.DetailRemoteDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.SpeciesRemoteDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.RetrofitDetailRemoteDataSource
 import com.github.pokemon.pokedex.data.datasource.remote.RetrofitSpeciesRemoteDataSource
+import com.github.pokemon.pokedex.data.repository.DefaultFavoriteRepository
 import com.github.pokemon.pokedex.data.repository.OfflineFirstDetailRepository
 import com.github.pokemon.pokedex.data.repository.OfflineFirstSpeciesRepository
 import com.github.pokemon.pokedex.data.repository.RoomHistorySearchRepository
+import com.github.pokemon.pokedex.domain.repository.FavoriteRepository
 import com.github.pokemon.pokedex.domain.repository.HistorySearchRepository
 import com.github.pokemon.pokedex.domain.repository.PokemonDetailRepository
 import com.github.pokemon.pokedex.domain.repository.PokemonSpeciesRepository
@@ -34,4 +36,5 @@ val dataModule = module {
     singleOf(::RoomHistorySearchRepository) { bind<HistorySearchRepository>() }
     singleOf(::OfflineFirstDetailRepository) { bind<PokemonDetailRepository>() }
     singleOf(::OfflineFirstSpeciesRepository) { bind<PokemonSpeciesRepository>() }
+    singleOf(::DefaultFavoriteRepository) { bind<FavoriteRepository>() }
 }

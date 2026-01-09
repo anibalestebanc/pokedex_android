@@ -1,6 +1,6 @@
 package com.github.pokemon.pokedex.domain.usecase
 
-import com.github.pokemon.pokedex.domain.repository.PokemonDetailRepository
+import com.github.pokemon.pokedex.domain.repository.FavoriteRepository
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -16,7 +16,7 @@ import kotlin.test.assertTrue
 class ToggleFavoriteUseCaseTest {
 
     @MockK
-    private lateinit var repository: PokemonDetailRepository
+    private lateinit var repository: FavoriteRepository
     private lateinit var toggleFavoriteUseCase: ToggleFavoriteUseCase
 
     @BeforeEach

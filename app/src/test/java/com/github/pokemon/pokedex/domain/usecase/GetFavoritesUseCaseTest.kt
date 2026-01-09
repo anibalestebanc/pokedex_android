@@ -7,7 +7,7 @@ import com.github.pokemon.pokedex.Pikachu
 import com.github.pokemon.pokedex.Squirtle
 import com.github.pokemon.pokedex.domain.exception.PokeException.DatabaseException
 import com.github.pokemon.pokedex.domain.model.PokemonDetail
-import com.github.pokemon.pokedex.domain.repository.PokemonDetailRepository
+import com.github.pokemon.pokedex.domain.repository.FavoriteRepository
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test
 class GetFavoritesUseCaseTest {
 
     @MockK
-    lateinit var repository: PokemonDetailRepository
+    lateinit var repository: FavoriteRepository
 
     private lateinit var getFavoriteUseCase: GetFavoritesUseCase
 
