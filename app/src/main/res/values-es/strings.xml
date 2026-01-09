@@ -64,6 +64,8 @@
   <string name="pokemon_detail_happiness">Felicidad</string>
   <string name="pokemon_detail_legendary">Legendario</string>
   <string name="pokemon_detail_mythical">Mítico</string>
+  <string name="pokemon_detail_height_value">%.1f m</string>
+  <string name="pokemon_detail_weight_value">%.1f kg</string>
   <string name="tbd">PD</string>
 
   <!--Search Result-->

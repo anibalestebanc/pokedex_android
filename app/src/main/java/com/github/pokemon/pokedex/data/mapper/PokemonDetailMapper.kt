@@ -76,6 +76,7 @@ fun PokemonDetail.combineWith(species: PokemonSpecies): PokemonFullDetail {
     val number = "#${id.toString().padStart(HUNDRED_LENGTH, '0')}"
     val heightM = height / MAX_PERCENTAGE
     val weightKg = weight / MAX_PERCENTAGE
+    val normalizeAbilities = abilities.map { it.replace("-", " ") }
 
     return PokemonFullDetail(
         id = id,
@@ -85,7 +86,7 @@ fun PokemonDetail.combineWith(species: PokemonSpecies): PokemonFullDetail {
         types = types,
         heightMeters = heightM,
         weightKg = weightKg,
-        abilities = abilities,
+        abilities = normalizeAbilities,
         stats = stats,
         sprites = sprites,
         isFavorite = isFavorite,
@@ -95,9 +96,9 @@ fun PokemonDetail.combineWith(species: PokemonSpecies): PokemonFullDetail {
         description = species.description,
         habitat = species.habitat,
         eggGroups = species.eggGroups,
-        captureRate = species.captureRate,
-        baseHappiness = species.baseHappiness,
-        growthRate = species.growthRate,
+        captureRate = species.captureRate ?: ZERO_VALUE,
+        baseHappiness = species.baseHappiness ?: ZERO_VALUE,
+        growthRate = species.growthRate ?: "-",
         isLegendary = species.isLegendary,
         isMythical = species.isMythical,
     )

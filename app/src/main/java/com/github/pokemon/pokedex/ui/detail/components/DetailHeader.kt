@@ -4,8 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,6 +36,7 @@ import coil.compose.AsyncImage
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.theme.PokeAppTheme
 import com.github.pokemon.pokedex.ui.components.FavoriteButton
+import com.github.pokemon.pokedex.ui.components.common.ChipGroup
 import com.github.pokemon.pokedex.ui.components.utils.PokeBackgroundUtil.primaryTypeColorRes
 
 @Composable
@@ -125,9 +124,9 @@ fun DetailHeader(
                 }
             }
 
-            ChipRow(
+            ChipGroup(
                 chips = types.map { it.replaceFirstChar { c -> if (c.isLowerCase()) c.titlecase() else c.toString() } },
-                chipColor = Color.White.copy(alpha = 0.25f),
+                containerColor = Color.White.copy(alpha = 0.25f),
                 contentColor = Color.White,
             )
 
@@ -191,35 +190,6 @@ fun DetailHeader(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-fun ChipRow(
-    chips: List<String>,
-    chipColor: Color = Color(0xFFF2F2F2),
-    contentColor: Color = Color.Black,
-) {
-    FlowRow(
-        maxItemsInEachRow = 1,
-    ) {
-        chips.forEach { TypeChip(it, chipColor, contentColor) }
-    }
-}
-
-@Composable
-fun TypeChip(
-    text: String,
-    background: Color = Color(0xFFF2F2F2),
-    contentColor: Color = Color.Black,
-) {
-    Box(
-        modifier = Modifier
-            .padding(vertical = 4.dp)
-            .background(background, shape = RoundedCornerShape(50))
-            .padding(horizontal = 10.dp, vertical = 6.dp),
-    ) {
-        Text(text, color = contentColor, fontSize = 14.sp, fontWeight = FontWeight.Medium)
-    }
-}
 
 @Preview
 @Composable

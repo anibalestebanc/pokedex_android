@@ -20,9 +20,9 @@ data class PokemonFullDetail(
     val description: String?,
     val habitat: String?,
     val eggGroups: List<String>,
-    val captureRate: Int?,
-    val baseHappiness: Int?,
-    val growthRate: String?,
+    val captureRate: Int,
+    val baseHappiness: Int,
+    val growthRate: String,
     val isLegendary: Boolean,
     val isMythical: Boolean,
 )

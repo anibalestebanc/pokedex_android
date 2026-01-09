@@ -64,7 +64,10 @@
   <string name="pokemon_detail_happiness">Happiness</string>
   <string name="pokemon_detail_legendary">Legendary</string>
   <string name="pokemon_detail_mythical">Mythical</string>
+  <string name="pokemon_detail_height_value">%.1f m</string>
+  <string name="pokemon_detail_weight_value">%.1f kg</string>
   <string name="tbd">TBD</string>
+
 
   <!--Search Result-->
   <string name="search_result_error">Error</string>

@@ -1,11 +1,5 @@
 package com.github.pokemon.pokedex.ui.components
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,11 +29,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -163,7 +154,7 @@ fun SearchListCard(
                                 verticalArrangement = Arrangement.Top,
                                 maxItemsInEachRow = 1
                             ) {
-                                types.take(3).forEach { t -> TypeChip(t) }
+                                types.take(3).forEach { t -> SearchCardChip(t) }
                             }
                         }
                     }
@@ -180,7 +171,6 @@ fun SearchListCard(
                             Modifier
                                 .size(90.dp)
                                 .clip(CircleShape)
-                                .shimmer()
                                 .background(Color.White.copy(alpha = 0.35f)),
                         )
                     } else {
@@ -206,7 +196,7 @@ fun SearchListCard(
 
 
 @Composable
-private fun TypeChip(type: String) {
+private fun SearchCardChip(type: String) {
     Box(
         modifier = Modifier
             .padding(vertical = 2.dp)
@@ -229,24 +219,10 @@ private fun ChipPlaceholder(width: Dp) {
             .height(22.dp)
             .width(width)
             .clip(RoundedCornerShape(12.dp))
-            .shimmer()
             .background(Color.White.copy(alpha = 0.35f)),
     )
 }
 
-fun Modifier.shimmer(): Modifier = composed {
-    val infinite = rememberInfiniteTransition(label = "shimmer")
-    val alpha by infinite.animateFloat(
-        initialValue = 0.3f,
-        targetValue = 0.9f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(900, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse,
-        ),
-        label = "shimmerAlpha",
-    )
-    this.alpha(alpha)
-}
 
 @Preview(showBackground = true)
 @Composable
