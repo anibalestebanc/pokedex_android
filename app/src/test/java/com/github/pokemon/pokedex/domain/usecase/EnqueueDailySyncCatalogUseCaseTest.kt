@@ -1,7 +1,8 @@
 package com.github.pokemon.pokedex.domain.usecase
 
 import com.github.pokemon.pokedex.core.work.SyncCatalogWorkScheduler
-import com.github.pokemon.pokedex.domain.repository.SyncCatalogRepository
+import com.github.pokemon.pokedex.data.datasource.local.SyncKeys
+import com.github.pokemon.pokedex.data.datasource.local.SyncMetaStore
 import com.github.pokemon.pokedex.utils.PokeTimeUtil
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
@@ -22,7 +23,7 @@ class EnqueueDailySyncCatalogUseCaseTest {
     @MockK
     lateinit var pokeTimeUtil: PokeTimeUtil
     @MockK
-    lateinit var repository: SyncCatalogRepository
+    lateinit var syncMetaStore: SyncMetaStore
 
     @MockK(relaxed = true)
     lateinit var scheduler: SyncCatalogWorkScheduler
@@ -32,7 +33,7 @@ class EnqueueDailySyncCatalogUseCaseTest {
     @BeforeEach
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
-        syncCatalogUseCase = EnqueueDailySyncCatalogUseCase(repository, scheduler, pokeTimeUtil)
+        syncCatalogUseCase = EnqueueDailySyncCatalogUseCase(syncMetaStore, scheduler, pokeTimeUtil)
     }
 
     @AfterEach
@@ -43,7 +44,7 @@ class EnqueueDailySyncCatalogUseCaseTest {
     @Test
     fun `should enqueue immediate sync when last sync is zero`() = runTest {
         // given
-        coEvery { repository.getLastSyncAt() } returns 0L
+        coEvery { syncMetaStore.getLastSyncAt(SyncKeys.LAST_SYNC_CATALOG) } returns 0L
         every { pokeTimeUtil.now() } returns 123_456L
         val minInterval = 86_400_000L // ONE_DAY
 
@@ -51,7 +52,7 @@ class EnqueueDailySyncCatalogUseCaseTest {
         syncCatalogUseCase(minInterval)
 
         // then
-        coVerify(exactly = 1) { repository.getLastSyncAt() }
+        coVerify(exactly = 1) { syncMetaStore.getLastSyncAt(SyncKeys.LAST_SYNC_CATALOG) }
         coVerify(exactly = 1) { scheduler.enqueueImmediateSync() }
         coVerify(exactly = 0) { scheduler.enqueueDailySync() }
     }
@@ -62,7 +63,7 @@ class EnqueueDailySyncCatalogUseCaseTest {
         val lastSync = 1_000_000L
         val now = 1_000_000L + 10_000L
         val minInterval = 10_000L
-        coEvery { repository.getLastSyncAt() } returns lastSync
+        coEvery { syncMetaStore.getLastSyncAt(SyncKeys.LAST_SYNC_CATALOG) } returns lastSync
         every { pokeTimeUtil.now() } returns now
 
         // when
@@ -79,7 +80,7 @@ class EnqueueDailySyncCatalogUseCaseTest {
         val lastSync = 2_000_000L
         val now = 2_000_000L + 9_999L
         val minInterval = 10_000L
-        coEvery { repository.getLastSyncAt() } returns lastSync
+        coEvery { syncMetaStore.getLastSyncAt(SyncKeys.LAST_SYNC_CATALOG) } returns lastSync
         every { pokeTimeUtil.now() } returns now
 
         // when
@@ -93,7 +94,7 @@ class EnqueueDailySyncCatalogUseCaseTest {
     @Test
     fun `should prefer immediate sync branch over others when lastSync is zero`() = runTest {
         // given
-        coEvery { repository.getLastSyncAt() } returns 0L
+        coEvery { syncMetaStore.getLastSyncAt(SyncKeys.LAST_SYNC_CATALOG) } returns 0L
         every { pokeTimeUtil.now() } returns Long.MAX_VALUE
         val minInterval = 1L
 

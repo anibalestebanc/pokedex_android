@@ -118,7 +118,7 @@ fun StatBar(
 
 @Preview(showBackground = true)
 @Composable
-private fun BaseStatsSectionPreview() {
+fun BaseStatsSectionPreview() {
     MaterialTheme {
         BaseStatsSection(
             stats = listOf(
