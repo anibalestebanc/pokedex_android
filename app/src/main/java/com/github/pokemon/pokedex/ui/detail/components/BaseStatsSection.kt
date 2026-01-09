@@ -1,5 +1,3 @@
-@file:JvmName("BaseStatsSectionKt")
-
 package com.github.pokemon.pokedex.ui.detail.components
 
 import androidx.compose.foundation.background
@@ -13,10 +11,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,30 +23,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
-typealias PokemonStat = com.github.pokemon.pokedex.domain.model.PokemonStat
+import com.github.pokemon.pokedex.domain.model.PokemonStat
+import com.github.pokemon.pokedex.domain.model.PokemonStatType
 
 @Composable
-fun BaseStatsSection(stats: List<PokemonStat>) {
-    val order = listOf("hp", "attack", "defense", "special-attack", "special-defense", "speed")
-    val statsMap = stats.associateBy { it.name.lowercase() }
-    val items = order.map { key ->
-        val value = statsMap[key]?.value ?: 0
-        val label = when (key) {
-            "hp" -> "HP"
-            "attack" -> "Attack"
-            "defense" -> "Defense"
-            "special-attack" -> "Sp. Atk"
-            "special-defense" -> "Sp. Def"
-            "speed" -> "Speed"
-            else -> key.replaceFirstChar { it.uppercase() }
+fun BaseStatsSection(
+    stats: List<PokemonStat>,
+    modifier: Modifier = Modifier
+) {
+    val items = remember(stats) {
+        val statsMap = stats.associateBy { it.name.lowercase() }
+        PokemonStatType.entries.map { type ->
+            val value = statsMap[type.key]?.value ?: 0
+            type.label to value
         }
-        label to value
     }
-    val total = items.sumOf { it.second }
+
+    val total = remember(items) { items.sumOf { it.second } }
 
     Column(
-        Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
             .padding(16.dp),
@@ -56,26 +51,41 @@ fun BaseStatsSection(stats: List<PokemonStat>) {
             StatRow(label = label, value = value)
             Spacer(Modifier.height(8.dp))
         }
-        Divider(Modifier.padding(vertical = 8.dp), color = MaterialTheme.colorScheme.onSurface)
-        StatRow(label = "Total", value = total, accent = MaterialTheme.colorScheme.secondaryContainer)
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 8.dp),
+            color = MaterialTheme.colorScheme.outlineVariant
+        )
+        StatRow(
+            label = "Total",
+            value = total,
+            accent = MaterialTheme.colorScheme.secondary
+        )
     }
 }
 
 @Composable
-fun StatRow(label: String,
-            value: Int,
-            accent: Color = MaterialTheme.colorScheme.secondaryContainer) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+fun StatRow(
+    label: String,
+    value: Int,
+    modifier: Modifier = Modifier,
+    accent: Color = MaterialTheme.colorScheme.primary
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Text(
             text = label,
             modifier = Modifier.width(96.dp),
-            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
             text = value.toString(),
-            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.width(40.dp),
-            fontWeight = FontWeight.SemiBold,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface,
         )
         StatBar(
             progress = (value / 255f).coerceIn(0f, 1f),
@@ -86,12 +96,16 @@ fun StatRow(label: String,
 }
 
 @Composable
-fun StatBar(progress: Float, color: Color, modifier: Modifier = Modifier) {
+fun StatBar(
+    progress: Float,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = modifier
             .height(8.dp)
-            .clip(RoundedCornerShape(50))
-            .background(MaterialTheme.colorScheme.onSecondary),
+            .clip(RoundedCornerShape(4.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant),
     ) {
         Box(
             modifier = Modifier
@@ -104,15 +118,17 @@ fun StatBar(progress: Float, color: Color, modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun BaseStatsSectionPreview() {
-    BaseStatsSection(
-        stats = listOf(
-            PokemonStat("hp", 100),
-            PokemonStat("attack", 49),
-            PokemonStat("defense", 48),
-            PokemonStat("special-attack", 65),
-            PokemonStat("special-defense", 65),
-            PokemonStat("speed", 45),
-        ),
-    )
+private fun BaseStatsSectionPreview() {
+    MaterialTheme {
+        BaseStatsSection(
+            stats = listOf(
+                PokemonStat("hp", 45),
+                PokemonStat("attack", 49),
+                PokemonStat("defense", 49),
+                PokemonStat("special-attack", 65),
+                PokemonStat("special-defense", 65),
+                PokemonStat("speed", 45),
+            ),
+        )
+    }
 }
