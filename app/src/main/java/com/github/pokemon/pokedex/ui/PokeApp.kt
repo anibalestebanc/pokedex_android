@@ -1,6 +1,5 @@
 package com.github.pokemon.pokedex.ui
 
-import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,39 +13,34 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.rememberNavBackStack
 import com.github.pokemon.pokedex.navigation.NavigationHost
-import com.github.pokemon.pokedex.navigation.NavigationRoute
-import com.github.pokemon.pokedex.navigation.rememberNavigationActions
+import com.github.pokemon.pokedex.navigation.rememberNavigationState
+import com.github.pokemon.pokedex.navigation.rememberNavigator
 import com.github.pokemon.pokedex.theme.HighContrastDarkColorScheme
 import com.github.pokemon.pokedex.theme.HighContrastLightColorScheme
 import com.github.pokemon.pokedex.ui.components.bottombar.PokeBottomBar
 
 @Composable
 fun PokeApp(appState: AppState) {
-
     val darkTheme = isSystemInDarkTheme()
     val colorScheme = if (darkTheme) HighContrastDarkColorScheme else HighContrastLightColorScheme
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val backStack = rememberNavBackStack(NavigationRoute.Home)
-
-    val navigationActions = rememberNavigationActions(backStack)
+    val navigationState = rememberNavigationState()
+    val navigator = rememberNavigator(navigationState)
 
     MaterialTheme(colorScheme = colorScheme) {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.surface,
             snackbarHost = { SnackbarHost(snackbarHostState) },
             bottomBar = {
-                if (shouldShowBottomBar(current = backStack.lastOrNull()))
-               PokeBottomBar(
-                    current = backStack.lastOrNull(),
-                    onClick = { destination ->
-                        navigationActions.onTopLevelSelected(destination)
-                    },
-                )
+                if (navigationState.isTopLevel(navigationState.currentKey)) {
+                    PokeBottomBar(
+                        current = navigationState.currentTopLevel,
+                        onClick = { route -> navigator.navigate(route) },
+                    )
+                }
             },
             contentWindowInsets = WindowInsets.systemBars,
         ) { innerPadding ->
@@ -56,19 +50,10 @@ fun PokeApp(appState: AppState) {
                     .padding(innerPadding),
             ) {
                 NavigationHost(
-                    appState = appState,
-                    backStack = backStack,
-                    onNavigate = navigationActions,
+                    navigationState = navigationState,
+                    navigator = navigator,
                 )
             }
         }
-    }
-}
-
-private fun shouldShowBottomBar(current: NavKey?): Boolean {
-    Log.d("Navigation3", "shouldShowBottomBar()-> current: ${current?.javaClass?.simpleName}")
-    return when (current) {
-        is NavigationRoute.Home, is NavigationRoute.SearchList, is NavigationRoute.Favorite -> true
-        else -> false
     }
 }

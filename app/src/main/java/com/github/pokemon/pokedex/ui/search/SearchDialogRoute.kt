@@ -33,15 +33,14 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.ui.components.appbar.RoundedSearchInputTopBar
+import com.github.pokemon.pokedex.utils.emptyString
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchDialogRoute(
-    navigateToResult: Boolean = false,
-    initialQuery: String = "",
+    query: String = emptyString,
     onBackClick: () -> Unit,
-    onSearchResult: (String) -> Unit,
-    onBackAndSaveStateHandle: (String) -> Unit,
+    onSearchList: (query: String) -> Unit,
     viewModel: SearchViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -50,20 +49,17 @@ fun SearchDialogRoute(
         viewModel.onAction(SearchAction.OnStart)
     }
 
-    LaunchedEffect(initialQuery) {
-        if (initialQuery.isNotEmpty()) {
-            viewModel.onAction(SearchAction.SetInitialQuery(initialQuery))
+    LaunchedEffect(query) {
+        if (query.isNotEmpty()) {
+            viewModel.onAction(SearchAction.SetInitialQuery(query))
         }
     }
 
     SearchDialogScreen(
         uiState = uiState,
         onDismiss = { onBackClick() },
-        onSubmitResult = { q ->
-            when (navigateToResult) {
-                true -> onSearchResult(q)
-                false -> onBackAndSaveStateHandle(q)
-            }
+        onSubmitResult = { query ->
+            onSearchList(query)
         },
         onAction = viewModel::onAction,
     )

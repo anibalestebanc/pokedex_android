@@ -21,12 +21,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.navigation.NavigationRoute
-import com.github.pokemon.pokedex.navigation.TopDestination
 
 @Composable
 fun PokeBottomBar(
     current: NavKey?,
-    onClick: (TopDestination) -> Unit,
+    onClick: (NavKey) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column (modifier = modifier.fillMaxWidth()){
@@ -50,7 +49,7 @@ fun PokeBottomBar(
 
             NavigationBarItem(
                 selected = current is NavigationRoute.Home,
-                onClick = { onClick(TopDestination.HOME) },
+                onClick = { onClick(NavigationRoute.Home) },
                 icon = {
                     Icon(
                         imageVector =  Icons.Outlined.Home,
@@ -70,7 +69,7 @@ fun PokeBottomBar(
 
             NavigationBarItem(
                 selected = current is NavigationRoute.SearchList,
-                onClick = { onClick(TopDestination.SEARCH_LIST) },
+                onClick = { onClick(NavigationRoute.SearchList()) },
                 icon = {
                     Icon(
                         imageVector =  Icons.Outlined.Search,
@@ -90,7 +89,7 @@ fun PokeBottomBar(
 
             NavigationBarItem(
                 selected = current is NavigationRoute.Favorite,
-                onClick = { onClick(TopDestination.FAVORITES) },
+                onClick = { onClick(NavigationRoute.Favorite) },
                 icon = {
                     Icon(
                         imageVector =  Icons.Outlined.FavoriteBorder,

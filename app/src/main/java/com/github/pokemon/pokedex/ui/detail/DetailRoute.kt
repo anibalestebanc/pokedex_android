@@ -40,16 +40,16 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun DetailRoute(
     onBack: () -> Unit,
-    pokemonId: String,
+    id: String,
     viewModel: DetailViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val isFavorite by viewModel.observeIsFavorite(pokemonId).collectAsStateWithLifecycle(initialValue = false)
+    val isFavorite by viewModel.observeIsFavorite(id).collectAsStateWithLifecycle(initialValue = false)
 
-    LaunchedEffect(pokemonId) {
-        viewModel.onAction(DetailAction.OnStart(pokemonId))
+    LaunchedEffect(id) {
+        viewModel.onAction(DetailAction.OnStart(id))
     }
 
     LaunchedEffect(viewModel) {
@@ -71,7 +71,7 @@ fun DetailRoute(
     }
 
     DetailScreen(
-        pokemonId = pokemonId,
+        pokemonId = id,
         isFavorite = isFavorite,
         uiState = uiState,
         onAction = viewModel::onAction,

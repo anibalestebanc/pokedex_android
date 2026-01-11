@@ -24,7 +24,6 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.domain.model.PokemonCatalog
-import com.github.pokemon.pokedex.ui.AppState
 import com.github.pokemon.pokedex.ui.components.SearchListCard
 import com.github.pokemon.pokedex.ui.components.appbar.FakeRoundedSearchInput
 import com.github.pokemon.pokedex.ui.components.common.EmptyScreen
@@ -37,7 +36,6 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchListRoute(
-    appState: AppState,
     initialQuery: String,
     onSearch: (String) -> Unit,
     onDetail: (String) -> Unit,
@@ -47,13 +45,6 @@ fun SearchListRoute(
     val pagingItems = viewModel.pagingFlow.collectAsLazyPagingItems()
     var seeded by rememberSaveable { mutableStateOf(false) }
 
-   // val backStackEntry by appState.navController.currentBackStackEntryAsState()
- /*   LaunchedEffect(backStackEntry) {
-        backStackEntry?.savedStateHandle?.getAndConsume<String>(SEARCH_LIST_KEY)?.let { q ->
-            viewModel.onAction(SearchListAction.QueryChanged(q))
-            viewModel.onAction(SearchListAction.SubmitSearch)
-        }
-    }*/
 
     LaunchedEffect(initialQuery, seeded) {
         if (!seeded) {

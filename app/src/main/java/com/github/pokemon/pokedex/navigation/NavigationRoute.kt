@@ -17,7 +17,7 @@ sealed class NavigationRoute : NavKey {
     data class SearchList(val query: String = emptyString) : NavigationRoute()
 
     @Serializable
-    data class Search(val query: String = emptyString, val navigateToSearch: Boolean = false) : NavigationRoute()
+    data class Search(val query: String = emptyString) : NavigationRoute()
 
     @Serializable
     data object Favorite : NavigationRoute()
