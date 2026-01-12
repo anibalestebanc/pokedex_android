@@ -24,14 +24,14 @@ import com.github.pokemon.pokedex.ui.components.RoundedSearchInput
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RoundedSearchInputTopBar(
+fun RoundedSearchTopBar(
     query: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
     onSubmit: () -> Unit,
     onBackClick: () -> Unit,
-    showBackButton: Boolean = false,
     modifier: Modifier = Modifier,
+    showBackButton: Boolean = false,
 ) {
     Row(
         modifier = modifier
@@ -67,9 +67,12 @@ fun RoundedSearchInputTopBar(
 
 @Preview
 @Composable
-fun RoundedSearchFullscreenTopBarPreview() {
-    PokeAppTheme {
-        RoundedSearchInputTopBar(
+private fun RoundedSearchTopBarPreview() {
+    PokeAppTheme(
+        darkTheme = false,
+        dynamicColor = false,
+    ) {
+        RoundedSearchTopBar(
             query = "",
             onValueChange = {},
             placeholder = stringResource(id = R.string.search_bar_hint),

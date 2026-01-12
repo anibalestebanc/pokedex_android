@@ -12,13 +12,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.pokemon.pokedex.R
-import com.github.pokemon.pokedex.ui.components.common.MediumChip
+import com.github.pokemon.pokedex.ui.components.MediumChip
 
 @Composable
 fun LegendarySection(
+    modifier: Modifier = Modifier,
     isLegendary: Boolean = false,
     isMythical: Boolean = false,
-    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -44,7 +44,7 @@ fun LegendarySection(
 
 @Preview(showBackground = true)
 @Composable
-fun LegendarySectionPreview() {
+private fun LegendarySectionPreview() {
     LegendarySection(
         isLegendary = true,
         isMythical = true,

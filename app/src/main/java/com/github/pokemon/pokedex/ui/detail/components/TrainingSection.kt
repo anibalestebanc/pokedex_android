@@ -58,7 +58,7 @@ fun TrainingSection(
 
 @Preview(showBackground = true)
 @Composable
-fun TrainingSectionPreview() {
+private fun TrainingSectionPreview() {
     TrainingSection(
         growthRate = "Fast",
         captureRate = 1,

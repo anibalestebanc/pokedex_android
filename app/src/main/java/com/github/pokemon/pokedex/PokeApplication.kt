@@ -10,7 +10,7 @@ import com.github.pokemon.pokedex.di.dataModule
 import com.github.pokemon.pokedex.di.domainModule
 import com.github.pokemon.pokedex.di.startupModule
 import com.github.pokemon.pokedex.di.syncCatalogModule
-import com.github.pokemon.pokedex.di.uiModule
+import com.github.pokemon.pokedex.di.presentationModule
 import com.github.pokemon.pokedex.startup.AppInitializer
 import com.github.pokemon.pokedex.startup.AsyncAppInitializer
 import com.github.pokemon.pokedex.startup.StrictModeInitializer
@@ -50,7 +50,7 @@ class PokeApplication : Application(), Configuration.Provider  {
                 startupModule,
                 dataModule,
                 domainModule,
-                uiModule,
+                presentationModule,
             )
         }
 

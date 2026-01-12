@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.components.common
+package com.github.pokemon.pokedex.ui.components.fullscreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

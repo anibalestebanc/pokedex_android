@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class SearchListViewModel(
@@ -30,9 +29,6 @@ class SearchListViewModel(
     private val loggerError: LoggerError,
     private val errorMapper: ErrorMapper
 ) : ViewModel() {
-
-    private val _uiState = MutableStateFlow(SearchListUiState())
-    val uiState: StateFlow<SearchListUiState> = _uiState
 
     private val queryFlow = MutableStateFlow(emptyString)
     private val detailFlows = mutableMapOf<Int, StateFlow<DetailItemUiState>>()
@@ -65,22 +61,13 @@ class SearchListViewModel(
     }
 
     fun onAction(event: SearchListAction) = when (event) {
-        is SearchListAction.SetInitialQuery -> initialSearch(event.text)
-        is SearchListAction.QueryChanged -> onQueryChanged(event.text)
-        SearchListAction.SubmitSearch -> submitSearch()
+        is SearchListAction.SubmitSearch -> submitSearch(event.query)
     }
 
-    private fun onQueryChanged(query: String) {
-        _uiState.update { it.copy(query = query) }
-    }
-
-    private fun initialSearch(query: String) {
-        _uiState.update { it.copy(query = query) }
-        queryFlow.value = query
-    }
-
-    private fun submitSearch() {
-        val query = _uiState.value.query
-        queryFlow.value = query
+    private fun submitSearch(query: String) {
+        val currentQuery = queryFlow.value
+        if (currentQuery != query) {
+            queryFlow.value = query
+        }
     }
 }

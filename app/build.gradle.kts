@@ -79,7 +79,9 @@ dependencies {
 
     // Lifecycle
     implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.runtime.compose)
     implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.viewmodel.savedstate)
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.lifecycle.livedata.ktx)
 
@@ -107,16 +109,26 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.material.icons.extended)
     implementation(libs.compose.foundation)
-    implementation(libs.navigation.compose)
     implementation(libs.compose.runtime.livedata)
     implementation(libs.accompanist.systemuicontroller)
 
+    //Navigation 3
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+
+    //Kotlin Serializable
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.kotlinx.serialization.json)
+
+    //Immutable
+    implementation(libs.kotlinx.collections.immutable)
+
     // Networking (for future use)
     implementation(libs.retrofit)
-    implementation(libs.retrofit.kotlinx.serialization)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
-    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit.kotlinx.serialization)
 
     // Persistence (for future use)
     implementation(libs.room.runtime)

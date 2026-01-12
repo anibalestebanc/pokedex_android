@@ -7,6 +7,7 @@ import com.github.pokemon.pokedex.domain.repository.HistorySearchRepository
 import com.github.pokemon.pokedex.domain.usecase.SaveHistorySearchUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
@@ -19,21 +20,15 @@ class SearchViewModel(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SearchUiState())
-    val uiState: StateFlow<SearchUiState> = _uiState
+    val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
 
     fun onAction(event: SearchAction) {
         when (event) {
             SearchAction.OnStart -> getSearchHistory()
-            is SearchAction.SetInitialQuery -> initialQuery(event.query)
-            is SearchAction.SearchSubmit -> submitSearch()
-            is SearchAction.SelectSuggestion -> selectSearchSuggestion(event.query)
-            is SearchAction.QueryChanged -> onQueryChanged(event.query)
+            is SearchAction.SearchSubmit -> saveSearchQuery(event.query)
+            is SearchAction.SelectSuggestion -> saveSearchQuery(event.query)
             SearchAction.RemoveAllHistory -> deleteSearchHistory()
         }
-    }
-
-    private fun initialQuery(query: String) {
-        _uiState.update { it.copy(query = query) }
     }
 
     private fun getSearchHistory() = viewModelScope.launch {
@@ -41,25 +36,11 @@ class SearchViewModel(
             .distinctUntilChanged()
             .catch { error ->
                 loggerError("Error getting search history", error)
-                _uiState.update { it.copy(searchHistory = emptyList()) }
+                _uiState.update { it.copy(historySearch = emptyList()) }
             }
             .collect { history ->
-                _uiState.update { it.copy(searchHistory = history) }
+                _uiState.update { it.copy(historySearch = history) }
             }
-    }
-
-    private fun onQueryChanged(query: String) {
-        _uiState.update { it.copy(query = query) }
-    }
-
-    private fun selectSearchSuggestion(query: String) {
-        _uiState.update { it.copy(query = query) }
-        saveSearchQuery(query)
-    }
-
-    private fun submitSearch() {
-        val query = _uiState.value.query
-        saveSearchQuery(query)
     }
 
     private fun saveSearchQuery(query: String) = viewModelScope.launch {

@@ -1,12 +1,19 @@
-package com.github.pokemon.pokedex.ui.home.model
+package com.github.pokemon.pokedex.ui.components.model
 
-import androidx.annotation.ColorRes
-import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
 import com.github.pokemon.pokedex.R
 
+val HomeOptions = listOf(
+    MenuItem.Pokedex,
+    MenuItem.Moves,
+    MenuItem.Abilities,
+    MenuItem.Items,
+    MenuItem.Locations,
+    MenuItem.TypeCharts,
+)
+
 @Immutable
-sealed class MenuItem(@StringRes val label: Int, @ColorRes val colorResId: Int) {
+sealed class MenuItem(val label: Int, val colorResId: Int) {
     object Pokedex : MenuItem(R.string.menu_pokedex, R.color.poke_teal)
     object Moves : MenuItem(R.string.menu_moves, R.color.poke_red)
     object Abilities : MenuItem(R.string.menu_abilities, R.color.poke_light_blue)

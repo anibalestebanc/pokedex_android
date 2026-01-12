@@ -36,21 +36,23 @@ import coil.compose.AsyncImage
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.theme.PokeAppTheme
 import com.github.pokemon.pokedex.ui.components.FavoriteButton
-import com.github.pokemon.pokedex.ui.components.common.ChipGroup
+import com.github.pokemon.pokedex.ui.components.ChipGroup
 import com.github.pokemon.pokedex.ui.components.utils.PokeBackgroundUtil.primaryTypeColorRes
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun DetailHeader(
     name: String,
     numberLabel: String,
     genera: String?,
-    types: List<String>,
+    types: ImmutableList<String>,
     imageUrl: String?,
     isFavorite: Boolean,
     headerColor: Color,
     onBackClick: () -> Unit,
     onToggleFavorite: () -> Unit,
-    onShareClick: (String) -> Unit ,
+    onShareClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -125,7 +127,7 @@ fun DetailHeader(
             }
 
             ChipGroup(
-                chips = types.map { it.replaceFirstChar { c -> if (c.isLowerCase()) c.titlecase() else c.toString() } },
+                chips = types,
                 containerColor = Color.White.copy(alpha = 0.25f),
                 contentColor = Color.White,
             )
@@ -151,7 +153,7 @@ fun DetailHeader(
                 .padding(vertical = 24.dp, horizontal = 16.dp),
         ) {
             IconButton(
-                modifier = modifier.size(40.dp),
+                modifier = Modifier.size(40.dp),
                 onClick = { onShareClick(imageUrl.orEmpty()) },
             ) {
                 Icon(
@@ -193,13 +195,13 @@ fun DetailHeader(
 
 @Preview
 @Composable
-fun DetailHeaderPreview() {
+private fun DetailHeaderPreview() {
     PokeAppTheme {
         DetailHeader(
             name = "pikachu",
             numberLabel = "002",
             genera = "Seed Pokémon",
-            types = listOf("Electric", "Electric"),
+            types = listOf("Electric", "Electric").toImmutableList(),
             isFavorite = false,
             imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/",
             headerColor = colorResource(id = primaryTypeColorRes(listOf("Electric"))),

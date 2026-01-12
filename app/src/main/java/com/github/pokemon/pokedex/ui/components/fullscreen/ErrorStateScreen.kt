@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.components.common
+package com.github.pokemon.pokedex.ui.components.fullscreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,8 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CloudOff
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,11 +23,9 @@ import androidx.compose.ui.unit.dp
 import com.github.pokemon.pokedex.theme.PokeAppTheme
 
 @Composable
-fun RetryErrorScreen(
+fun ErrorScreen(
     title: String,
     message: String? = null,
-    retryText: String?,
-    onRetry: (() -> Unit)?,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(24.dp),
 ) {
@@ -45,9 +42,8 @@ fun RetryErrorScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Icon(
-                imageVector = Icons.Outlined.CloudOff,
+                imageVector = Icons.Outlined.ErrorOutline,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(64.dp)
@@ -66,25 +62,17 @@ fun RetryErrorScreen(
                     textAlign = TextAlign.Center
                 )
             }
-            if (retryText != null && onRetry != null) {
-                Button(onClick = onRetry) {
-                    Text(retryText)
-                }
-            }
         }
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
-fun RetryErrorScreenPreview(){
+fun ErrorScreenPreview(){
     PokeAppTheme {
-        RetryErrorScreen(
+        ErrorScreen(
             title = "Error",
             message = "No se pudo cargar la lista",
-            retryText = "Reintentar",
-            onRetry = {}
         )
     }
 }
