@@ -79,7 +79,9 @@ dependencies {
 
     // Lifecycle
     implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.runtime.compose)
     implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.viewmodel.savedstate)
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.lifecycle.livedata.ktx)
 

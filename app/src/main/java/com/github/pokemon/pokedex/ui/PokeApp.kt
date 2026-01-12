@@ -18,6 +18,7 @@ import com.github.pokemon.pokedex.navigation.rememberNavigationState
 import com.github.pokemon.pokedex.navigation.rememberNavigator
 import com.github.pokemon.pokedex.theme.HighContrastDarkColorScheme
 import com.github.pokemon.pokedex.theme.HighContrastLightColorScheme
+import com.github.pokemon.pokedex.ui.components.bottombar.Destinations
 import com.github.pokemon.pokedex.ui.components.bottombar.PokeBottomBar
 
 @Composable
@@ -26,7 +27,6 @@ fun PokeApp(appState: AppState) {
     val colorScheme = if (darkTheme) HighContrastDarkColorScheme else HighContrastLightColorScheme
 
     val snackbarHostState = remember { SnackbarHostState() }
-
     val navigationState = rememberNavigationState()
     val navigator = rememberNavigator(navigationState)
 
@@ -38,6 +38,7 @@ fun PokeApp(appState: AppState) {
                 if (navigationState.isTopLevel(navigationState.currentKey)) {
                     PokeBottomBar(
                         current = navigationState.currentTopLevel,
+                        destinations = Destinations,
                         onClick = { route -> navigator.navigate(route) },
                     )
                 }

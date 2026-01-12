@@ -20,12 +20,16 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.ui.components.HomeOptionsComponent
 import com.github.pokemon.pokedex.ui.components.appbar.FakeRoundedSearchInput
+import com.github.pokemon.pokedex.ui.sharedsearch.SearchSharedViewModel
+import com.github.pokemon.pokedex.ui.sharedsearch.SharedSearchAction
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 
 @Composable
 fun HomeRoute(
     onSearch: () -> Unit,
+    sharedViewModel: SearchSharedViewModel = koinActivityViewModel(),
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -35,7 +39,10 @@ fun HomeRoute(
             viewModel.uiEffect.collect { effect ->
                 when (effect) {
                     is HomeEffect.NavigateToPokedex -> {}
-                    is HomeEffect.NavigateToSearch -> onSearch()
+                    is HomeEffect.NavigateToSearch -> {
+                        sharedViewModel.onAction(SharedSearchAction.ClearQuery)
+                        onSearch()
+                    }
                 }
             }
         }

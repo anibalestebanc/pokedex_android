@@ -5,39 +5,34 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation3.runtime.NavKey
 import com.github.pokemon.pokedex.R
-import com.github.pokemon.pokedex.navigation.NavigationRoute.Favorite
-import com.github.pokemon.pokedex.navigation.NavigationRoute.Home
-import com.github.pokemon.pokedex.navigation.NavigationRoute.SearchList
+import com.github.pokemon.pokedex.navigation.NavigationRoute
 
 data class BottomBarItem(
-    val id: String,
     val label: Int,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
-    val qualifiedName: String,
+    val route: NavKey,
 )
 
-val TopBottomBarDestinations = listOf(
-    BottomBarItem(
-        id = "home",
+val Destinations = mapOf(
+    "home" to BottomBarItem(
         label = R.string.bottom_bar_home,
         selectedIcon = Icons.Outlined.Home,
         unselectedIcon = Icons.Outlined.Home,
-        qualifiedName = Home::class.qualifiedName!!,
+        route = NavigationRoute.Home,
     ),
-    BottomBarItem(
-        id = "search",
+    "search" to BottomBarItem(
         label = R.string.bottom_bar_search,
         selectedIcon = Icons.Outlined.Search,
         unselectedIcon = Icons.Outlined.Search,
-        qualifiedName = SearchList::class.qualifiedName!!,
+        route = NavigationRoute.SearchList,
     ),
-    BottomBarItem(
-        id = "favorite",
+    "favorite" to BottomBarItem(
         label = R.string.bottom_bar_favorite,
         selectedIcon = Icons.Outlined.FavoriteBorder,
         unselectedIcon = Icons.Outlined.FavoriteBorder,
-        qualifiedName = Favorite::class.qualifiedName!!,
+        route = NavigationRoute.Favorite,
     ),
 )

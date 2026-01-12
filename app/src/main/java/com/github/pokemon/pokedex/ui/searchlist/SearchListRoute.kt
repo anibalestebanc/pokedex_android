@@ -5,15 +5,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,31 +28,28 @@ import com.github.pokemon.pokedex.ui.components.common.EmptyScreen
 import com.github.pokemon.pokedex.ui.components.common.RetryErrorScreen
 import com.github.pokemon.pokedex.ui.components.common.LoadingScreen
 import com.github.pokemon.pokedex.ui.components.common.LoadingMore
+import com.github.pokemon.pokedex.ui.sharedsearch.SearchSharedViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 @Composable
 fun SearchListRoute(
-    initialQuery: String,
     onSearch: (String) -> Unit,
     onDetail: (String) -> Unit,
+    sharedViewModel: SearchSharedViewModel = koinActivityViewModel(),
     viewModel: SearchListViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val pagingItems = viewModel.pagingFlow.collectAsLazyPagingItems()
-    var seeded by rememberSaveable { mutableStateOf(false) }
+    val shareQuery = sharedViewModel.sharedQuery.collectAsStateWithLifecycle().value
 
-
-    LaunchedEffect(initialQuery, seeded) {
-        if (!seeded) {
-            viewModel.onAction(SearchListAction.SetInitialQuery(initialQuery))
-            seeded = true
-        }
+    LaunchedEffect(shareQuery) {
+        viewModel.onAction(SearchListAction.SubmitSearch(shareQuery))
     }
 
     SearchListScreen(
-        uiState = uiState,
+        searchQuery = shareQuery,
         onSearchClick = onSearch,
         onDetailClick = onDetail,
         pagingItems = pagingItems,
@@ -64,19 +59,19 @@ fun SearchListRoute(
 
 @Composable
 fun SearchListScreen(
-    uiState: SearchListUiState,
+    searchQuery : String,
     onSearchClick: (String) -> Unit,
     onDetailClick: (String) -> Unit,
     pagingItems: LazyPagingItems<PokemonCatalog>? = null,
     observeDetail: (Int) -> Flow<DetailItemUiState>,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize()) {
 
         Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
             FakeRoundedSearchInput(
-                text = uiState.query.ifBlank { stringResource(id = R.string.search_bar_hint) },
-                onSearchClick = { onSearchClick(uiState.query) },
+                text = searchQuery.ifBlank { stringResource(id = R.string.search_bar_hint) },
+                onSearchClick = { onSearchClick(searchQuery) },
             )
         }
 
@@ -101,13 +96,13 @@ fun SearchListScreen(
                 }
 
                 is LoadState.NotLoading -> {
-                    EmptyScreen(title = stringResource(id = R.string.search_result_empty, uiState.query))
+                    EmptyScreen(title = stringResource(id = R.string.search_result_empty, searchQuery))
                 }
             }
         }
 
         LazyColumn(
-            modifier = modifier,
+            modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
@@ -151,9 +146,9 @@ fun SearchListScreen(
 @Composable
 fun SearchListScreenPreview() {
     SearchListScreen(
+        searchQuery = "",
         onDetailClick = {},
         onSearchClick = {},
-        uiState = SearchListUiState(),
         pagingItems = null,
         observeDetail = { flowOf(DetailItemUiState()) }
     )

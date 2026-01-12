@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation3.runtime.NavKey
 
-
 @Composable
 fun rememberNavigator(
     state: NavigationState

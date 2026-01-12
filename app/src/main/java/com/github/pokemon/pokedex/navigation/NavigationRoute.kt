@@ -14,10 +14,10 @@ sealed class NavigationRoute : NavKey {
     data class Detail(val id: String) : NavigationRoute()
 
     @Serializable
-    data class SearchList(val query: String = emptyString) : NavigationRoute()
+    data object SearchList : NavigationRoute()
 
     @Serializable
-    data class Search(val query: String = emptyString) : NavigationRoute()
+    data object Search : NavigationRoute()
 
     @Serializable
     data object Favorite : NavigationRoute()

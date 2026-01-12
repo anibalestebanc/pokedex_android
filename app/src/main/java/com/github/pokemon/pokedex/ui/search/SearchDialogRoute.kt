@@ -33,34 +33,31 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.ui.components.appbar.RoundedSearchInputTopBar
-import com.github.pokemon.pokedex.utils.emptyString
+import com.github.pokemon.pokedex.ui.sharedsearch.SearchSharedViewModel
+import com.github.pokemon.pokedex.ui.sharedsearch.SharedSearchAction
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.viewmodel.koinActivityViewModel
 
 @Composable
 fun SearchDialogRoute(
-    query: String = emptyString,
     onBackClick: () -> Unit,
     onSearchList: (query: String) -> Unit,
+    sharedViewModel: SearchSharedViewModel = koinActivityViewModel(),
     viewModel: SearchViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val sharedQuery = sharedViewModel.sharedQuery.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel) {
         viewModel.onAction(SearchAction.OnStart)
     }
 
-    LaunchedEffect(query) {
-        if (query.isNotEmpty()) {
-            viewModel.onAction(SearchAction.SetInitialQuery(query))
-        }
-    }
-
     SearchDialogScreen(
         uiState = uiState,
+        searchQuery = sharedQuery.value,
+        onQueryChange = { query -> sharedViewModel.onAction(SharedSearchAction.QueryChanged(query)) },
         onDismiss = { onBackClick() },
-        onSubmitResult = { query ->
-            onSearchList(query)
-        },
+        onSubmitResult = { query -> onSearchList(query) },
         onAction = viewModel::onAction,
     )
 }
@@ -70,6 +67,8 @@ fun SearchDialogRoute(
 @Composable
 fun SearchDialogScreen(
     uiState: SearchUiState,
+    searchQuery : String,
+    onQueryChange: (String) -> Unit,
     onDismiss: () -> Unit,
     onSubmitResult: (String) -> Unit,
     onAction: (SearchAction) -> Unit,
@@ -94,13 +93,13 @@ fun SearchDialogScreen(
                 Scaffold(
                     topBar = {
                         RoundedSearchInputTopBar(
-                            query = uiState.query,
-                            onValueChange = { onAction(SearchAction.QueryChanged(it)) },
+                            query = searchQuery,
+                            onValueChange = onQueryChange,
                             placeholder = stringResource(id = R.string.search_bar_hint),
                             onSubmit = {
-                                val query = uiState.query.trim()
+                                val query = searchQuery.trim()
                                 if (query.isNotEmpty()) {
-                                    onAction(SearchAction.SearchSubmit)
+                                    onAction(SearchAction.SearchSubmit(query))
                                 }
                                 onSubmitResult(query)
                             },
@@ -139,13 +138,13 @@ fun SearchDialogScreen(
                             contentPadding = PaddingValues(bottom = 24.dp),
                         ) {
                             items(
-                                count = uiState.searchHistory.size,
+                                count = uiState.historySearch.size,
                                 key = { it },
                             ) { index ->
-                                val item = uiState.searchHistory[index]
+                                val savedQuery = uiState.historySearch[index]
 
                                 ListItem(
-                                    headlineContent = { Text(item, color = MaterialTheme.colorScheme.onSurface) },
+                                    headlineContent = { Text(savedQuery, color = MaterialTheme.colorScheme.onSurface) },
                                     leadingContent = {
                                         Icon(
                                             Icons.Rounded.History,
@@ -155,9 +154,9 @@ fun SearchDialogScreen(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .clickable {
-                                            onAction(SearchAction.QueryChanged(item))
-                                            onAction(SearchAction.SearchSubmit)
-                                            onSubmitResult(item)
+                                            onQueryChange(savedQuery)
+                                            onAction(SearchAction.SearchSubmit(savedQuery))
+                                            onSubmitResult(savedQuery)
                                         },
                                 )
                             }

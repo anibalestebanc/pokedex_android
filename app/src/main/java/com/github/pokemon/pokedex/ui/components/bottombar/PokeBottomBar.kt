@@ -2,10 +2,6 @@ package com.github.pokemon.pokedex.ui.components.bottombar
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -19,12 +15,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
-import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.navigation.NavigationRoute
 
 @Composable
 fun PokeBottomBar(
-    current: NavKey?,
+    current: NavKey,
+    destinations: Map<String, BottomBarItem>,
     onClick: (NavKey) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -39,83 +35,45 @@ fun PokeBottomBar(
             tonalElevation = 0.dp,
         ) {
 
-            val defaultItemColor = NavigationBarItemDefaults.colors(
-                selectedIconColor = MaterialTheme.colorScheme.onSurface,
-                selectedTextColor = MaterialTheme.colorScheme.onSurface,
-                unselectedIconColor = MaterialTheme.colorScheme.onSurface,
-                unselectedTextColor = MaterialTheme.colorScheme.onSurface,
-                indicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-            )
-
-            NavigationBarItem(
-                selected = current is NavigationRoute.Home,
-                onClick = { onClick(NavigationRoute.Home) },
-                icon = {
-                    Icon(
-                        imageVector =  Icons.Outlined.Home,
-                        tint = MaterialTheme.colorScheme.onSurface,
-                        contentDescription = null,
-                    )
-                },
-                label = {
-                    Text(
-                        text = stringResource(R.string.bottom_bar_home),
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                },
-                alwaysShowLabel = true,
-                colors = defaultItemColor,
-            )
-
-            NavigationBarItem(
-                selected = current is NavigationRoute.SearchList,
-                onClick = { onClick(NavigationRoute.SearchList()) },
-                icon = {
-                    Icon(
-                        imageVector =  Icons.Outlined.Search,
-                        tint = MaterialTheme.colorScheme.onSurface,
-                        contentDescription = null,
-                    )
-                },
-                label = {
-                    Text(
-                        text = stringResource(R.string.bottom_bar_search),
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                },
-                alwaysShowLabel = true,
-                colors = defaultItemColor,
-            )
-
-            NavigationBarItem(
-                selected = current is NavigationRoute.Favorite,
-                onClick = { onClick(NavigationRoute.Favorite) },
-                icon = {
-                    Icon(
-                        imageVector =  Icons.Outlined.FavoriteBorder,
-                        tint = MaterialTheme.colorScheme.onSurface,
-                        contentDescription = null,
-                    )
-                },
-                label = {
-                    Text(
-                        text = stringResource(R.string.bottom_bar_favorite),
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                },
-                alwaysShowLabel = true,
-                colors = defaultItemColor,
-            )
+            destinations.entries.forEach { map ->
+                val item = map.value
+                val label = stringResource(id = item.label)
+                NavigationBarItem(
+                    selected = current::class == item.route::class,
+                    onClick = { onClick(item.route) },
+                    icon = {
+                        Icon(
+                            imageVector =  item.selectedIcon,
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            contentDescription = null,
+                        )
+                    },
+                    label = {
+                        Text(
+                            text = label,
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                    },
+                    alwaysShowLabel = true,
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = MaterialTheme.colorScheme.onSurface,
+                        selectedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurface,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurface,
+                        indicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                    ),
+                )
+            }
         }
     }
-
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PokeBottomBarPreview() {
     PokeBottomBar(
-        current = NavigationRoute.SearchList(),
+        current = NavigationRoute.SearchList,
+        destinations = Destinations,
         onClick = {}
     )
 }

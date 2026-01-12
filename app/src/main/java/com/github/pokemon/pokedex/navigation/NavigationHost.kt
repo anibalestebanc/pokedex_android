@@ -32,7 +32,7 @@ fun NavigationHost(
             entry<NavigationRoute.Home> {
                 HomeRoute(
                     onSearch = {
-                        navigator.navigate(NavigationRoute.Search())
+                        navigator.navigate(NavigationRoute.Search)
                     },
                 )
             }
@@ -44,25 +44,23 @@ fun NavigationHost(
                 )
             }
 
-            entry<NavigationRoute.Search> { search ->
+            entry<NavigationRoute.Search> {
                 SearchDialogRoute(
-                    query = search.query,
                     onBackClick = { navigator.goBack() },
-                    onSearchList = { query ->
+                    onSearchList = {
                         navigator.goBack()
-                        navigator.navigate(NavigationRoute.SearchList(query))
+                        navigator.navigate(NavigationRoute.SearchList)
                     },
                 )
             }
 
-            entry<NavigationRoute.SearchList> { searchList ->
+            entry<NavigationRoute.SearchList> {
                 SearchListRoute(
-                    initialQuery = searchList.query,
                     onDetail = { pokemonId ->
                         navigator.navigate(NavigationRoute.Detail(pokemonId))
                     },
-                    onSearch = { query ->
-                        navigator.navigate(NavigationRoute.Search(query))
+                    onSearch = {
+                        navigator.navigate(NavigationRoute.Search)
                     },
                 )
             }

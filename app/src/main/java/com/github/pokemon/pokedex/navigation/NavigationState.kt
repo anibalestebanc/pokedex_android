@@ -40,5 +40,4 @@ class NavigationState(val startDestination: NavKey) {
     fun isTopLevel(key: NavKey): Boolean {
         return key::class in topLevelDestinations
     }
-
 }
