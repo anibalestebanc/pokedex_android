@@ -117,10 +117,12 @@ dependencies {
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
 
-
     //Kotlin Serializable
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.serialization.json)
+
+    //Immutable
+    implementation(libs.kotlinx.collections.immutable)
 
     // Networking (for future use)
     implementation(libs.retrofit)

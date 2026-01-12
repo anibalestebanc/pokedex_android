@@ -32,7 +32,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.pokemon.pokedex.R
-import com.github.pokemon.pokedex.ui.components.appbar.RoundedSearchInputTopBar
+import com.github.pokemon.pokedex.ui.components.appbar.RoundedSearchTopBar
 import com.github.pokemon.pokedex.ui.sharedsearch.SearchSharedViewModel
 import com.github.pokemon.pokedex.ui.sharedsearch.SharedSearchAction
 import org.koin.androidx.compose.koinViewModel
@@ -92,7 +92,7 @@ fun SearchDialogScreen(
             Surface {
                 Scaffold(
                     topBar = {
-                        RoundedSearchInputTopBar(
+                        RoundedSearchTopBar(
                             query = searchQuery,
                             onValueChange = onQueryChange,
                             placeholder = stringResource(id = R.string.search_bar_hint),

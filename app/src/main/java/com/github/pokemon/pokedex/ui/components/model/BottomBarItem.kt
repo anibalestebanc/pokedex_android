@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.components.bottombar
+package com.github.pokemon.pokedex.ui.components.model
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder

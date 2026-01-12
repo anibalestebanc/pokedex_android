@@ -14,6 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.pokemon.pokedex.domain.model.PokemonFullDetail
 import com.github.pokemon.pokedex.domain.model.PokemonSprites
+import com.github.pokemon.pokedex.utils.capitalizeFirst
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun AboutSection(detail: PokemonFullDetail, modifier: Modifier = Modifier) {
@@ -37,8 +39,8 @@ fun AboutSection(detail: PokemonFullDetail, modifier: Modifier = Modifier) {
 
         if (detail.abilities.isNotEmpty() || detail.eggGroups.isNotEmpty()) {
             BreedingSection(
-                abilities = detail.abilities,
-                eggGroups = detail.eggGroups,
+                abilities = detail.abilities.map { capitalizeFirst(it) }.toImmutableList(),
+                eggGroups = detail.eggGroups.map { capitalizeFirst(it) }.toImmutableList(),
                 modifier = Modifier.padding(top = 8.dp),
             )
         }
@@ -62,7 +64,7 @@ fun AboutSection(detail: PokemonFullDetail, modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun AboutSectionPreview() {
+private fun AboutSectionPreview() {
     AboutSection(
         PokemonFullDetail(
             id = 25,

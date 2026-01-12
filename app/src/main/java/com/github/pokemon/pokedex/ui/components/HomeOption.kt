@@ -28,25 +28,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.theme.PokeAppTheme
-import com.github.pokemon.pokedex.ui.home.model.MenuItem
+import com.github.pokemon.pokedex.ui.components.model.HomeOptions
+import com.github.pokemon.pokedex.ui.components.model.MenuItem
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
-val HomeOptions = listOf(
-    MenuItem.Pokedex,
-    MenuItem.Moves,
-    MenuItem.Abilities,
-    MenuItem.Items,
-    MenuItem.Locations,
-    MenuItem.TypeCharts,
-)
 @Composable
-fun HomeOptionsComponent(options: List<MenuItem> = HomeOptions) {
-
+fun HomeOptionsComponent(
+    options: ImmutableList<MenuItem>,
+    modifier: Modifier = Modifier
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(5.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp),
         userScrollEnabled = false,
-        modifier = Modifier.height(202.dp),
+        modifier = modifier.height(202.dp),
     ) {
         items(
             count = options.size,
@@ -62,7 +59,7 @@ fun HomeOptionsComponent(options: List<MenuItem> = HomeOptions) {
     }
 }
 @Composable
-fun HomeOption(text: String, color: Color, onClick: () -> Unit = {}) {
+private fun HomeOption(text: String, color: Color, onClick: () -> Unit = {}) {
     Surface(
         color = color,
         shape = RoundedCornerShape(16.dp),
@@ -102,11 +99,11 @@ fun HomeOption(text: String, color: Color, onClick: () -> Unit = {}) {
 
 @Preview
 @Composable
-fun HomeOptionPreview() {
+private fun HomeOptionPreview() {
     PokeAppTheme(
         dynamicColor = false,
         darkTheme = false,
     ) {
-        HomeOptionsComponent()
+        HomeOptionsComponent(options = HomeOptions.toImmutableList())
     }
 }

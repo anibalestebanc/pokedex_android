@@ -19,9 +19,11 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.ui.components.HomeOptionsComponent
-import com.github.pokemon.pokedex.ui.components.appbar.FakeRoundedSearchInput
+import com.github.pokemon.pokedex.ui.components.SimpleRoundedSearch
+import com.github.pokemon.pokedex.ui.components.model.HomeOptions
 import com.github.pokemon.pokedex.ui.sharedsearch.SearchSharedViewModel
 import com.github.pokemon.pokedex.ui.sharedsearch.SharedSearchAction
+import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.viewmodel.koinActivityViewModel
 
@@ -67,7 +69,7 @@ fun HomeScreen(onAction: (HomeAction) -> Unit) {
             )
         }
         item {
-            FakeRoundedSearchInput(
+            SimpleRoundedSearch(
                 text = stringResource(id = R.string.search_bar_hint),
                 onSearchClick = { onAction(HomeAction.OnSearchClick) },
             )
@@ -77,7 +79,7 @@ fun HomeScreen(onAction: (HomeAction) -> Unit) {
         }
 
         item {
-            HomeOptionsComponent()
+            HomeOptionsComponent(options = HomeOptions.toImmutableList())
         }
     }
 }

@@ -18,8 +18,9 @@ import com.github.pokemon.pokedex.navigation.rememberNavigationState
 import com.github.pokemon.pokedex.navigation.rememberNavigator
 import com.github.pokemon.pokedex.theme.HighContrastDarkColorScheme
 import com.github.pokemon.pokedex.theme.HighContrastLightColorScheme
-import com.github.pokemon.pokedex.ui.components.bottombar.Destinations
+import com.github.pokemon.pokedex.ui.components.model.Destinations
 import com.github.pokemon.pokedex.ui.components.bottombar.PokeBottomBar
+import kotlinx.collections.immutable.toImmutableMap
 
 @Composable
 fun PokeApp(appState: AppState) {
@@ -38,7 +39,7 @@ fun PokeApp(appState: AppState) {
                 if (navigationState.isTopLevel(navigationState.currentKey)) {
                     PokeBottomBar(
                         current = navigationState.currentTopLevel,
-                        destinations = Destinations,
+                        destinations = Destinations.toImmutableMap(),
                         onClick = { route -> navigator.navigate(route) },
                     )
                 }

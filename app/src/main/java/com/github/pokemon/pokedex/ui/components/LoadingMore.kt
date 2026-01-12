@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.components.common
+package com.github.pokemon.pokedex.ui.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

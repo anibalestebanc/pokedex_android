@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.components.common
+package com.github.pokemon.pokedex.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,11 +17,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ChipGroup(
-    chips: List<String>,
+    chips: ImmutableList<String>,
     modifier: Modifier = Modifier,
     containerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
     contentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -90,12 +92,12 @@ fun ChipGroupPreview() {
     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text("Standard Chip Group:", fontWeight = FontWeight.Bold)
         ChipGroup(
-            chips = listOf("Electric", "Speed", "Static")
+            chips = listOf("Electric", "Speed", "Static").toImmutableList()
         )
 
         Text("Custom Colors (Material 3):", fontWeight = FontWeight.Bold)
         ChipGroup(
-            chips = listOf("Fire", "Flying"),
+            chips = listOf("Fire", "Flying").toImmutableList(),
             containerColor = MaterialTheme.colorScheme.tertiaryContainer,
             contentColor = MaterialTheme.colorScheme.onTertiaryContainer
         )

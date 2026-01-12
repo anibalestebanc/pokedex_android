@@ -16,11 +16,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
 import com.github.pokemon.pokedex.navigation.NavigationRoute
+import com.github.pokemon.pokedex.ui.components.model.BottomBarItem
+import com.github.pokemon.pokedex.ui.components.model.Destinations
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.toImmutableMap
 
 @Composable
 fun PokeBottomBar(
     current: NavKey,
-    destinations: Map<String, BottomBarItem>,
+    destinations: ImmutableMap<String, BottomBarItem>,
     onClick: (NavKey) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -35,8 +39,8 @@ fun PokeBottomBar(
             tonalElevation = 0.dp,
         ) {
 
-            destinations.entries.forEach { map ->
-                val item = map.value
+            destinations.entries.forEach { immutableEntry ->
+                val item = immutableEntry.value
                 val label = stringResource(id = item.label)
                 NavigationBarItem(
                     selected = current::class == item.route::class,
@@ -73,7 +77,7 @@ fun PokeBottomBar(
 fun PokeBottomBarPreview() {
     PokeBottomBar(
         current = NavigationRoute.SearchList,
-        destinations = Destinations,
+        destinations = Destinations.toImmutableMap(),
         onClick = {}
     )
 }

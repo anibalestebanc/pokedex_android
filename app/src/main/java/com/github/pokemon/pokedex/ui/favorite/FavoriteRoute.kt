@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.ui.components.SearchListCard
-import com.github.pokemon.pokedex.ui.components.common.EmptyScreen
-import com.github.pokemon.pokedex.ui.components.common.ErrorScreen
+import com.github.pokemon.pokedex.ui.components.fullscreen.EmptyScreen
+import com.github.pokemon.pokedex.ui.components.fullscreen.ErrorScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

@@ -13,13 +13,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.pokemon.pokedex.R
-import com.github.pokemon.pokedex.ui.components.common.ChipGroup
-import com.github.pokemon.pokedex.utils.capitalizeFirst
+import com.github.pokemon.pokedex.ui.components.ChipGroup
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun BreedingSection(
-    abilities: List<String>,
-    eggGroups: List<String>,
+    abilities: ImmutableList<String>,
+    eggGroups: ImmutableList<String>,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -32,7 +33,7 @@ fun BreedingSection(
                 modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
             )
             Spacer(Modifier.height(4.dp))
-            ChipGroup(chips = eggGroups.map { egg -> capitalizeFirst(egg) })
+            ChipGroup(chips = eggGroups)
         }
 
         if (abilities.isNotEmpty()) {
@@ -43,7 +44,7 @@ fun BreedingSection(
             )
             Spacer(Modifier.height(4.dp))
             ChipGroup(
-                chips = abilities.map { ability -> capitalizeFirst(ability) },
+                chips = abilities,
             )
         }
     }
@@ -52,9 +53,9 @@ fun BreedingSection(
 
 @Preview(showBackground = true)
 @Composable
-fun BreedingSectionPreview() {
+private fun BreedingSectionPreview() {
     BreedingSection(
-        abilities = listOf("Lightning Rod"),
-        eggGroups = listOf("Monster"),
+        abilities = listOf("Lightning Rod").toImmutableList(),
+        eggGroups = listOf("Monster").toImmutableList(),
     )
 }

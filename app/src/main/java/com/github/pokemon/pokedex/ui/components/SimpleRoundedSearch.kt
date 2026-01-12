@@ -1,4 +1,4 @@
-package com.github.pokemon.pokedex.ui.components.appbar
+package com.github.pokemon.pokedex.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -25,9 +25,10 @@ import androidx.compose.ui.unit.dp
 import com.github.pokemon.pokedex.R
 
 @Composable
-fun FakeRoundedSearchInput(
+fun SimpleRoundedSearch(
     text: String,
     onSearchClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val shape = RoundedCornerShape(24.dp)
     val interaction = remember { MutableInteractionSource() }
@@ -37,7 +38,7 @@ fun FakeRoundedSearchInput(
         contentColor = MaterialTheme.colorScheme.onSurface,
         shape = shape,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.6f)),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(44.dp)
             .clip(shape)
@@ -71,6 +72,6 @@ fun FakeRoundedSearchInput(
 
 @Preview
 @Composable
-fun FakeRoundedSearchInputPreview() {
-    FakeRoundedSearchInput(stringResource(id = R.string.search_bar_hint),{})
+fun SimpleRoundedSearchPreview() {
+    SimpleRoundedSearch(stringResource(id = R.string.search_bar_hint),{})
 }

@@ -16,10 +16,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun SectionTabs(
-    tabs: List<String>,
+    tabs: ImmutableList<String>,
     selectedIndex: Int,
     onTabSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
@@ -58,9 +60,9 @@ fun SectionTabs(
 
 @Preview(showBackground = true)
 @Composable
-fun SectionTabsPreview(){
+private fun SectionTabsPreview(){
     SectionTabs(
-        tabs = listOf("About", "Base Stats"),
+        tabs = listOf("About", "Base Stats").toImmutableList(),
         selectedIndex = 0,
         onTabSelected = {}
     )

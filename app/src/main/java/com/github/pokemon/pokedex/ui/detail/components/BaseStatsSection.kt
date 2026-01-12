@@ -15,6 +15,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,21 +27,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.pokemon.pokedex.domain.model.PokemonStat
 import com.github.pokemon.pokedex.domain.model.PokemonStatType
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun BaseStatsSection(
-    stats: List<PokemonStat>,
+    stats: ImmutableList<PokemonStat>,
     modifier: Modifier = Modifier
 ) {
-    val items = remember(stats) {
-        val statsMap = stats.associateBy { it.name.lowercase() }
-        PokemonStatType.entries.map { type ->
-            val value = statsMap[type.key]?.value ?: 0
-            type.label to value
+    val statsMap : Map<String, PokemonStat> by remember {
+        derivedStateOf {
+            stats.associateBy { it.name.lowercase() }
         }
     }
 
-    val total = remember(items) { items.sumOf { it.second } }
+    val items by remember(stats) {
+        derivedStateOf {
+            PokemonStatType.entries.map { type ->
+                val value = statsMap[type.key]?.value ?: 0
+                type.label to value
+            }
+        }
+    }
+
+    val total by remember {
+        derivedStateOf {
+            items.sumOf { it.second }
+        }
+    }
 
     Column(
         modifier = modifier
@@ -118,7 +133,7 @@ fun StatBar(
 
 @Preview(showBackground = true)
 @Composable
-fun BaseStatsSectionPreview() {
+private fun BaseStatsSectionPreview() {
     MaterialTheme {
         BaseStatsSection(
             stats = listOf(
@@ -128,7 +143,7 @@ fun BaseStatsSectionPreview() {
                 PokemonStat("special-attack", 65),
                 PokemonStat("special-defense", 65),
                 PokemonStat("speed", 45),
-            ),
+            ).toImmutableList(),
         )
     }
 }

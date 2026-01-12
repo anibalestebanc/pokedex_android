@@ -20,8 +20,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TopSnackbarBanner(text: String, showBanner: Boolean) {
-    AnimatedVisibility(visible = showBanner) {
+fun TopSnackbarBanner(
+    text: String,
+    showBanner: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    AnimatedVisibility(visible = showBanner, modifier = modifier.fillMaxWidth()) {
         Surface(color = MaterialTheme.colorScheme.onBackground) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -48,7 +52,7 @@ fun TopSnackbarBanner(text: String, showBanner: Boolean) {
 
 @Preview(showBackground = true)
 @Composable
-fun TopSnackbarBannerPreview() {
+private fun TopSnackbarBannerPreview() {
     TopSnackbarBanner(
         text = "This is a preview",
         showBanner = true,

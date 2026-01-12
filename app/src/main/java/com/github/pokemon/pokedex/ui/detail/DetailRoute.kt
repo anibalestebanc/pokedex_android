@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -28,13 +29,16 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.domain.model.PokemonFullDetail
 import com.github.pokemon.pokedex.theme.PokeAppTheme
-import com.github.pokemon.pokedex.ui.components.common.RetryErrorScreen
-import com.github.pokemon.pokedex.ui.components.common.LoadingScreen
+import com.github.pokemon.pokedex.ui.components.fullscreen.RetryErrorScreen
+import com.github.pokemon.pokedex.ui.components.fullscreen.LoadingScreen
 import com.github.pokemon.pokedex.ui.components.utils.PokeBackgroundUtil.primaryTypeColorRes
 import com.github.pokemon.pokedex.ui.detail.components.AboutSection
 import com.github.pokemon.pokedex.ui.detail.components.BaseStatsSection
 import com.github.pokemon.pokedex.ui.detail.components.DetailHeader
 import com.github.pokemon.pokedex.ui.detail.components.SectionTabs
+import com.github.pokemon.pokedex.utils.capitalizeFirst
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableMap
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -96,7 +100,7 @@ fun DetailScreen(
         )
 
         uiState.data != null -> PokemonDetailContent(
-            data = uiState.data,
+            detail = uiState.data,
             isFavorite = isFavorite,
             onBackClick = onBackClick,
             onToggleFavorite = { onAction(DetailAction.OnToggleFavorite(pokemonId)) },
@@ -107,7 +111,7 @@ fun DetailScreen(
 
 @Composable
 fun PokemonDetailContent(
-    data: PokemonFullDetail,
+    detail: PokemonFullDetail,
     isFavorite: Boolean,
     onBackClick: () -> Unit,
     onToggleFavorite : () -> Unit,
@@ -124,32 +128,32 @@ fun PokemonDetailContent(
             .background(MaterialTheme.colorScheme.surface),
     ) {
         DetailHeader(
-            name = data.name,
-            numberLabel = data.numberLabel,
-            genera = data.genera,
-            types = data.types,
-            imageUrl = data.imageUrl,
+            name = detail.name,
+            numberLabel = detail.numberLabel,
+            genera = detail.genera,
+            types = detail.types.map { capitalizeFirst(it) }.toImmutableList(),
+            imageUrl = detail.imageUrl,
             isFavorite = isFavorite,
-            headerColor = colorResource(id = primaryTypeColorRes(data.types)),
+            headerColor = colorResource(id = primaryTypeColorRes(detail.types)),
             onBackClick = onBackClick,
             onToggleFavorite = onToggleFavorite,
             onShareClick = onShareClick
         )
 
         // Tabs
-        var selectedTab by remember { mutableStateOf(0) }
+        var selectedTab by remember { mutableIntStateOf(0) }
         SectionTabs(
             tabs = listOf(
                 stringResource(R.string.pokemon_detail_about),
                 stringResource(R.string.pokemon_detail_base_stats),
-            ),
+            ).toImmutableList(),
             selectedIndex = selectedTab,
             onTabSelected = { selectedTab = it },
         )
 
         when (selectedTab) {
-            0 -> AboutSection(data)
-            1 -> BaseStatsSection(stats = data.stats)
+            0 -> AboutSection(detail)
+            1 -> BaseStatsSection(stats = detail.stats.toImmutableList())
         }
         Spacer(Modifier.height(16.dp))
     }
@@ -157,7 +161,7 @@ fun PokemonDetailContent(
 
 @Preview
 @Composable
-fun DetailScreenPreview() {
+private fun DetailScreenPreview() {
     PokeAppTheme {
          DetailScreen(
              "Pikachu"

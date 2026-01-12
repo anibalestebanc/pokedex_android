@@ -57,7 +57,7 @@ fun CharacteristicsSection(
 
 @Preview(showBackground = true)
 @Composable
-fun CharacteristicsSectionPreview() {
+private fun CharacteristicsSectionPreview() {
     CharacteristicsSection(
         heightMeters = 1.0,
         weightKg = 1.0,

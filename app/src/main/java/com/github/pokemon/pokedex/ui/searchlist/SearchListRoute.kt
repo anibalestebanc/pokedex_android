@@ -23,11 +23,11 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.github.pokemon.pokedex.R
 import com.github.pokemon.pokedex.domain.model.PokemonCatalog
 import com.github.pokemon.pokedex.ui.components.SearchListCard
-import com.github.pokemon.pokedex.ui.components.appbar.FakeRoundedSearchInput
-import com.github.pokemon.pokedex.ui.components.common.EmptyScreen
-import com.github.pokemon.pokedex.ui.components.common.RetryErrorScreen
-import com.github.pokemon.pokedex.ui.components.common.LoadingScreen
-import com.github.pokemon.pokedex.ui.components.common.LoadingMore
+import com.github.pokemon.pokedex.ui.components.SimpleRoundedSearch
+import com.github.pokemon.pokedex.ui.components.fullscreen.EmptyScreen
+import com.github.pokemon.pokedex.ui.components.fullscreen.RetryErrorScreen
+import com.github.pokemon.pokedex.ui.components.fullscreen.LoadingScreen
+import com.github.pokemon.pokedex.ui.components.LoadingMore
 import com.github.pokemon.pokedex.ui.sharedsearch.SearchSharedViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -69,7 +69,7 @@ fun SearchListScreen(
     Column(modifier = modifier.fillMaxSize()) {
 
         Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-            FakeRoundedSearchInput(
+            SimpleRoundedSearch(
                 text = searchQuery.ifBlank { stringResource(id = R.string.search_bar_hint) },
                 onSearchClick = { onSearchClick(searchQuery) },
             )
