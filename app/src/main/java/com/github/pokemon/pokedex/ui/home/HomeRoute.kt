@@ -1,11 +1,15 @@
 package com.github.pokemon.pokedex.ui.home
 
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,6 +22,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.github.pokemon.pokedex.R
+import com.github.pokemon.pokedex.theme.PokeAppTheme
 import com.github.pokemon.pokedex.ui.components.HomeOptionsComponent
 import com.github.pokemon.pokedex.ui.components.SimpleRoundedSearch
 import com.github.pokemon.pokedex.ui.components.model.HomeOptions
@@ -40,9 +45,11 @@ fun HomeRoute(
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.uiEffect.collect { effect ->
                 when (effect) {
-                    //Todo Add pokedex feature
                     is HomeEffect.NavigateToPokedex -> {}
-                    is HomeEffect.NavigateToSearch -> onSearchClick()
+                    is HomeEffect.NavigateToSearch -> {
+                        sharedViewModel.onAction(SharedSearchAction.ClearQuery)
+                        onSearch()
+                    }
                 }
             }
         }
@@ -51,11 +58,16 @@ fun HomeRoute(
 }
 
 @Composable
-fun HomeScreen(onAction: (HomeAction) -> Unit) {
-    LazyColumn(
-        contentPadding = PaddingValues(horizontal = 32.dp, vertical = 32.dp),
-    ) {
-        item {
+fun HomeScreen(
+    onAction: (HomeAction) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Surface(modifier
+        .fillMaxSize()
+        .verticalScroll(rememberScrollState())) {
+        Column(
+            modifier = Modifier.padding(horizontal = 32.dp, vertical = 32.dp),
+        ) {
             Text(
                 text = stringResource(id = R.string.main_app_bar_title),
                 color = MaterialTheme.colorScheme.onSurface,
@@ -65,18 +77,14 @@ fun HomeScreen(onAction: (HomeAction) -> Unit) {
                 ),
                 modifier = Modifier.padding(top = 48.dp, bottom = 24.dp),
             )
-        }
-        item {
+
             SimpleRoundedSearch(
                 text = stringResource(id = R.string.search_bar_hint),
                 onSearchClick = { onAction(HomeAction.OnSearchClick) },
             )
-        }
-        item {
-            Spacer(modifier = Modifier.height(32.dp))
-        }
 
-        item {
+            Spacer(modifier = Modifier.height(32.dp))
+
             HomeOptionsComponent(options = HomeOptions.toImmutableList())
         }
     }
@@ -85,6 +93,11 @@ fun HomeScreen(onAction: (HomeAction) -> Unit) {
 
 @Preview
 @Composable
-fun PreviewMainScreen() {
-    HomeScreen({ })
+private fun PreviewMainScreen() {
+    PokeAppTheme(
+        darkTheme = false,
+        dynamicColor = false,
+    ) {
+        HomeScreen({ })
+    }
 }
