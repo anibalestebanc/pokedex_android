@@ -10,30 +10,23 @@ fun rememberNavigator(
 ): Navigator = remember(state) {
     Navigator(state)
 }
-class Navigator(private val state: NavigationState) {
-    fun navigate(key: NavKey) = when {
-        state.isTopLevel(key) -> navigateToTopLevel(key)
-        else -> navigateTo(key)
+class Navigator(val state: NavigationState) {
+    fun navigate(key: NavKey) {
+        if (key in state.backStacks.keys){
+            state.topLevelRoute = key
+        } else {
+            state.backStacks[state.topLevelRoute]?.add(key)
+        }
     }
 
     fun goBack() {
-        if (state.backStack.size > 1) {
-            state.backStack.removeLastOrNull()
-        }
-    }
+        val currentStack = state.backStacks[state.topLevelRoute] ?: error("Stack for ${state.topLevelRoute} not found")
+        val currentRoute = currentStack.last()
 
-    private fun navigateToTopLevel(key: NavKey) {
-        state.backStack.clear()
-        state.backStack.add(state.startDestination)
-
-        if (key != state.startDestination) {
-            state.backStack.add(key)
-        }
-    }
-
-    private fun navigateTo(key: NavKey) {
-        if (state.currentKey != key) {
-            state.backStack.add(key)
+        if (currentRoute == state.topLevelRoute) {
+            state.topLevelRoute = state.startDestination
+        } else {
+            currentStack.removeLastOrNull()
         }
     }
 }

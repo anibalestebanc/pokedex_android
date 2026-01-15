@@ -14,32 +14,41 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.github.pokemon.pokedex.navigation.NavigationHost
+import com.github.pokemon.pokedex.navigation.Route
 import com.github.pokemon.pokedex.navigation.rememberNavigationState
 import com.github.pokemon.pokedex.navigation.rememberNavigator
 import com.github.pokemon.pokedex.theme.HighContrastDarkColorScheme
 import com.github.pokemon.pokedex.theme.HighContrastLightColorScheme
-import com.github.pokemon.pokedex.ui.components.model.Destinations
+import com.github.pokemon.pokedex.ui.components.model.TOP_LEVEL_DESTINATION
 import com.github.pokemon.pokedex.ui.components.bottombar.PokeBottomBar
 import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.collections.immutable.toImmutableSet
 
 @Composable
-fun PokeApp(appState: AppState) {
+fun PokeApp(
+    appState: AppState,
+    modifier: Modifier = Modifier,
+) {
     val darkTheme = isSystemInDarkTheme()
     val colorScheme = if (darkTheme) HighContrastDarkColorScheme else HighContrastLightColorScheme
 
-    val snackbarHostState = remember { SnackbarHostState() }
-    val navigationState = rememberNavigationState()
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    val navigationState = rememberNavigationState(
+        startDestination = Route.Home,
+        topLevelRoutes = TOP_LEVEL_DESTINATION.keys.toImmutableSet(),
+    )
     val navigator = rememberNavigator(navigationState)
 
     MaterialTheme(colorScheme = colorScheme) {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.surface,
-            snackbarHost = { SnackbarHost(snackbarHostState) },
+            snackbarHost = { SnackbarHost(snackBarHostState) },
             bottomBar = {
-                if (navigationState.isTopLevel(navigationState.currentKey)) {
+                if (navigationState.currentRoute in TOP_LEVEL_DESTINATION.keys) {
                     PokeBottomBar(
-                        current = navigationState.currentTopLevel,
-                        destinations = Destinations.toImmutableMap(),
+                        selected = navigationState.topLevelRoute,
+                        destinations = TOP_LEVEL_DESTINATION.toImmutableMap(),
                         onClick = { route -> navigator.navigate(route) },
                     )
                 }
@@ -47,7 +56,7 @@ fun PokeApp(appState: AppState) {
             contentWindowInsets = WindowInsets.systemBars,
         ) { innerPadding ->
             Surface(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxSize()
                     .padding(innerPadding),
             ) {

@@ -15,16 +15,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
-import com.github.pokemon.pokedex.navigation.NavigationRoute
+import com.github.pokemon.pokedex.navigation.Route
 import com.github.pokemon.pokedex.ui.components.model.BottomBarItem
-import com.github.pokemon.pokedex.ui.components.model.Destinations
+import com.github.pokemon.pokedex.ui.components.model.TOP_LEVEL_DESTINATION
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableMap
 
 @Composable
 fun PokeBottomBar(
-    current: NavKey,
-    destinations: ImmutableMap<String, BottomBarItem>,
+    selected: NavKey,
+    destinations: ImmutableMap<NavKey, BottomBarItem>,
     onClick: (NavKey) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -39,15 +39,14 @@ fun PokeBottomBar(
             tonalElevation = 0.dp,
         ) {
 
-            destinations.entries.forEach { immutableEntry ->
-                val item = immutableEntry.value
-                val label = stringResource(id = item.label)
+            destinations.forEach { (route, item) ->
+                val label = stringResource(id = item.title)
                 NavigationBarItem(
-                    selected = current::class == item.route::class,
-                    onClick = { onClick(item.route) },
+                    selected = selected::class == route::class,
+                    onClick = { onClick(route) },
                     icon = {
                         Icon(
-                            imageVector =  item.selectedIcon,
+                            imageVector =  item.icon,
                             tint = MaterialTheme.colorScheme.onSurface,
                             contentDescription = null,
                         )
@@ -74,10 +73,10 @@ fun PokeBottomBar(
 
 @Preview(showBackground = true)
 @Composable
-fun PokeBottomBarPreview() {
+private fun PokeBottomBarPreview() {
     PokeBottomBar(
-        current = NavigationRoute.SearchList,
-        destinations = Destinations.toImmutableMap(),
+        selected = Route.SearchList,
+        destinations = TOP_LEVEL_DESTINATION.toImmutableMap(),
         onClick = {}
     )
 }

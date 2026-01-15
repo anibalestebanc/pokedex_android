@@ -3,11 +3,12 @@ package com.github.pokemon.pokedex.navigation
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.github.pokemon.pokedex.ui.detail.DetailRoute
 import com.github.pokemon.pokedex.ui.favorite.FavoriteRoute
@@ -21,58 +22,58 @@ fun NavigationHost(
     navigator: Navigator,
     modifier: Modifier = Modifier,
 ) {
-    NavDisplay(
-        backStack = navigationState.backStack,
-        modifier = modifier,
-        entryDecorators = listOf(
-            rememberSaveableStateHolderNavEntryDecorator(),
-            rememberViewModelStoreNavEntryDecorator(),
-        ),
-        entryProvider = entryProvider {
-            entry<NavigationRoute.Home> {
+
+    val entryProvider: (NavKey) -> NavEntry<NavKey> =
+        entryProvider {
+            entry<Route.Home> {
                 HomeRoute(
                     onSearch = {
-                        navigator.navigate(NavigationRoute.Search)
+                        navigator.navigate(Route.Search)
                     },
                 )
             }
 
-            entry<NavigationRoute.Detail> { detail ->
+            entry<Route.Detail> { detail ->
                 DetailRoute(
                     onBack = { navigator.goBack() },
                     id = detail.id,
                 )
             }
 
-            entry<NavigationRoute.Search> {
+            entry<Route.Search> {
                 SearchDialogRoute(
                     onBackClick = { navigator.goBack() },
                     onSearchList = {
                         navigator.goBack()
-                        navigator.navigate(NavigationRoute.SearchList)
+                        navigator.navigate(Route.SearchList)
                     },
                 )
             }
 
-            entry<NavigationRoute.SearchList> {
+            entry<Route.SearchList> {
                 SearchListRoute(
                     onDetail = { pokemonId ->
-                        navigator.navigate(NavigationRoute.Detail(pokemonId))
+                        navigator.navigate(Route.Detail(pokemonId))
                     },
                     onSearch = {
-                        navigator.navigate(NavigationRoute.Search)
+                        navigator.navigate(Route.Search)
                     },
                 )
             }
 
-            entry<NavigationRoute.Favorite> {
+            entry<Route.Favorite> {
                 FavoriteRoute(
                     onDetail = { id ->
-                        navigator.navigate(NavigationRoute.Detail(id))
+                        navigator.navigate(Route.Detail(id))
                     },
                 )
             }
-        },
+        }
+
+    NavDisplay(
+        modifier = modifier.fillMaxSize(),
+        entries = navigationState.toEntries(entryProvider),
+        onBack = { navigator.goBack() },
         transitionSpec = {
             ContentTransform(
                 slideInHorizontally(initialOffsetX = { it }),

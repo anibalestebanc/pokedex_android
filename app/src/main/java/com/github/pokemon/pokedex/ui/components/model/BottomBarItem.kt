@@ -7,32 +7,24 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.NavKey
 import com.github.pokemon.pokedex.R
-import com.github.pokemon.pokedex.navigation.NavigationRoute
+import com.github.pokemon.pokedex.navigation.Route
 
 data class BottomBarItem(
-    val label: Int,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
-    val route: NavKey,
+    val title: Int,
+    val icon: ImageVector,
 )
 
-val Destinations = mapOf(
-    "home" to BottomBarItem(
-        label = R.string.bottom_bar_home,
-        selectedIcon = Icons.Outlined.Home,
-        unselectedIcon = Icons.Outlined.Home,
-        route = NavigationRoute.Home,
+val TOP_LEVEL_DESTINATION: Map<NavKey, BottomBarItem> = mapOf(
+    Route.Home to BottomBarItem(
+        title = R.string.bottom_bar_home,
+        icon = Icons.Outlined.Home,
     ),
-    "search" to BottomBarItem(
-        label = R.string.bottom_bar_search,
-        selectedIcon = Icons.Outlined.Search,
-        unselectedIcon = Icons.Outlined.Search,
-        route = NavigationRoute.SearchList,
+    Route.SearchList to BottomBarItem(
+        title = R.string.bottom_bar_search,
+        icon = Icons.Outlined.Search,
     ),
-    "favorite" to BottomBarItem(
-        label = R.string.bottom_bar_favorite,
-        selectedIcon = Icons.Outlined.FavoriteBorder,
-        unselectedIcon = Icons.Outlined.FavoriteBorder,
-        route = NavigationRoute.Favorite,
+    Route.Favorite to BottomBarItem(
+        title = R.string.bottom_bar_favorite,
+        icon = Icons.Outlined.FavoriteBorder,
     ),
 )

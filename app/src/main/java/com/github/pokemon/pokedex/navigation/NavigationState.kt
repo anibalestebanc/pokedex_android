@@ -1,43 +1,80 @@
 package com.github.pokemon.pokedex.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSerializable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
-import kotlin.reflect.KClass
+import androidx.navigation3.runtime.rememberDecoratedNavEntries
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.runtime.serialization.NavKeySerializer
+import androidx.savedstate.compose.serialization.serializers.MutableStateSerializer
+import kotlinx.collections.immutable.ImmutableSet
 
-//TODO check why this code crash
-/*fun navigationStateSaver(startDestination: NavKey): Saver<NavigationState, Any> = listSaver(
-    save = { state -> state.backStack.toList() },
-    restore = { saved ->
-        NavigationState(startDestination).apply {
-            backStack.clear()
-            backStack.addAll(saved)
-        }
-    }
-)*/
 
 @Composable
 fun rememberNavigationState(
-    startDestination: NavKey = NavigationRoute.Home,
-): NavigationState = remember(startDestination) { //rememberSaveable(saver = navigationStateSaver(startDestination)) {
-    NavigationState(startDestination)
+    startDestination: NavKey,
+    topLevelRoutes: ImmutableSet<NavKey>
+): NavigationState {
+    val topLevelRoute = rememberSerializable(
+        startDestination, topLevelRoutes,
+        serializer = MutableStateSerializer(NavKeySerializer()),
+    ) {
+        mutableStateOf(startDestination)
+    }
+
+    val backStacks = topLevelRoutes.associateWith { key -> rememberNavBackStack(key) }
+
+    return remember(startDestination, topLevelRoute) {
+        NavigationState(startDestination, topLevelRoute, backStacks)
+    }
 }
 
-class NavigationState(val startDestination: NavKey) {
+class NavigationState(
+    val startDestination: NavKey,
+    topLevelRoute: MutableState<NavKey>,
+    val backStacks: Map<NavKey, NavBackStack<NavKey>>,
+) {
+    var topLevelRoute: NavKey by topLevelRoute
+    val stacksInUse: List<NavKey>
+        get() = if (topLevelRoute == startDestination) {
+            listOf(startDestination)
+        } else {
+            listOf(startDestination, topLevelRoute)
+        }
 
-    private val topLevelDestinations: Set<KClass<out NavigationRoute>> = setOf(
-        NavigationRoute.Home::class,
-        NavigationRoute.SearchList::class,
-        NavigationRoute.Favorite::class
-    )
-    val backStack = mutableStateListOf(startDestination)
+    val currentRoute: NavKey
+        get() = backStacks[topLevelRoute]?.lastOrNull() ?: startDestination
+}
 
-    val currentKey: NavKey get() = backStack.last()
+@Composable
+fun NavigationState.toEntries(
+    entryProvider: (NavKey) -> NavEntry<NavKey>,
+): SnapshotStateList<NavEntry<NavKey>> {
 
-    val currentTopLevel: NavKey get() = backStack.lastOrNull { isTopLevel(it) } ?: startDestination
-
-    fun isTopLevel(key: NavKey): Boolean {
-        return key::class in topLevelDestinations
+    val decoratedEntries = backStacks.mapValues { (_, stack) ->
+        val decorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator<NavKey>(),
+            rememberViewModelStoreNavEntryDecorator(),
+        )
+        rememberDecoratedNavEntries(
+            backStack = stack,
+            entryDecorators = decorators,
+            entryProvider = entryProvider,
+        )
     }
+
+    return stacksInUse
+        .flatMap { decoratedEntries[it] ?: emptyList() }
+        .toMutableStateList()
 }
